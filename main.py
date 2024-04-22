@@ -15,6 +15,11 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 font = pygame.font.SysFont(None, 36)
+main_menu = 1
+meow 
+meow 
+meow
+meow
 
 clicks = 0
 click_power = 1
