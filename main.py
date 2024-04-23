@@ -37,7 +37,7 @@ window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.js
 
 
 
-champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 700), (200, 50)),
+champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 700), (200, 50)),
                                              text='Champion',
                                              manager=window,
                                              )
