@@ -44,15 +44,15 @@ window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.js
 
 
 
-champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 700), (200, 50)),
+champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((25, 700), (200, 50)),
                                              text='Champion',
                                              manager=window,
                                              )
-upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 700), (200, 50)),
+upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((325, 700), (200, 50)),
                                              text='Upgrade',
                                              manager=window,
                                              )
-misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((700, 700), (200, 50)),
+misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((625, 700), (200, 50)),
                                              text='Misc.',
                                              manager=window,
                                              )
