@@ -14,10 +14,6 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
 
-# FPS
-fps = 60
-FramePerSec = pygame.time.Clock()
-
 # Colours
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -103,8 +99,6 @@ while running:
     window.draw_ui(screen)
     
     pygame.display.flip()
-
-    FramePerSec.tick(fps)
 
 pygame.quit()
 sys.exit()
