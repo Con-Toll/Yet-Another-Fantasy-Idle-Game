@@ -62,7 +62,7 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((700, 700),
                                              )
 
 
-
+clock = pygame.time.Clock()
 
 # Game loop \o/
 running = True
