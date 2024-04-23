@@ -24,7 +24,7 @@ auto_click_interval = 1000  # in milliseconds
 last_auto_click_time = pygame.time.get_ticks()
 
 def champ_menu(x,y,width,height):
-     champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
+    champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
                                                text='Champion',
                                                manager=window,
                                                )
@@ -37,7 +37,7 @@ window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.js
 
 
 
-champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((100, 50), (200, 50)),
+champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 700), (200, 50)),
                                              text='Champion',
                                              manager=window,
                                              )
@@ -67,7 +67,7 @@ while running:
             if event.button == 1:  # Left mouse button
                 mouse_pos = pygame.mouse.get_pos()
             if champ_button.rect.collidepoint(mouse_pos):
-                champ_menu(100,200,200,700)
+                champ_menu(100,200,200,50)
             elif upgrade_button.rect.collidepoint(mouse_pos):
                 print("Upgrade button pressed")
             elif misc_button.rect.collidepoint(mouse_pos):
