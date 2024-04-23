@@ -6,22 +6,33 @@ import os
 pygame.init()
 
 
-screen_width = 1000
-screen_height = 800
+# -- VARIABLES --
+# Screen info
+screen_width = 854
+screen_height = 480
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
 
+# FPS
+fps = 60
+FramePerSec = pygame.time.Clock()
+
+# Colours
 white = (255, 255, 255)
 black = (0, 0, 0)
 
 font = pygame.font.SysFont(None, 36)
+main_menu = 1
 
-clicks = 0
+# Clicking
 click_power = 1
 auto_click_power = 0
-auto_click_interval = 1000  # in milliseconds
-last_auto_click_time = pygame.time.get_ticks()
+click_check_interval = 1000  # in milliseconds
+last_click_update = pygame.time.get_ticks()
+
+# Currency
+gold = 0
 
 def champ_menu(x,y,width,height):
     champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
@@ -52,7 +63,8 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((700, 700),
 
 
 
-clock = pygame.time.Clock()
+
+# Game loop \o/
 running = True
 while running:
     screen.fill(white)
@@ -73,16 +85,17 @@ while running:
             elif misc_button.rect.collidepoint(mouse_pos):
                 print("Misc. button pressed")
             else:
-                clicks += click_power
+                gold += click_power
+
 
     # Draw text
-    score_text = font.render(f"Clicker Count: {clicks}", True, black)
+    score_text = font.render(f"Gold: {gold}", True, black)
     screen.blit(score_text, (20, 20))
 
     # Auto-click
     current_time = pygame.time.get_ticks()
-    if current_time - last_auto_click_time >= auto_click_interval:
-        clicks += auto_click_power
+    if current_time - last_click_update >= click_check_interval:
+        gold += auto_click_power
         last_auto_click_time = current_time
     
 
@@ -90,6 +103,8 @@ while running:
     window.draw_ui(screen)
     
     pygame.display.flip()
+
+    FramePerSec.tick(fps)
 
 pygame.quit()
 sys.exit()
