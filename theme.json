@@ -1,0 +1,18 @@
+{
+    "button":
+    {
+        "colours":
+        {
+             "normal_border": "Red",
+             "normal_bg": "Orange",
+             "normal_text": "White"
+        },
+        "misc":
+        {
+             "shape": "rounded_rectangle",
+             "shape_corner_radius": "10",
+             "border_width": "2"
+
+        }
+    }
+}
