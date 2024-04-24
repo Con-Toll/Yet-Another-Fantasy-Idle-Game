@@ -68,7 +68,9 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((635, 490),
 area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((5,0),(320,540)),manager=window)
 area_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((320,0),(320,540)),manager=window)
 area_misc = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((635,0),(320,540)),manager=window)
-
+area_champ.hide()
+area_upgrade.hide()
+area_misc.hide()
 
 clock = pygame.time.Clock()
 
