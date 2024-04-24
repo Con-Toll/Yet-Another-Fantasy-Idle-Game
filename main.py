@@ -28,7 +28,7 @@ click_check_interval = 1000  # in milliseconds
 last_click_update = pygame.time.get_ticks()
 
 # Currency
-gold = 0
+gold = 54235235230
 
 def champ_menu(x,y,width,height):
     champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
@@ -85,8 +85,17 @@ while running:
 
 
     # Draw text
-    score_text = font.render(f"Gold: {gold}", True, black)
-    screen.blit(score_text, (20, 20))
+    def gold_display():
+        score_text = font.render(f"Gold:", True, black)
+        score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
+
+        gold_text = font.render(f"{gold}", True, black)
+        gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
+
+        screen.blit(score_text, score_text_rect)
+        screen.blit(gold_text, gold_text_rect)
+
+    gold_display()
 
     # Auto-click
     current_time = pygame.time.get_ticks()
