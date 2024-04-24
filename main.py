@@ -10,9 +10,12 @@ pygame.init()
 # Screen info
 screen_width = 960
 screen_height = 540
+screen_width = 960
+screen_height = 540
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
+
 
 
 # Colours
@@ -23,6 +26,7 @@ font = pygame.font.SysFont(None, 36)
 main_menu = 1
 
 
+
 # Clicking
 click_power = 1
 auto_click_power = 0
@@ -30,15 +34,10 @@ click_check_interval = 1000  # in milliseconds
 last_click_update = pygame.time.get_ticks()
 
 
+
 # Currency
 gold = 0
 
-
-# =========PLACEHOLDER IDLE GENERATION VARIABLE=========
-idle_power = 0
-
-
-# Champion Menu
 def champ_menu(x,y,width,height):
     champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
                                                text='Champion',
@@ -47,23 +46,34 @@ def champ_menu(x,y,width,height):
     return champ_button
 
 # Buttons
+# Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
 window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
 
 
+
+champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5, 490), (320, 50)),
 champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5, 490), (320, 50)),
                                              text='Champion',
                                              manager=window,
                                              )
 upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((320, 490), (320, 50)),
+upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((320, 490), (320, 50)),
                                              text='Upgrade',
                                              manager=window,
                                              )
 misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((635, 490), (320, 50)),
+misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((635, 490), (320, 50)),
                                              text='Misc.',
                                              manager=window,
                                              )
-
+#container
+area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((5,0),(320,540)),manager=window)
+area_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((320,0),(320,540)),manager=window)
+area_misc = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((635,0),(320,540)),manager=window)
+area_champ.hide()
+area_upgrade.hide()
+area_misc.hide()
 
 #container
 area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((5,0),(320,540)),manager=window)
@@ -117,6 +127,29 @@ while running:
                 print("Misc. button pressed")
             else:
                 gold += click_power
+                if champ_button.rect.collidepoint(mouse_pos):
+                    if champion_y == 490:
+                        champion_y = 0
+                    else:
+                        champion_y = 490
+                    champ_button.set_position(position=(5, champion_y))
+                elif upgrade_button.rect.collidepoint(mouse_pos):
+                    if upgrade_y == 490:
+                        upgrade_y = 0
+                    else:
+                        upgrade_y = 490
+                    upgrade_button.set_position(position=(320, upgrade_y))
+                    print("Upgrade button pressed")
+                elif misc_button.rect.collidepoint(mouse_pos):
+                    if misc_y == 490:
+                        misc_y = 0
+                    else:
+                        misc_y = 490
+                    misc_button.set_position(position=(635, misc_y))
+                    print("Misc. button pressed")
+                else:
+                    gold += click_power
+
 
 
     # Click Power Display
