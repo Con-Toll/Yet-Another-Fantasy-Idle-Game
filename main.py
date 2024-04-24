@@ -38,14 +38,6 @@ gold = 0
 idle_power = 0
 
 
-# Champion Menu
-def champ_menu(x,y,width,height):
-    champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
-                                               text='Champion',
-                                               manager=window,
-                                               )
-    return champ_button
-
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
 window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
