@@ -8,11 +8,12 @@ pygame.init()
 
 # -- VARIABLES --
 # Screen info
-screen_width = 854
-screen_height = 480
+screen_width = 960
+screen_height = 540
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
+
 
 # Colours
 white = (255, 255, 255)
@@ -21,15 +22,23 @@ black = (0, 0, 0)
 font = pygame.font.SysFont(None, 36)
 main_menu = 1
 
+
 # Clicking
 click_power = 1
 auto_click_power = 0
 click_check_interval = 1000  # in milliseconds
 last_click_update = pygame.time.get_ticks()
 
-# Currency
-gold = 9999999999
 
+# Currency
+gold = 0
+
+
+# =========PLACEHOLDER IDLE GENERATION VARIABLE=========
+idle_power = 0
+
+
+# Champion Menu
 def champ_menu(x,y,width,height):
     champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((x,y), (width, height)),
                                                text='Champion',
@@ -38,7 +47,7 @@ def champ_menu(x,y,width,height):
     return champ_button
 
 
-#button
+# Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
 window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
 
@@ -84,7 +93,24 @@ while running:
                 gold += click_power
 
 
-    # Draw text
+    # Click Power Display
+    def idle_power_display():
+        idle_text = font.render(f"Idle: {idle_power}", True, black)
+        idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
+
+        screen.blit(idle_text, idle_text_rect)
+
+    idle_power_display()
+
+    def click_power_display():
+        click_power_text = font.render(f"Clicks: {click_power}", True, black)
+        click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
+
+        screen.blit(click_power_text, click_power_text_rect)
+
+    click_power_display()
+
+    # Gold Display
     def gold_display(gold):
         score_text = font.render(f"Gold:", True, black)
         score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
@@ -93,7 +119,7 @@ while running:
             gold_format = "{:.4e}".format(gold)
         else:
             gold_format = "{:,}".format(gold)
-            
+
         gold_text = font.render(f"{gold_format}", True, black)
         gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
 
