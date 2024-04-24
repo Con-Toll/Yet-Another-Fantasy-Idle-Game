@@ -86,28 +86,28 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 mouse_pos = pygame.mouse.get_pos()
-            if champ_button.rect.collidepoint(mouse_pos):
-                if champion_y == 490:
-                    champion_y = 0
+                if champ_button.rect.collidepoint(mouse_pos):
+                    if champion_y == 490:
+                        champion_y = 0
+                    else:
+                        champion_y = 490
+                    champ_button.set_position(position=(5, champion_y))
+                elif upgrade_button.rect.collidepoint(mouse_pos):
+                    if upgrade_y == 490:
+                        upgrade_y = 0
+                    else:
+                        upgrade_y = 490
+                    upgrade_button.set_position(position=(320, upgrade_y))
+                    print("Upgrade button pressed")
+                elif misc_button.rect.collidepoint(mouse_pos):
+                    if misc_y == 490:
+                        misc_y = 0
+                    else:
+                        misc_y = 490
+                    misc_button.set_position(position=(635, misc_y))
+                    print("Misc. button pressed")
                 else:
-                    champion_y = 490
-                champ_button.set_position(position=(5, champion_y))
-            elif upgrade_button.rect.collidepoint(mouse_pos):
-                if upgrade_y == 490:
-                    upgrade_y = 0
-                else:
-                    upgrade_y = 490
-                upgrade_button.set_position(position=(320, upgrade_y))
-                print("Upgrade button pressed")
-            elif misc_button.rect.collidepoint(mouse_pos):
-                if misc_y == 490:
-                    misc_y = 0
-                else:
-                    misc_y = 490
-                misc_button.set_position(position=(635, misc_y))
-                print("Misc. button pressed")
-            else:
-                gold += click_power
+                    gold += click_power
 
 
     # Click Power Display
