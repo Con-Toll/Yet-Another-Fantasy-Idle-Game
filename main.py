@@ -48,13 +48,30 @@ area_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((320,490),(
 area_misc = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((640,490),(320,540)),manager=window)
 
 #Container
-area_champ_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),manager=window,container=area_champ,allow_scroll_x=False)
-area_upgrade_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,400)),manager=window,container=area_upgrade,allow_scroll_x=False)
-area_upgrade_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,400)),manager=window,container=area_misc,allow_scroll_x=False)
+area_champ_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_champ,allow_scroll_x=False)
+area_upgrade_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_upgrade,allow_scroll_x=False)
+area_misc_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_misc,allow_scroll_x=False)
 
-test = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_champ_container)
-test_2 = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_champ_container)
-test_3 = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_champ_container)
+#scroll
+area_champ_container.set_scrollable_area_dimensions((315,400))
+area_upgrade_container.set_scrollable_area_dimensions((315,400))
+area_misc_container.set_scrollable_area_dimensions((315,400))
+
+#Champion area
+champ_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_champ_container)
+champe_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_champ_container)
+champ_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_champ_container)
+
+#Upgrade Area
+upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_upgrade_container)
+upgrade_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_upgrade_container)
+upgrade_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_upgrade_container)
+
+#Misc Area
+misc_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_misc_container)
+misc_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_misc_container)
+misc_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_misc_container)
+
 
 #Button
 champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
@@ -69,9 +86,10 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320
                                              text='Misc.',
                                              container=area_misc,
                                              )
+#Champion Button
 champ_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
                                              text='Layla',
-                                             container=test,
+                                             container=champ_1_area,
                                              )
 
 
@@ -93,7 +111,7 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-            window.process_events(event)
+        
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 mouse_pos = pygame.mouse.get_pos()
@@ -119,7 +137,7 @@ while running:
                 print("Misc. button pressed")
             else:
                 gold += click_power
-
+        window.process_events(event)
 
     # Click Power Display
     def idle_power_display():
