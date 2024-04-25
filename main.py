@@ -92,6 +92,17 @@ champ_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150),
                                              container=champ_1_area,
                                              )
 
+#try creating a class
+class champion:
+    def __init__(self,name,cl,ig) -> None:
+        self.name = name
+        self.cl = cl
+        self.ig = 
+        
+    def __str__(self) -> str:
+        store = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((0,0),(320,20)),
+                                                  placeholder_text=self.name,
+                                                  container=champ_1_area)
 
 clock = pygame.time.Clock()
 
