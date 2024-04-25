@@ -108,7 +108,7 @@ class champion:
                                                   container=champ_1_area)
         return store
 
-champion
+
 clock = pygame.time.Clock()
 
 
