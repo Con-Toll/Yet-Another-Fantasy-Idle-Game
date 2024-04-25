@@ -10,9 +10,9 @@
         "misc":
         {
              "shape": "rounded_rectangle",
-             "shape_corner_radius": "",
              "border_width": ""
 
         }
     }
-}
+    
+}   
