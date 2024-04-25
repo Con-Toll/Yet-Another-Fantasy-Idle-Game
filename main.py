@@ -97,13 +97,15 @@ class champion:
     def __init__(self,name,cl,ig) -> None:
         self.name = name
         self.cl = cl
-        self.ig = 
+        self.ig = 1
         
     def __str__(self) -> str:
         store = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((0,0),(320,20)),
                                                   placeholder_text=self.name,
                                                   container=champ_1_area)
+        return store
 
+champion
 clock = pygame.time.Clock()
 
 
