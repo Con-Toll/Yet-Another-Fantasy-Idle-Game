@@ -138,7 +138,6 @@ while running:
             else:
                 gold += click_power
         window.process_events(event)
-
     # Click Power Display
     def idle_power_display():
         idle_text = font.render(f"Idle: {idle_power}", True, black)
