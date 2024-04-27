@@ -159,11 +159,11 @@ misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), 
 
 
 #Champion loaded image
-champion_1_loaded_image = pygame.image.load("")
-champion_2_loaded_image = pygame.image.load("")
-champion_3_loaded_image = pygame.image.load("")
-champion_4_loaded_image = pygame.image.load("")
-champion_5_loaded_image = pygame.image.load("")
+champion_1_loaded_image = pygame.image.load("images.png")
+champion_2_loaded_image = pygame.image.load("images.png")
+champion_3_loaded_image = pygame.image.load("images.png")
+champion_4_loaded_image = pygame.image.load("images.png")
+champion_5_loaded_image = pygame.image.load("images.png")
 
 #Champion embedded image
 grid_image_1 = pygame_gui.elements.UIImage(
@@ -173,19 +173,19 @@ grid_image_1 = pygame_gui.elements.UIImage(
 grid_image_2 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
-    container=champ_1_area)
+    container=champ_2_area)
 grid_image_3 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
-    container=champ_1_area)
+    container=champ_3_area)
 grid_image_4 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
-    container=champ_1_area)
+    container=champ_4_area)
 grid_image_5 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
-    container=champ_1_area)
+    container=champ_5_area)
 
 
 #try creating a class
