@@ -254,7 +254,6 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 #Upgrade Description 
-Upgrade_1_Description = pygame_gui.elements.TextBox(html_text="<p>Yadaa Yadaa Yadaa .......<\p>",relative_text=pygame.Rect((),()),manager=window)
 
 
 #try creating a class
@@ -373,6 +372,8 @@ while running:
 #Testing  
         elif event.type == pygame.MOUSEMOTION:
             mouse_pos = pygame.mouse.get_pos()
+            Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa Yadaa Yadaa .......<p>",relative_rect=pygame.Rect((mouse_pos),(20,20)),manager=window)
+
             if upgrade_grid_image_1.rect.collidepoint(mouse_pos):
                 upgrade_grid_image_1.show()
             else :
