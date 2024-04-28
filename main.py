@@ -2,6 +2,7 @@ import pygame
 import pygame_gui
 import sys
 import os
+from pygame_gui.core import ObjectID
 
 pygame.init()
 
@@ -65,11 +66,9 @@ champ_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(30
 champ_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_champ_container)
 
 #Upgrade Area
-upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_upgrade_container)
-upgrade_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_upgrade_container)
-upgrade_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_upgrade_container)
-upgrade_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(300,200)),container=area_upgrade_container)
-upgrade_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_upgrade_container)
+upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,400)),container=area_upgrade_container)
+upgrade_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,400)),container=area_upgrade_container)
+
 
 #Misc Area
 misc_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_misc_container)
@@ -115,26 +114,16 @@ champ_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150),
                                              container=champ_5_area,
                                              )
 #Upgrade Button
-upgrade_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Upgrade 1',
+BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
+                                             text='Buy All',
                                              container=upgrade_1_area,
                                              )
 upgrade_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
                                              text='Upgrade 2',
                                              container=upgrade_2_area,
                                              )
-upgrade_3_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Upgrade 3',
-                                             container=upgrade_3_area,
-                                             )
-upgrade_4_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Upgrade 4',
-                                             container=upgrade_4_area,
-                                             )
-upgrade_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Upgrade 5',
-                                             container=upgrade_5_area,
-                                             )
+
+
 #Misc Button
 misc_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
                                              text='Misc 1',
@@ -166,26 +155,99 @@ champion_4_loaded_image = pygame.image.load("images.png")
 champion_5_loaded_image = pygame.image.load("images.png")
 
 #Champion embedded image
-grid_image_1 = pygame_gui.elements.UIImage(
+champion_image_1 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
     container=champ_1_area)
-grid_image_2 = pygame_gui.elements.UIImage(
+champion_image_2 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
     container=champ_2_area)
-grid_image_3 = pygame_gui.elements.UIImage(
+champion_image_3 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
     container=champ_3_area)
-grid_image_4 = pygame_gui.elements.UIImage(
+champion_image_4 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
     container=champ_4_area)
-grid_image_5 = pygame_gui.elements.UIImage(
+champion_image_5 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((20,20),(80,80)),
     image_surface=champion_1_loaded_image,
     container=champ_5_area)
+
+
+#Upgrade Picture
+
+Upgrade_1_loaded_image = pygame.image.load("images.png")
+Upgrade_2_loaded_image = pygame.image.load("images.png")
+Upgrade_3_loaded_image = pygame.image.load("images.png")
+Upgrade_4_loaded_image = pygame.image.load("images.png")
+Upgrade_5_loaded_image = pygame.image.load("images.png")
+Upgrade_6_loaded_image = pygame.image.load("images.png")
+Upgrade_7_loaded_image = pygame.image.load("images.png")
+Upgrade_8_loaded_image = pygame.image.load("images.png")
+Upgrade_9_loaded_image = pygame.image.load("images.png")
+Upgrade_10_loaded_image = pygame.image.load("images.png")
+Upgrade_11_loaded_image = pygame.image.load("images.png")
+Upgrade_12_loaded_image = pygame.image.load("images.png")
+
+#Upgrade embedded image
+upgrade_grid_image_1 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((10,135),(45,45)),
+    image_surface=Upgrade_1_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_2 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((70,135),(45,45)),
+    image_surface=Upgrade_2_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_3 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((130,135),(45,45)),
+    image_surface=Upgrade_3_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_4 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((190,135),(45,45)),
+    image_surface=Upgrade_4_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_5 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((250,135),(45,45)),
+    image_surface=Upgrade_5_loaded_image,
+    container=upgrade_1_area)
+
+upgrade_grid_image_6 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((10,200),(45,45)),
+    image_surface=Upgrade_6_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_7 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((70,200),(45,45)),
+    image_surface=Upgrade_7_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_8 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((130,200),(45,45)),
+    image_surface=Upgrade_8_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_9 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((190,200),(45,45)),
+    image_surface=Upgrade_9_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_10 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((250,200),(45,45)),
+    image_surface=Upgrade_10_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_11 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((10,265),(45,45)),
+    image_surface=Upgrade_11_loaded_image,
+    container=upgrade_1_area)
+upgrade_grid_image_12 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((70,265),(45,45)),
+    image_surface=Upgrade_12_loaded_image,
+    container=upgrade_1_area)
+
+#Upgrade "Available Text"
+
+Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((20,50),(300,50)),text="Available :",
+                                             container=upgrade_1_area,
+                                            )
 
 
 #try creating a class
