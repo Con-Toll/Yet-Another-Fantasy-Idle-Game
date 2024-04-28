@@ -253,6 +253,9 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                              container=upgrade_2_area,
                                             )
 
+#Upgrade Description 
+Upgrade_1_Description = pygame_gui.elements.TextBox(html_text="<p>Yadaa Yadaa Yadaa .......<\p>",relative_text=pygame.Rect((),()),manager=window)
+
 
 #try creating a class
 class Champion:
