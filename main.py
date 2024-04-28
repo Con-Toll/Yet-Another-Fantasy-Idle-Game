@@ -363,12 +363,18 @@ while running:
                     print("Misc. button pressed")    
                 elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_12.set_relative_position(position=(70,210))
+                    upgrade_grid_image_12.set_relative_position(position=(70,210)) 
 
-    
-                
                 else:
                     gold += click_power
+#Testing  
+        elif event.type == pygame.MOUSEMOTION:
+            mouse_pos = pygame.mouse.get_pos()
+            if upgrade_grid_image_1.rect.collidepoint(mouse_pos):
+                upgrade_grid_image_1.show()
+            else :
+                upgrade_grid_image_1.hide()
+
         window.process_events(event)
     # Click Power Display
     def idle_power_display():
