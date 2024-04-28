@@ -273,6 +273,7 @@ champion_y = 490
 upgrade_y = 490
 misc_y = 490
 
+Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((34,50),(300,80)),manager=window)
 
 # Game loop \o/
 running = True
@@ -372,13 +373,12 @@ while running:
 #Testing  
         elif event.type == pygame.MOUSEMOTION:
             mouse_pos = pygame.mouse.get_pos()
-            Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa Yadaa Yadaa .......<p>",relative_rect=pygame.Rect((mouse_pos),(20,20)),manager=window)
+            
 
             if upgrade_grid_image_1.rect.collidepoint(mouse_pos):
-                upgrade_grid_image_1.show()
+               Upgrade_1_Description.show()
             else :
-                upgrade_grid_image_1.hide()
-
+                Upgrade_1_Description.hide()
         window.process_events(event)
     # Click Power Display
     def idle_power_display():
