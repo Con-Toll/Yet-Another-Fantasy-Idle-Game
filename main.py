@@ -118,10 +118,10 @@ BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), 
                                              text='Buy All',
                                              container=upgrade_1_area,
                                              )
-upgrade_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Upgrade 2',
-                                             container=upgrade_2_area,
-                                             )
+#upgrade_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
+#                                             text='Upgrade 2',
+#                                             container=upgrade_2_area,
+#                                             )
 
 
 #Misc Button
@@ -245,8 +245,12 @@ upgrade_grid_image_12 = pygame_gui.elements.UIImage(
 
 #Upgrade "Available Text"
 
-Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((20,50),(300,50)),text="Available :",
+Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,50),(200,50)),text="Available :",
                                              container=upgrade_1_area,
+                                            )
+
+Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,50)),text="Bought :",
+                                             container=upgrade_2_area,
                                             )
 
 
@@ -302,6 +306,67 @@ while running:
                         misc_y = 490
                     area_misc.set_position(position=(640, misc_y))
                     print("Misc. button pressed")
+                elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_1.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_1.set_relative_position(position=(10,80))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_2.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_2.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_2.set_relative_position(position=(70,80))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_3.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_3.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_3.set_relative_position(position=(130,80))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_4.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_4.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_4.set_relative_position(position=(190,80))
+
+                    print("Misc. button pressed")   
+                elif upgrade_grid_image_5.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_5.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_5.set_relative_position(position=(250,80))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_6.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_6.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_6.set_relative_position(position=(10,145))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_7.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_7.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_7.set_relative_position(position=(70,145))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_8.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_8.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_8.set_relative_position(position=(130,145))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_9.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_9.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_9.set_relative_position(position=(190,145))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_10.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_10.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_10.set_relative_position(position=(250,145))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_11.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_11.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_11.set_relative_position(position=(10,210))
+
+                    print("Misc. button pressed")    
+                elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_12.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_12.set_relative_position(position=(70,210))
+
+    
+                
                 else:
                     gold += click_power
         window.process_events(event)
