@@ -254,21 +254,24 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 #Des area
-area_1 = pygame_gui.elements.UIPanel(relative_rect=((0,0),(400,100)),container= upgrade_1_area,anchors="center")
+area_1 = pygame_gui.elements.UIPanel(relative_rect=((0,0),(400,100)),manager=window,starting_height=6)
+area_1.hide()
 
 #Upgrade Description 
-Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_2_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_3_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_4_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_5_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_6_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_7_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_8_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_9_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_10_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_11_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
-Upgrade_12_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area)
+Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_2_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_3_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_4_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_5_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_6_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_7_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_8_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_9_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_10_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_11_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_12_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+
+
 
 
 
@@ -286,6 +289,9 @@ class Champion:
 
     def __str__(self):
         return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
+    
+    
+    
 
 clock = pygame.time.Clock()
 
@@ -389,7 +395,10 @@ while running:
                 elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
                     upgrade_grid_image_12.set_relative_position(position=(70,210)) 
-
+                    
+                elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
+                    upgrade_grid_image_12.set_container(container=upgrade_2_area)
+                    upgrade_grid_image_12.set_relative_position(position=(70,210)) 
                 else:
                     gold += click_power
 #Testing  
