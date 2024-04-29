@@ -35,10 +35,6 @@ last_click_update = pygame.time.get_ticks()
 gold = 0
 
 
-# =========PLACEHOLDER IDLE GENERATION VARIABLE=========
-total_idle_power = 0
-
-
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
 window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
@@ -254,12 +250,17 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 
+total_idle_power = 0
+
 # Champions
 class Champion:
     def __init__(self, name, level, idle_power):
         self.name = name
         self.level = level
         self.idle_power = idle_power
+
+
+
 
 clock = pygame.time.Clock()
 
