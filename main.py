@@ -19,6 +19,12 @@ pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
 background = pygame.image.load("background.png").convert()
+backgroundwidth = background.get_width()
+
+scroll = 0
+sections = math.ceil(screen_width / backgroundwidth)
+print(sections)
+
 
 # Colours
 white = (255, 255, 255)
@@ -282,7 +288,17 @@ while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
 
-    screen.blit(background, (0, 0))
+    for i in range(0, sections + 1):  
+     screen.blit(background, (i * backgroundwidth + scroll, 0))
+    
+    
+    #scrolling background
+     scroll -= 1
+    
+    if abs(scroll) > backgroundwidth:
+      scroll = 0
+
+
 
     # Event handling
     for event in pygame.event.get():
