@@ -36,7 +36,7 @@ gold = 0
 
 
 # =========PLACEHOLDER IDLE GENERATION VARIABLE=========
-idle_power = 0
+total_idle_power = 0
 
 
 # Buttons
@@ -254,15 +254,12 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 
-#try creating a class
+# Champions
 class Champion:
-    def __init__(self, name, click_power, idle_power):
+    def __init__(self, name, level, idle_power):
         self.name = name
-        self.click_power = click_power
+        self.level = level
         self.idle_power = idle_power
-
-    def __str__(self):
-        return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
 
 clock = pygame.time.Clock()
 
@@ -310,12 +307,12 @@ while running:
                     upgrade_grid_image_1.set_container(container=upgrade_2_area)
                     upgrade_grid_image_1.set_relative_position(position=(10,80))
 
-                    print("Misc. button pressed")    
+                    print("Misc. button pressed")
                 elif upgrade_grid_image_2.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_2.set_container(container=upgrade_2_area)
                     upgrade_grid_image_2.set_relative_position(position=(70,80))
 
-                    print("Misc. button pressed")    
+                    print("Misc. button pressed")
                 elif upgrade_grid_image_3.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_3.set_container(container=upgrade_2_area)
                     upgrade_grid_image_3.set_relative_position(position=(130,80))
@@ -372,7 +369,7 @@ while running:
         window.process_events(event)
     # Click Power Display
     def idle_power_display():
-        idle_text = font.render(f"Idle: {idle_power}", True, black)
+        idle_text = font.render(f"Idle: {total_idle_power}", True, black)
         idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
 
         screen.blit(idle_text, idle_text_rect)
