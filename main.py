@@ -18,7 +18,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
-background = pygame.image.load("background.png").convert()
+background = pygame.image.load("textures/background.png").convert()
 backgroundwidth = background.get_width()
 
 scroll = 0
