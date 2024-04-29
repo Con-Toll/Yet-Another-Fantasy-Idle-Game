@@ -4,6 +4,7 @@ import pygame_gui
 import sys
 import os
 from pygame_gui.core import ObjectID
+import math
 
 pygame.init()
 
@@ -16,6 +17,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
 
+#background image 
+background = pygame.image.load("background.png").convert()
 
 # Colours
 white = (255, 255, 255)
@@ -279,6 +282,8 @@ while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
 
+    screen.blit(background, (0, 0))
+
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -415,7 +420,7 @@ while running:
 
     window.update(time_delta)
     window.draw_ui(screen)
-    
+    pygame.display.update
     pygame.display.flip()
 
 pygame.quit()
