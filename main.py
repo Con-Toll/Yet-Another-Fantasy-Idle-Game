@@ -254,12 +254,13 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 #Des area
-area_1 = pygame_gui.elements.UIPanel(relative_rect=((0,0),(400,100)),manager=window,starting_height=6)
-area_1.hide()
+
+Upgrade_area_1 = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((5,10)))
+
 
 #Upgrade Description 
-Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
-Upgrade_2_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
+Upgrade_1_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0,starting_height=4)
+Upgrade_2_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0,starting_height=4)
 Upgrade_3_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
 Upgrade_4_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
 Upgrade_5_Description = pygame_gui.elements.UITextBox(html_text="<p>Yadaa yadaaa<p>",relative_rect=pygame.Rect((0,310),(300,80)),container=upgrade_1_area,visible=0)
@@ -281,16 +282,23 @@ progress_b = pygame_gui.elements.UIProgressBar(relative_rect=pygame.Rect((200,50
 
 
 #try creating a class
+
+
+
+
 class Champion:
     def __init__(self, name, click_power, idle_power):
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
+        
 
     def __str__(self):
         return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
     
-    
+    def area(contain):
+        area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((),()),container=contain)
+        return area
     
 
 clock = pygame.time.Clock()
@@ -407,8 +415,7 @@ while running:
             
 
             if upgrade_grid_image_1.rect.collidepoint(mouse_pos):
-               area_1.set_position(mouse_pos)
-               area_1.show()
+                upgrade_1_area.show()
             
             elif upgrade_grid_image_2.rect.collidepoint(mouse_pos):
                Upgrade_2_Description.set_position(mouse_pos)
@@ -417,7 +424,7 @@ while running:
             else :
                 Upgrade_1_Description.hide()
                 Upgrade_2_Description.hide()
-                area_1.hide()
+                
                 
         window.process_events(event)
     # Click Power Display
