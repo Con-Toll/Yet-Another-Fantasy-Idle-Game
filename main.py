@@ -272,7 +272,15 @@ class Champion:
 
     def __str__(self):
         return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
-
+    
+    def container(container):
+        store  = pygame_gui.elements.UIPanel(relative_rect=((),())
+                                         ,manager=window,
+                                         container=container
+                                            )
+        return store
+    
+N = Champion.container()
 clock = pygame.time.Clock()
 
 
