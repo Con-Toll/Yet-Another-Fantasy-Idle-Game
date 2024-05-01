@@ -252,6 +252,17 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
 
 total_idle_power = 0
 
+# Hire Champion
+total_champion = 0
+champ_area = (
+    champ_1_area
+)
+button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
+                                         text='Hire',
+                                         container=champ_1_area,
+                                         )
+
+
 # Champions
 class Champion:
     def __init__(self, name, level, idle_power):
@@ -259,7 +270,7 @@ class Champion:
         self.level = level
         self.idle_power = idle_power
 
-
+champion1 = Champion("You, The Hero", 0, 0)
 
 
 clock = pygame.time.Clock()
@@ -287,21 +298,33 @@ while running:
                 if champ_button.rect.collidepoint(mouse_pos):
                     if champion_y == 490:
                         champion_y = 0
+                        upgrade_y = 490
+                        misc_y = 490
                     else:
                         champion_y = 490
                     area_champ.set_position(position=(0, champion_y))
+                    area_upgrade.set_position(position=(320, upgrade_y))
+                    area_misc.set_position(position=(640, misc_y))
                 elif upgrade_button.rect.collidepoint(mouse_pos):
                     if upgrade_y == 490:
+                        champion_y = 490
                         upgrade_y = 0
+                        misc_y = 490
                     else:
                         upgrade_y = 490
+                    area_champ.set_position(position=(0, champion_y))
                     area_upgrade.set_position(position=(320, upgrade_y))
+                    area_misc.set_position(position=(640, misc_y))
                     print("Upgrade button pressed")
                 elif misc_button.rect.collidepoint(mouse_pos):
                     if misc_y == 490:
+                        champion_y = 490
+                        upgrade_y = 490
                         misc_y = 0
                     else:
                         misc_y = 490
+                    area_champ.set_position(position=(0, champion_y))
+                    area_upgrade.set_position(position=(320, upgrade_y))
                     area_misc.set_position(position=(640, misc_y))
                     print("Misc. button pressed")
                 elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
