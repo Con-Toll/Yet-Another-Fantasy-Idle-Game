@@ -67,24 +67,14 @@ area_champ_container.set_scrollable_area_dimensions((315,400))
 area_upgrade_container.set_scrollable_area_dimensions((315,400))
 area_misc_container.set_scrollable_area_dimensions((315,400))
 
-#Champion area
-champ_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_champ_container)
-champ_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_champ_container)
-champ_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_champ_container)
-champ_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(300,200)),container=area_champ_container)
-champ_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_champ_container)
+
 
 #Upgrade Area
 upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,400)),container=area_upgrade_container)
 upgrade_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,400)),container=area_upgrade_container)
 
 
-#Misc Area
-misc_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_misc_container)
-misc_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_misc_container)
-misc_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_misc_container)
-misc_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(300,200)),container=area_misc_container)
-misc_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_misc_container)
+
 
 
 #Button
@@ -101,90 +91,12 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320
                                              container=area_misc,
                                              )
 
-#Champion Button
-champ_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 1',
-                                             container=champ_1_area,
-                                             )
-champ_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 2',
-                                             container=champ_2_area,
-                                             )
-champ_3_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 3',
-                                             container=champ_3_area,
-                                             )
-champ_4_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 4',
-                                             container=champ_4_area,
-                                             )
-champ_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 5',
-                                             container=champ_5_area,
-                                             )
+
 #Upgrade Button
 BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
                                              text='Buy All',
                                              container=upgrade_1_area,
                                              )
-#upgrade_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-#                                             text='Upgrade 2',
-#                                             container=upgrade_2_area,
-#                                             )
-
-
-#Misc Button
-misc_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 1',
-                                             container=misc_1_area,
-                                             )
-misc_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 2',
-                                             container=misc_2_area,
-                                             )
-misc_3_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 3',
-                                             container=misc_3_area,
-                                             )
-misc_4_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 4',
-                                             container=misc_4_area,
-                                             )
-misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 5',
-                                             container=misc_5_area,
-                                            )
-
-
-#Champion loaded image
-champion_1_loaded_image = pygame.image.load("images.png")
-champion_2_loaded_image = pygame.image.load("images.png")
-champion_3_loaded_image = pygame.image.load("images.png")
-champion_4_loaded_image = pygame.image.load("images.png")
-champion_5_loaded_image = pygame.image.load("images.png")
-
-#Champion embedded image
-champion_image_1 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_1_area)
-champion_image_2 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_2_area)
-champion_image_3 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_3_area)
-champion_image_4 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_4_area)
-champion_image_5 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_5_area)
-
 
 #Upgrade Picture
 
@@ -264,23 +176,54 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
 
 
 #try creating a class
-class Champion:
-    def __init__(self, name, click_power, idle_power):
+class Container:
+    def __init__(self,position,name) -> None:
+        self.pos_y = position
+        self.recog = name
+    
+    def container(self,name):
+        self.recog  = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,self.pos_y),(300,200)),
+                                         container=name
+                                            )
+        return self.recog
+    
+    
+class Champion(Container):
+    def __init__(self, name="", click_power=1, idle_power=1,position=0):
+        super().__init__(position,name)
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
+    
+    def Button(self,text=""):
+        button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150),(320,50)),
+                                             text=f"Level: {text} ",
+                                             container=self.recog,
+                                             )       
+        return button
+    
+    def image(self,image):
+        Image = pygame.image.load(image)
+        Image_show = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20,20),(80,80)),
+                                                 image_surface=Image,
+                                                 container=self.recog)
+        return Image_show
+    
+        
+    def Title(self,text):
+        Write = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((100,50),(100,30)),
+                                            text=f"Level {text}")
+        return Write
+    
+    def click(self,text):
+      #  Write = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((),()))
+        pass
 
-    def __str__(self):
-        return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
-    
-    def container(container):
-        store  = pygame_gui.elements.UIPanel(relative_rect=((),())
-                                         ,manager=window,
-                                         container=container
-                                            )
-        return store
-    
-N = Champion.container()
+test = Champion("Alex",200,200,0)
+test.container(area_champ_container)
+test.image("images.png")
+test.Button("Level")
+
 clock = pygame.time.Clock()
 
 
@@ -393,9 +336,7 @@ while running:
                 elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
                     upgrade_grid_image_12.set_relative_position(position=(70,210))
-
-    
-                
+                    
                 else:
                     gold += click_power
         window.process_events(event)
@@ -448,6 +389,3 @@ while running:
 
 pygame.quit()
 sys.exit()
-
-
-
