@@ -192,15 +192,16 @@ class Container:
 # Champion Class ( just need to fill the argument and it will automatically add into champion scrollable container)
 
 class Champion:
-    def __init__(self, name="", click_power=1, idle_power=1, position=0,level=1):
+    def __init__(self, name="", click_power=1, idle_power=1, position=0,level=1,image="images.png"):
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
         self.position = position
         self.level = level
+        self.image = image
 
         # UIPanel 
-        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (320, 200)), container=area_champ_container)
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, self.position), (320, 200)), container=area_champ_container)
 
         # UIButton 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 150), (320, 50)), text=f"Level: default ", container=self.container)
@@ -209,7 +210,7 @@ class Champion:
         self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 60), (180, 70)), html_text=f"<p>Level : {self.level}<p>", container=self.container)
         
         #Loaded Image 
-        self.loaded_image = pygame.image.load("images.png")
+        self.loaded_image = pygame.image.load(image)
 
         # UIImage 
         self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 20), (80, 80)), image_surface=self.loaded_image, container=self.container)
@@ -225,10 +226,6 @@ class Champion:
         self.container.set_position(0,pos_y)
         return self.container
         
-    def set_images(self,images):
-        image = pygame.image.load(images)
-        self.image.set_image(image)
-        return self.image
         
     def  set_text(self,level):
         self.text_box.set_text(html_text=f"<p>Level : {level} <p><p>Power : {self.click_power}<p>")
@@ -239,10 +236,14 @@ class Champion:
     
 
 Champion_1 = Champion("Alucard",100,1,0)
-Champion_1.image.set_images("background.png")
+Champion_2 = Champion("Layla",100,1,200)
+Champion_2.container.hide()
 
+hero= 0
 
 clock = pygame.time.Clock()
+
+
 
 
 champion_y = 490
@@ -354,6 +355,9 @@ while running:
                 elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
                     upgrade_grid_image_12.set_relative_position(position=(70,210))
+                elif Champion_1.button.rect.collidepoint(mouse_pos):
+                    Champion_2.container.show()
+                    
                     
                 else:
                     gold += click_power
