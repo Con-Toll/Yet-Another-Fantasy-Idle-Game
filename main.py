@@ -207,9 +207,12 @@ class Champion:
 
         # UITextBox 
         self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 60), (180, 70)), html_text=f"<p>Level : {self.level}<p>", container=self.container)
+        
+        #Loaded Image 
+        self.loaded_image = pygame.image.load("images.png")
 
         # UIImage 
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 20), (80, 80)), image_surface=pygame.image.load("images.png"), container=self.container)
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 20), (80, 80)), image_surface=self.loaded_image, container=self.container)
         
         # Label
         self.label = pygame_gui.elements.UILabel(text=name,relative_rect=pygame.Rect((150,5),(100,50)),container=self.container)
@@ -220,9 +223,12 @@ class Champion:
     
     def set_container_pos(self,pos_y):
         self.container.set_position(0,pos_y)
+        return self.container
         
-    def set_image(self,image):
-        self.image.set_image(pygame.image.load(f"{image}"))
+    def set_images(self,images):
+        image = pygame.image.load(images)
+        self.image.set_image(image)
+        return self.image
         
     def  set_text(self,level):
         self.text_box.set_text(html_text=f"<p>Level : {level} <p><p>Power : {self.click_power}<p>")
@@ -233,7 +239,7 @@ class Champion:
     
 
 Champion_1 = Champion("Alucard",100,1,0)
-
+Champion_1.image.set_images("background.png")
 
 
 clock = pygame.time.Clock()
