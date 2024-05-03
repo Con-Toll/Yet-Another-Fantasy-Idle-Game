@@ -233,33 +233,54 @@ class Champion():
 # Champions List
 hero = Champion("hero", "You, the Hero", 0, 0, False, 0)
 pyr = Champion("pyr", "Pyr, the Apprentice", 0, 0, False, 200)
-
+avani = Champion("avani", "Avani, the Bright", 0, 0, False, 400)
+obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, 600)
 
 # Display first champion
 hero.container(area_champ_container)
+hero.title_display(hero.container)
 hero.image("images.png")
 
 
 # Hire Champion
 total_champion = 0
-button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
+price_hire = 15
+button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
                                          text="Hire",
                                          container=hero.container,
                                          )
 
+price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+                                            text=f"{price_hire}",
+                                            container=hero.container)
+
+# Level Champion
+#button_level =  pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
+#                                         text="Level",
+#                                         container=None,
+#                                         )
 
 # Champion Unlocks
 def heroUnlock():
-    # Set current champion details
-    hero.title_display(hero.container)
+    # Activate champion stats
 
 
     # Display next champion's container
     pyr.container(area_champ_container)
     pyr.image("images.png")
     button_hire.set_container(pyr.container)
+    price_hire_display.set_container(pyr.container)
+    pyr.title_display(pyr.container)
+
+def pyrUnlock():
+    # Activate champion stats
 
 
+    # Display next champion's container
+    avani.container(area_champ_container)
+    avani.image("images.png")
+    button_hire.set_container(avani.container)
+    avani.title_display(avani.container)
 
 clock = pygame.time.Clock()
 
@@ -392,12 +413,19 @@ while running:
 
                 # Hire button
                 elif button_hire.rect.collidepoint(mouse_pos):
-                    if total_champion == 0:
+                    # Hire conditions
+                    if gold >= price_hire and total_champion == 0:
+                        gold = gold - price_hire
+                        price_hire = 100
+                        # Unlock champion
                         hero.isUnlocked = True
                         total_champion += 1
                         heroUnlock()
-                    elif total_champion == 1:
-                        print(hero.isUnlocked)
+                    elif gold >= price_hire and total_champion == 1:
+                        gold = gold - price_hire
+                        pyr.isUnlocked = True
+                        total_champion += 1
+                        pyrUnlock()
                 
                 else:
                     gold += click_power
