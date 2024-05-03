@@ -63,12 +63,6 @@ area_champ_container.set_scrollable_area_dimensions((315,400))
 area_upgrade_container.set_scrollable_area_dimensions((315,400))
 area_misc_container.set_scrollable_area_dimensions((315,400))
 
-#Champion area
-champ_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_champ_container)
-champ_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_champ_container)
-champ_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_champ_container)
-champ_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(300,200)),container=area_champ_container)
-champ_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_champ_container)
 
 #Upgrade Area
 upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,400)),container=area_upgrade_container)
@@ -103,10 +97,6 @@ BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), 
                                              text='Buy All',
                                              container=upgrade_1_area,
                                              )
-#upgrade_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-#                                             text='Upgrade 2',
-#                                             container=upgrade_2_area,
-#                                             )
 
 
 #Misc Button
@@ -130,36 +120,6 @@ misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), 
                                              text='Misc 5',
                                              container=misc_5_area,
                                             )
-
-
-#Champion loaded image
-champion_1_loaded_image = pygame.image.load("images.png")
-champion_2_loaded_image = pygame.image.load("images.png")
-champion_3_loaded_image = pygame.image.load("images.png")
-champion_4_loaded_image = pygame.image.load("images.png")
-champion_5_loaded_image = pygame.image.load("images.png")
-
-#Champion embedded image
-champion_image_1 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_1_area)
-champion_image_2 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_2_area)
-champion_image_3 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_3_area)
-champion_image_4 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_4_area)
-champion_image_5 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_5_area)
 
 
 #Upgrade Picture
@@ -241,26 +201,64 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
 
 total_idle_power = 0
 
-# Hire Champion
-total_champion = 0
-champ_area = (
-    champ_1_area
-)
-button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                         text='Hire',
-                                         container=champ_1_area,
-                                         )
-
-
 # Champions
-class Champion:
-    def __init__(self, name, level, idle_power, isUnlocked):
+class Champion():
+    def __init__(self, name, title, level, idle_power, isUnlocked, position):
         self.name = name
+        self.title = title
         self.level = level
         self.idle_power = idle_power
         self.isUnlocked = isUnlocked
+        self.pos = position
 
-champion1 = Champion("You, The Hero", 0, 0, False)
+    def image(self, image):
+        image = pygame.image.load(image)
+        image_show = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 40),(80, 80)),
+                                                 image_surface=image,
+                                                 container=self.container)
+        return image_show
+
+    def title_display(self, name):
+        title_show = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5),(300, 35)),
+                                            text=f"{self.title}",
+                                            container=name)
+        return title_show
+    
+    def container(self, name):
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
+                                         container=name
+                                            )
+
+
+# Champions List
+hero = Champion("hero", "You, the Hero", 0, 0, False, 0)
+pyr = Champion("pyr", "Pyr, the Apprentice", 0, 0, False, 200)
+
+
+# Display first champion
+hero.container(area_champ_container)
+hero.image("images.png")
+
+
+# Hire Champion
+total_champion = 0
+button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
+                                         text="Hire",
+                                         container=hero.container,
+                                         )
+
+
+# Champion Unlocks
+def heroUnlock():
+    # Set current champion details
+    hero.title_display(hero.container)
+
+
+    # Display next champion's container
+    pyr.container(area_champ_container)
+    pyr.image("images.png")
+    button_hire.set_container(pyr.container)
+
 
 
 clock = pygame.time.Clock()
@@ -286,7 +284,6 @@ while running:
     
     if abs(scroll) > backgroundwidth:
       scroll = 0
-
 
 
     # Event handling
@@ -396,10 +393,11 @@ while running:
                 # Hire button
                 elif button_hire.rect.collidepoint(mouse_pos):
                     if total_champion == 0:
-                        champion1.isUnlocked = True
-                        button_hire.set_container(champ_2_area)
+                        hero.isUnlocked = True
+                        total_champion += 1
+                        heroUnlock()
                     elif total_champion == 1:
-                        print(champion1.isUnlocked)
+                        print(hero.isUnlocked)
                 
                 else:
                     gold += click_power
