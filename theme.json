@@ -11,6 +11,12 @@
         {
              "shape": "rounded_rectangle",
              "border_width": ""
+        },
+        "font":
+        {
+           "name": "chava",
+           "size": "25",
+           "regular_path": "assets/Chava-Regular.ttf"
 
         }
     },
@@ -24,8 +30,10 @@
          },
          "font":
          {
-             "size": "25"
-             
+            "name": "chava",
+            "size": "25",
+            "regular_path": "assets/Chava-Regular.ttf"
+
          }
         }
     

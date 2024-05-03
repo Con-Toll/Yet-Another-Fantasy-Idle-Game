@@ -89,7 +89,7 @@ misc_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300
 
 #Button
 champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text=font.render'Champion',
+                                             text='Champion',
                                              container=area_champ,
                                              )
 upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
