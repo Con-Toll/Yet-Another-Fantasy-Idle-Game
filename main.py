@@ -17,7 +17,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
-background = pygame.image.load("textures/background.png").convert()
+background = pygame.image.load("assets/background.png").convert()
 backgroundwidth = background.get_width()
 
 scroll = 0
@@ -29,7 +29,7 @@ print(sections)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-font = pygame.font.SysFont(None, 36)
+font = pygame.font.Font("assets/Chava-Regular.ttf", 30)
 main_menu = 1
 
 
@@ -89,7 +89,7 @@ misc_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300
 
 #Button
 champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text='Champion',
+                                             text=font.render'Champion',
                                              container=area_champ,
                                              )
 upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
