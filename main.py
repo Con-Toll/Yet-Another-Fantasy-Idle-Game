@@ -97,27 +97,7 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320
                                              container=area_misc,
                                              )
 
-#Champion Button
-champ_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 1',
-                                             container=champ_1_area,
-                                             )
-champ_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 2',
-                                             container=champ_2_area,
-                                             )
-champ_3_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 3',
-                                             container=champ_3_area,
-                                             )
-champ_4_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 4',
-                                             container=champ_4_area,
-                                             )
-champ_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Champion 5',
-                                             container=champ_5_area,
-                                             )
+
 #Upgrade Button
 BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
                                              text='Buy All',
@@ -274,12 +254,13 @@ button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (3
 
 # Champions
 class Champion:
-    def __init__(self, name, level, idle_power):
+    def __init__(self, name, level, idle_power, isUnlocked):
         self.name = name
         self.level = level
         self.idle_power = idle_power
+        self.isUnlocked = isUnlocked
 
-champion1 = Champion("You, The Hero", 0, 0)
+champion1 = Champion("You, The Hero", 0, 0, False)
 
 
 clock = pygame.time.Clock()
@@ -316,6 +297,8 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 mouse_pos = pygame.mouse.get_pos()
+
+                # Tab buttons
                 if champ_button.rect.collidepoint(mouse_pos):
                     if champion_y == 490:
                         champion_y = 0
@@ -348,6 +331,8 @@ while running:
                     area_upgrade.set_position(position=(320, upgrade_y))
                     area_misc.set_position(position=(640, misc_y))
                     print("Misc. button pressed")
+
+                # Upgrade buttons
                 elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_1.set_container(container=upgrade_2_area)
                     upgrade_grid_image_1.set_relative_position(position=(10,80))
@@ -406,8 +391,15 @@ while running:
                 elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
                     upgrade_grid_image_12.set_relative_position(position=(70,210))
+                    print("Misc. button pressed")
 
-    
+                # Hire button
+                elif button_hire.rect.collidepoint(mouse_pos):
+                    if total_champion == 0:
+                        champion1.isUnlocked = True
+                        button_hire.set_container(champ_2_area)
+                    elif total_champion == 1:
+                        print(champion1.isUnlocked)
                 
                 else:
                     gold += click_power
