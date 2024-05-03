@@ -3,6 +3,7 @@ import pygame_gui
 import sys
 import os
 from pygame_gui.core import ObjectID
+import math
 
 pygame.init()
 
@@ -14,6 +15,14 @@ screen_height = 540
 screen = pygame.display.set_mode((screen_width, screen_height))
 
 pygame.display.set_caption("Yet Another Idle Clicker")
+
+#background image 
+background = pygame.image.load("textures/background.png").convert()
+backgroundwidth = background.get_width()
+
+scroll = 0
+sections = math.ceil(screen_width / backgroundwidth)
+print(sections)
 
 
 # Colours
@@ -287,6 +296,18 @@ while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
 
+    for i in range(0, sections + 1):  
+     screen.blit(background, (i * backgroundwidth + scroll, 0))
+    
+    
+    #scrolling background
+     scroll -= 1
+    
+    if abs(scroll) > backgroundwidth:
+      scroll = 0
+
+
+
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -435,7 +456,7 @@ while running:
 
     window.update(time_delta)
     window.draw_ui(screen)
-    
+    pygame.display.update
     pygame.display.flip()
 
 pygame.quit()
