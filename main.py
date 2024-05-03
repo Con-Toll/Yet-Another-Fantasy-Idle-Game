@@ -189,13 +189,15 @@ class Container:
     
     
     
-    
+# Champion Class ( just need to fill the argument and it will automatically add into champion scrollable container)
+
 class Champion:
-    def __init__(self, name, click_power, idle_power, position):
+    def __init__(self, name="", click_power=1, idle_power=1, position=0,level=1):
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
         self.position = position
+        self.level = level
 
         # UIPanel 
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (320, 200)), container=area_champ_container)
@@ -204,13 +206,13 @@ class Champion:
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 150), (320, 50)), text=f"Level: default ", container=self.container)
 
         # UITextBox 
-        self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((100, 50), (150, 100)), html_text=f"<p>Level : {self.name}<p>", container=self.container)
+        self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 60), (180, 70)), html_text=f"<p>Level : {self.level}<p>", container=self.container)
 
         # UIImage 
         self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 20), (80, 80)), image_surface=pygame.image.load("images.png"), container=self.container)
         
         # Label
-        self.label = pygame_gui.elements.UILabel(text=name,relative_rect=pygame.Rect((100,0),(200,50)),container=self.container)
+        self.label = pygame_gui.elements.UILabel(text=name,relative_rect=pygame.Rect((150,5),(100,50)),container=self.container)
 
 
     def __str__(self):
@@ -222,12 +224,16 @@ class Champion:
     def set_image(self,image):
         self.image.set_image(pygame.image.load(f"{image}"))
         
-    def  set_text(self,level,):
+    def  set_text(self,level):
         self.text_box.set_text(html_text=f"<p>Level : {level} <p><p>Power : {self.click_power}<p>")
         
     def set_label(self,text):
         self.label.set_text(text=text)
     
+    
+
+Champion_1 = Champion("Alucard",100,1,0)
+
 
 
 clock = pygame.time.Clock()
