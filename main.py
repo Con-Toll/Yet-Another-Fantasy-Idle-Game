@@ -188,50 +188,46 @@ class Container:
         return self.recog
     
     
-class Champion(Container):
-    def __init__(self, name="", click_power=1, idle_power=1,position=0):
-        super().__init__(position,name)
+    
+    
+class Champion:
+    def __init__(self, name, click_power, idle_power, position):
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
+        self.position = position
 
-    
-    
-    def Button(self,text=""):
+        # UIPanel 
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (320, 200)), container=area_champ_container)
+
+        # UIButton 
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 150), (320, 50)), text=f"Level: default ", container=self.container)
+
+        # UITextBox 
+        self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((100, 50), (150, 100)), html_text=f"<p>Level : {self.name}<p>", container=self.container)
+
+        # UIImage 
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 20), (80, 80)), image_surface=pygame.image.load("images.png"), container=self.container)
         
-        button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150),(320,50)),
-                                             text=f"Level: {text} ",
-                                             container=self.recog,
-                                             )       
-        
-        return button
+        # Label
+        self.label = pygame_gui.elements.UILabel(text=name,relative_rect=pygame.Rect((100,0),(200,50)),container=self.container)
+
+
+    def __str__(self):
+        return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
     
-    def image(self,image):
-        Image = pygame.image.load(image)
-        Image_show = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20,20),(80,80)),
-                                                 image_surface=Image,
-                                                 container=self.recog)
-        return Image_show
-    
+    def set_container_pos(self,pos_y):
+        self.container.set_position(0,pos_y)
         
-    def Title(self,text):
-        Write = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((100,50),(100,30)),
-                                            text=f"Level {text}")
+    def set_image(self,image):
+        self.image.set_image(pygame.image.load(f"{image}"))
         
-        return Write
+    def  set_text(self,level,):
+        self.text_box.set_text(html_text=f"<p>Level : {level} <p><p>Power : {self.click_power}<p>")
+        
+    def set_label(self,text):
+        self.label.set_text(text=text)
     
-    def click(self,text):
-      #  Write = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((),()))
-        pass
-
-test = Champion("Alex",200,200,0)  #Argument = Name , power , idle power , position in scrollable container
-test.container(area_champ_container)  # Refer line 61   ( Scrollable container)
-test.image("images.png")               # Call Image function and pass the image name on argument
-test.Button("Level")                   # Call button function and pass the button name into the argument
-
-
-##### Later ill add other stuff 
-
 
 
 clock = pygame.time.Clock()
