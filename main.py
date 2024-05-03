@@ -194,12 +194,16 @@ class Champion(Container):
         self.name = name
         self.click_power = click_power
         self.idle_power = idle_power
+
+    
     
     def Button(self,text=""):
+        
         button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150),(320,50)),
                                              text=f"Level: {text} ",
                                              container=self.recog,
                                              )       
+        
         return button
     
     def image(self,image):
@@ -213,16 +217,22 @@ class Champion(Container):
     def Title(self,text):
         Write = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((100,50),(100,30)),
                                             text=f"Level {text}")
+        
         return Write
     
     def click(self,text):
       #  Write = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((),()))
         pass
 
-test = Champion("Alex",200,200,0)
-test.container(area_champ_container)
-test.image("images.png")
-test.Button("Level")
+test = Champion("Alex",200,200,0)  #Argument = Name , power , idle power , position in scrollable container
+test.container(area_champ_container)  # Refer line 61   ( Scrollable container)
+test.image("images.png")               # Call Image function and pass the image name on argument
+test.Button("Level")                   # Call button function and pass the button name into the argument
+
+
+##### Later ill add other stuff 
+
+
 
 clock = pygame.time.Clock()
 
