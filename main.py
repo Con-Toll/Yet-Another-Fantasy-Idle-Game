@@ -29,7 +29,7 @@ print(sections)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-font = pygame.font.Font("assets/Chava-Regular.ttf", 30)
+font = pygame.font.SysFont(None, 36)
 main_menu = 1
 
 
