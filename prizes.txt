@@ -1,0 +1,8 @@
+POWER MULTIPLY BY 34
+while
+set_mode
+set_scrollable_area_dimensionssd
+set_scrollable_area_dimensionsasd
+set_scrollable_area_dimensionsasd
+score_text
+score_text
