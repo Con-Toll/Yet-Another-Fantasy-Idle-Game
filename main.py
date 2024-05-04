@@ -14,7 +14,7 @@ screen_width = 960
 screen_height = 540
 screen = pygame.display.set_mode((screen_width, screen_height))
 
-pygame.display.set_caption("Yet Another Idle Clicker")
+title = pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
 background = pygame.image.load("textures/background.png").convert()
@@ -49,7 +49,7 @@ idle_power = 0
 
 
 # Buttons
-button_layout_rect = pygame.Rect(30,20,100,20)
+#button_layout_rect = pygame.Rect(30,20,100,20)
 window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
 
 #Overlap UIPanel
@@ -409,5 +409,9 @@ while running:
     pygame.display.update
     pygame.display.flip()
 
+
+
 pygame.quit()
 sys.exit()
+
+
