@@ -5,6 +5,7 @@ import os
 from pygame_gui.core import ObjectID
 import math
 import time
+import threading
 
 pygame.init()
 
@@ -176,6 +177,51 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                             )
 
 
+#Gold Display
+# Click Power Display
+def idle_power_display():
+    idle_text = font.render(f"Idle: {idle_power}", True, black)
+    idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
+
+    screen.blit(idle_text, idle_text_rect)
+
+
+
+def click_power_display():
+    click_power_text = font.render(f"Clicks: {click_power}", True, black)
+    click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
+
+    screen.blit(click_power_text, click_power_text_rect)
+
+
+
+# Gold Display
+def gold_display(gold):
+    score_text = font.render(f"Gold:", True, black)
+    score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
+        
+    if gold > 9999999999:
+        gold_format = "{:.4e}".format(gold)
+    else:
+        gold_format = "{:,}".format(gold)
+
+    gold_text = font.render(f"{gold_format}", True, black)
+    gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
+
+    screen.blit(score_text, score_text_rect)
+    screen.blit(gold_text, gold_text_rect)
+
+
+
+# Auto-click
+current_time = pygame.time.get_ticks()
+if current_time - last_click_update >= click_check_interval:
+    gold += auto_click_power
+    last_auto_click_time = current_time
+
+
+
+
 #try creating a class
 class Container:
     def __init__(self,position,name) -> None:
@@ -196,7 +242,7 @@ class Champion:
     def __init__(self, name="", click_power=1, idle_power=1, position=0,level=1,image="images.png",trigger=False):
         self.name = name
         self.click_power = click_power
-        self.idle_power = click_power
+        self.idle_power = idle_power
         self.position = position
         self.level = level
         self.image = image
@@ -219,10 +265,17 @@ class Champion:
         # Label
         self.label = pygame_gui.elements.UILabel(text=name,relative_rect=pygame.Rect((150,5),(100,50)),container=self.container)
        
-    def trigger(self,set):
-        while self.triggers == set:
-            gold += self.click_power
-            time.wait(1)
+    def trigger(self, cp):
+        self.triggers = True
+        threading.Thread(target=self.increment_gold, args=(cp,)).start()
+
+    def increment_gold(self, cp):
+        while self.triggers:
+            global gold
+            gold += cp
+            print(gold)
+            time.sleep(1)
+
 
     def __str__(self):
         return f"{self.name} (Click Power: {self.click_power}, Idle Power: {self.idle_power})"
@@ -244,7 +297,6 @@ Champion_1 = Champion("Alucard",100,1,0)
 Champion_2 = Champion("Layla",100,1,200)
 Champion_2.container.hide()
 
-hero= 0
 
 clock = pygame.time.Clock()
 
@@ -362,55 +414,19 @@ while running:
                     upgrade_grid_image_12.set_relative_position(position=(70,210))
                 elif Champion_1.button.rect.collidepoint(mouse_pos):
                     Champion_2.container.show()
-                    Champion_1.trigger(True)
-
+                    Champion_1.trigger(Champion_1.click_power)
+                    print(gold)
                     
                     
                 else:
                     gold += click_power
         window.process_events(event)
-    # Click Power Display
-    def idle_power_display():
-        idle_text = font.render(f"Idle: {idle_power}", True, black)
-        idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
 
-        screen.blit(idle_text, idle_text_rect)
-
-    idle_power_display()
-
-    def click_power_display():
-        click_power_text = font.render(f"Clicks: {click_power}", True, black)
-        click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
-
-        screen.blit(click_power_text, click_power_text_rect)
-
-    click_power_display()
-
-    # Gold Display
-    def gold_display(gold):
-        score_text = font.render(f"Gold:", True, black)
-        score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
-        
-        if gold > 9999999999:
-            gold_format = "{:.4e}".format(gold)
-        else:
-            gold_format = "{:,}".format(gold)
-
-        gold_text = font.render(f"{gold_format}", True, black)
-        gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
-
-        screen.blit(score_text, score_text_rect)
-        screen.blit(gold_text, gold_text_rect)
-
-    gold_display(gold)
-
-    # Auto-click
-    current_time = pygame.time.get_ticks()
-    if current_time - last_click_update >= click_check_interval:
-        gold += auto_click_power
-        last_auto_click_time = current_time
     
-
+    click_power_display()    
+    idle_power_display()
+    gold_display(gold)
+      
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
