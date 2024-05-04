@@ -4,6 +4,8 @@ import sys
 import os
 from pygame_gui.core import ObjectID
 import math
+import time
+import threading
 
 pygame.init()
 
@@ -32,16 +34,19 @@ black = (0, 0, 0)
 font = pygame.font.SysFont(None, 36)
 main_menu = 1
 
-
+# Game Variables
 # Clicking
-click_power = 1
+click_power = 100
 auto_click_power = 0
 click_check_interval = 1000  # in milliseconds
 last_click_update = pygame.time.get_ticks()
 
-
 # Currency
 gold = 0
+
+# Champions
+total_champion = 0
+price_hire = 15
 
 
 # Buttons
@@ -201,58 +206,135 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
 
 total_idle_power = 0
 
+# Idle Power Display
+def idle_power_display():
+    idle_text = font.render(f"Idle: {total_idle_power}", True, black)
+    idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
+
+    screen.blit(idle_text, idle_text_rect)
+
+
+# Click Power Display
+def click_power_display():
+    if click_power > 9999999999:
+        click_power_format = "{:.4e}".format(click_power)
+    else:
+        click_power_format = "{:,}".format(click_power)
+    click_power_text = font.render(f"Clicks: {click_power_format}", True, black)
+    click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
+
+    screen.blit(click_power_text, click_power_text_rect)
+
+
+# Gold Display
+def gold_display(gold):
+    score_text = font.render(f"Gold:", True, black)
+    score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
+        
+    if gold > 9999999999:
+        gold_format = "{:.4e}".format(gold)
+    else:
+        gold_format = "{:,}".format(gold)
+
+    gold_text = font.render(f"{gold_format}", True, black)
+    gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
+
+    screen.blit(score_text, score_text_rect)
+    screen.blit(gold_text, gold_text_rect)
+
+
+# Auto-click
+current_time = pygame.time.get_ticks()
+if current_time - last_click_update >= click_check_interval:
+    gold += auto_click_power
+    last_auto_click_time = current_time
+
+
 # Champions
 class Champion():
-    def __init__(self, name, title, level, idle_power, isUnlocked, position):
+    def __init__(self, name, title, level, idle_power, isUnlocked, shown, position, image=None):
         self.name = name
         self.title = title
         self.level = level
         self.idle_power = idle_power
         self.isUnlocked = isUnlocked
+        self.shown = shown
         self.pos = position
+        self.image = image
 
-    def image(self, image):
-        image = pygame.image.load(image)
-        image_show = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 40),(80, 80)),
-                                                 image_surface=image,
-                                                 container=self.container)
-        return image_show
-
-    def title_display(self, name):
-        title_show = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5),(300, 35)),
-                                            text=f"{self.title}",
-                                            container=name)
-        return title_show
-    
-    def container(self, name):
+        # Champion container
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
-                                         container=name
-                                            )
+                                                     container=area_champ_container)
 
+        # Champion buttons
+
+        # Champion info
+        self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 55), (160, 70)),
+                                                      html_text=f"<p>Level : {self.level}<p>",
+                                                      container=self.container)
+
+        # Champion image
+        self.image_load = pygame.image.load(image)
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 50),(80, 80)),
+                                                 image_surface=self.image_load,
+                                                 container=self.container)
+
+        # Champion title
+        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5),(300, 35)),
+                                                 text=f"{self.title}",
+                                                 container=self.container)
+
+    def trigger(self, idle_power):
+        threading.Thread(target=self.increment_gold, args=(idle_power,)).start()
+
+    def increment_gold(self, idle_power):
+        while self.isUnlocked:
+            global gold
+            gold += idle_power
+            time.sleep(1)
+
+    def showChamp(self):
+        if self.shown == False:
+            self.container.hide()
+            self.container.disable()
+        elif self.shown == True:
+            self.container.show()
+            self.container.enable()
 
 # Champions List
-hero = Champion("hero", "You, the Hero", 0, 0, False, 0)
-pyr = Champion("pyr", "Pyr, the Apprentice", 0, 0, False, 200)
-avani = Champion("avani", "Avani, the Bright", 0, 0, False, 400)
-obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, 600)
+hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, "images.png")
+pyr = Champion("pyr", "Pyr, the Apprentice", 0, 2, False, False, 200, "images.png")
+avani = Champion("avani", "Avani, the Bright", 0, 0, False, False, 400, "images.png")
+obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, False, 600, "images.png")
+# azura
 
-# Display first champion
-hero.container(area_champ_container)
-hero.title_display(hero.container)
-hero.image("images.png")
-
+# Champion initialization
+pyr.showChamp()
+avani.showChamp()
+obek.showChamp()
 
 # Hire Champion
-total_champion = 0
-price_hire = 15
+
+
+
 button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
-                                         text="Hire",
-                                         container=hero.container,
-                                         )
+                                            text="Hire",
+                                            container=hero.container,
+                                            )
 
 price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
                                             text=f"{price_hire}",
                                             container=hero.container)
+
+def hire():
+    global gold
+    global total_champion
+    global price_hire
+
+    gold = gold - price_hire
+    price_hire *= 5
+    price_hire_display.set_text(f"{price_hire}")
+    total_champion += 1
 
 # Level Champion
 #button_level =  pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
@@ -263,24 +345,32 @@ price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160,
 # Champion Unlocks
 def heroUnlock():
     # Activate champion stats
-
-
+    hero.trigger(hero.idle_power)
+    hero.level = 1
+    hero.text_box.set_text(f"<p>Level : {hero.level}<p>")
     # Display next champion's container
-    pyr.container(area_champ_container)
-    pyr.image("images.png")
+    pyr.showChamp()
     button_hire.set_container(pyr.container)
     price_hire_display.set_container(pyr.container)
-    pyr.title_display(pyr.container)
 
 def pyrUnlock():
+    # Activate champion stats
+    pyr.trigger(pyr.idle_power)
+
+    # Display next champion's container
+    avani.showChamp()
+    button_hire.set_container(avani.container)
+    price_hire_display.set_container(avani.container)
+
+def avaniUnlock():
     # Activate champion stats
 
 
     # Display next champion's container
-    avani.container(area_champ_container)
-    avani.image("images.png")
-    button_hire.set_container(avani.container)
-    avani.title_display(avani.container)
+    obek.showChamp()
+    button_hire.set_container(obek.container)
+    price_hire_display.set_container(obek.container)
+
 
 clock = pygame.time.Clock()
 
@@ -415,62 +505,34 @@ while running:
                 elif button_hire.rect.collidepoint(mouse_pos):
                     # Hire conditions
                     if gold >= price_hire and total_champion == 0:
-                        gold = gold - price_hire
-                        price_hire = 100
+                        hire()
+                        #price_hire = 100
                         # Unlock champion
                         hero.isUnlocked = True
-                        total_champion += 1
+                        pyr.shown = True
                         heroUnlock()
                     elif gold >= price_hire and total_champion == 1:
-                        gold = gold - price_hire
+                        hire()
+                        #price_hire = 2500
                         pyr.isUnlocked = True
-                        total_champion += 1
+                        avani.shown = True
                         pyrUnlock()
+                    elif gold >= price_hire and total_champion == 2:
+                        hire()
+                        avani.isUnlocked = True
+                        obek.shown = True
+                        avaniUnlock()
                 
                 else:
                     gold += click_power
+
         window.process_events(event)
-    # Click Power Display
-    def idle_power_display():
-        idle_text = font.render(f"Idle: {total_idle_power}", True, black)
-        idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
 
-        screen.blit(idle_text, idle_text_rect)
-
-    idle_power_display()
-
-    def click_power_display():
-        click_power_text = font.render(f"Clicks: {click_power}", True, black)
-        click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
-
-        screen.blit(click_power_text, click_power_text_rect)
-
+    
     click_power_display()
-
-    # Gold Display
-    def gold_display(gold):
-        score_text = font.render(f"Gold:", True, black)
-        score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
-        
-        if gold > 9999999999:
-            gold_format = "{:.4e}".format(gold)
-        else:
-            gold_format = "{:,}".format(gold)
-
-        gold_text = font.render(f"{gold_format}", True, black)
-        gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
-
-        screen.blit(score_text, score_text_rect)
-        screen.blit(gold_text, gold_text_rect)
-
+    idle_power_display()
     gold_display(gold)
 
-    # Auto-click
-    current_time = pygame.time.get_ticks()
-    if current_time - last_click_update >= click_check_interval:
-        gold += auto_click_power
-        last_auto_click_time = current_time
-    
 
     window.update(time_delta)
     window.draw_ui(screen)
