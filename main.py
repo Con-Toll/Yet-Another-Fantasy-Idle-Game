@@ -19,7 +19,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
-background = pygame.image.load("textures/background.png").convert()
+background = pygame.image.load("assets/background.png").convert()
 backgroundwidth = background.get_width()
 
 scroll = 0
@@ -31,7 +31,7 @@ print(sections)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-font = pygame.font.SysFont(None, 36)
+font = pygame.font.Font("assets/Chava-Regular.ttf", 30)
 main_menu = 1
 
 # Game Variables
@@ -51,7 +51,7 @@ price_hire = 15
 
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
-window = pygame_gui.UIManager((screen_width, screen_height),theme_path='theme.json')
+window = pygame_gui.UIManager((screen_width, screen_height),theme_path='assets/theme.json')
 
 #Overlap UIPanel
 area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,490),(320,540)),manager=window)
@@ -84,11 +84,11 @@ misc_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300
 
 #Button
 champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text='Champion',
+                                             text='Champions',
                                              container=area_champ,
                                              )
 upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text='Upgrade',
+                                             text='Upgrades',
                                              container=area_upgrade,
                                              )
 misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
@@ -127,20 +127,53 @@ misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), 
                                             )
 
 
+<<<<<<< HEAD
+=======
+#Champion loaded image
+champion_1_loaded_image = pygame.image.load("assets/images.png")
+champion_2_loaded_image = pygame.image.load("assets/images.png")
+champion_3_loaded_image = pygame.image.load("assets/images.png")
+champion_4_loaded_image = pygame.image.load("assets/images.png")
+champion_5_loaded_image = pygame.image.load("assets/images.png")
+
+#Champion embedded image
+champion_image_1 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((20,20),(80,80)),
+    image_surface=champion_1_loaded_image,
+    container=champ_1_area)
+champion_image_2 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((20,20),(80,80)),
+    image_surface=champion_1_loaded_image,
+    container=champ_2_area)
+champion_image_3 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((20,20),(80,80)),
+    image_surface=champion_1_loaded_image,
+    container=champ_3_area)
+champion_image_4 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((20,20),(80,80)),
+    image_surface=champion_1_loaded_image,
+    container=champ_4_area)
+champion_image_5 = pygame_gui.elements.UIImage(
+    relative_rect=pygame.Rect((20,20),(80,80)),
+    image_surface=champion_1_loaded_image,
+    container=champ_5_area)
+
+
+>>>>>>> main
 #Upgrade Picture
 
-Upgrade_1_loaded_image = pygame.image.load("images.png")
-Upgrade_2_loaded_image = pygame.image.load("images.png")
-Upgrade_3_loaded_image = pygame.image.load("images.png")
-Upgrade_4_loaded_image = pygame.image.load("images.png")
-Upgrade_5_loaded_image = pygame.image.load("images.png")
-Upgrade_6_loaded_image = pygame.image.load("images.png")
-Upgrade_7_loaded_image = pygame.image.load("images.png")
-Upgrade_8_loaded_image = pygame.image.load("images.png")
-Upgrade_9_loaded_image = pygame.image.load("images.png")
-Upgrade_10_loaded_image = pygame.image.load("images.png")
-Upgrade_11_loaded_image = pygame.image.load("images.png")
-Upgrade_12_loaded_image = pygame.image.load("images.png")
+Upgrade_1_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_2_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_3_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_4_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_5_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_6_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_7_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_8_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_9_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_10_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_11_loaded_image = pygame.image.load("assets/images.png")
+Upgrade_12_loaded_image = pygame.image.load("assets/images.png")
 
 #Upgrade embedded image
 upgrade_grid_image_1 = pygame_gui.elements.UIImage(
