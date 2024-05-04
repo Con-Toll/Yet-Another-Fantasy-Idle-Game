@@ -31,7 +31,7 @@ print(sections)
 white = (255, 255, 255)
 black = (0, 0, 0)
 
-font = pygame.font.Font("assets/Chava-Regular.ttf", 30)
+font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
 main_menu = 1
 
 # Game Variables
@@ -127,39 +127,6 @@ misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), 
                                             )
 
 
-<<<<<<< HEAD
-=======
-#Champion loaded image
-champion_1_loaded_image = pygame.image.load("assets/images.png")
-champion_2_loaded_image = pygame.image.load("assets/images.png")
-champion_3_loaded_image = pygame.image.load("assets/images.png")
-champion_4_loaded_image = pygame.image.load("assets/images.png")
-champion_5_loaded_image = pygame.image.load("assets/images.png")
-
-#Champion embedded image
-champion_image_1 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_1_area)
-champion_image_2 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_2_area)
-champion_image_3 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_3_area)
-champion_image_4 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_4_area)
-champion_image_5 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((20,20),(80,80)),
-    image_surface=champion_1_loaded_image,
-    container=champ_5_area)
-
-
->>>>>>> main
 #Upgrade Picture
 
 Upgrade_1_loaded_image = pygame.image.load("assets/images.png")
@@ -335,10 +302,10 @@ class Champion():
             self.container.enable()
 
 # Champions List
-hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, "images.png")
-pyr = Champion("pyr", "Pyr, the Apprentice", 0, 2, False, False, 200, "images.png")
-avani = Champion("avani", "Avani, the Bright", 0, 0, False, False, 400, "images.png")
-obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, False, 600, "images.png")
+hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, "assets/images.png")
+pyr = Champion("pyr", "Pyr, the Apprentice", 0, 2, False, False, 200, "assets/images.png")
+avani = Champion("avani", "Avani, the Bright", 0, 0, False, False, 400, "assets/images.png")
+obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, False, 600, "assets/images.png")
 # azura
 
 # Champion initialization
