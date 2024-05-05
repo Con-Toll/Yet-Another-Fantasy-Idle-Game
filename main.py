@@ -293,17 +293,31 @@ class Champion():
 
         # Level Champion
         self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
-                                                    text="Level up",
-                                                    container=self.container)
+                                                         text="Level up",
+                                                         container=self.container)
     
+        self.price_level_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+                                                               text=f"{self.price_level}",
+                                                               container=self.container)
+
+
         # Hire Champion
         self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
                                                         text="Hire",
                                                         container=self.container)
 
         self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
-                                                        text=f"{self.price_hire}",
-                                                        container=self.container)
+                                                              text=f"{self.price_hire}",
+                                                              container=self.container)
+
+    def level_up(self):
+        global gold
+        gold = gold - self.price_level
+        self.level += 1
+        self.text_box.set_text(f"<p>Level : {self.level}<p>")
+        self.price_level *= 2
+        self.price_level_display.set_text(f"{self.price_level}")
+        return self.price_level
 
     def hire(self):
         self.button_hire.disable()
@@ -327,10 +341,6 @@ class Champion():
             next_champion.shown = True
             next_champion.showChamp()
         
-    # Level up champion
-    def level_up(self):
-        self.level += 1
-        self.text_box.set_text(f"<p>Level : {self.level}<p>")
 
     # Idle generation
     def trigger(self, idle_power):
