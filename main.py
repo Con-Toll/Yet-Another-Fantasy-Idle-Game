@@ -252,7 +252,7 @@ if current_time - last_click_update >= click_check_interval:
 
 # Champions
 class Champion():
-    def __init__(self, name, title, level, idle_power, isUnlocked, shown, position, image=None):
+    def __init__(self, name, title, level, idle_power, isUnlocked, shown, position, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = level
@@ -289,9 +289,9 @@ class Champion():
 
     def increment_gold(self, idle_power):
         while self.isUnlocked:
+            time.sleep(1)
             global gold
             gold += idle_power
-            time.sleep(1)
 
     def showChamp(self):
         if self.shown == False:
