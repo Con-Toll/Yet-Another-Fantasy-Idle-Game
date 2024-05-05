@@ -302,7 +302,6 @@ clock = pygame.time.Clock()
 
 
 
-
 champion_y = 490
 upgrade_y = 490
 misc_y = 490
