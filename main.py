@@ -538,7 +538,7 @@ while running:
                 for champion in champions:
                     # Level up button
                     if champion.button_level.rect.collidepoint(mouse_pos):
-                        if champion.isUnlocked:
+                        if gold >= champion.self_price_level and champion.isUnlocked:
                             champion.level_up()
 
                     # Hire button
