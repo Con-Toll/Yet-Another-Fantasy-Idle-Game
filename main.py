@@ -460,12 +460,14 @@ while running:
                     area_misc.set_position(position=(640, misc_y))
                 elif upgrade_button.rect.collidepoint(mouse_pos):
                     if upgrade_y == 490:
+                        for i in range(490):
+                            area_champ.set_position(upgrade_y-0.5)
                         champion_y = 490
                         upgrade_y = 0
                         misc_y = 490
                     else:
                         upgrade_y = 490
-                    area_champ.set_position(position=(0, champion_y))
+                    #area_champ.set_position(position=(0, champion_y))
                     area_upgrade.set_position(position=(320, upgrade_y))
                     area_misc.set_position(position=(640, misc_y))
                     print("Upgrade button pressed")
