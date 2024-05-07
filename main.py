@@ -324,6 +324,8 @@ class Champion():
         self.button_hire.hide()
         self.price_hire_display.disable()
         self.price_hire_display.hide()
+        self.button_level.enable()
+        self.button_level.show()
 
         global gold
         global total_champion
@@ -365,6 +367,8 @@ class Champion():
             if self.isUnlocked == False:
                 self.button_hire.show()
                 self.button_hire.enable()
+                self.button_level.hide()
+                self.button_level.disable()
 
 # Champions List
 hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, 15, 20, "assets/images.png")
@@ -376,6 +380,7 @@ obek = Champion("obek", "Obek, the Scavenger", 0, 0, False, False, 600, 10000, 1
 champions = [hero, pyr, avani, obek]
 
 # Champion initialization
+hero.showChamp()
 pyr.showChamp()
 avani.showChamp()
 obek.showChamp()
