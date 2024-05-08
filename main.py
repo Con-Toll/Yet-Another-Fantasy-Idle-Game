@@ -11,6 +11,8 @@ import datetime
 date_now = datetime.datetime.now()
 
 
+
+
 pygame.init()
 
 
@@ -386,8 +388,20 @@ obek.showChamp()
 
 
 # Level Champion
+class Event():
+    def __init__(self,name,perk) -> None:
+        self.name = name
+        self.perk = perk
+    
+           
+    def even_time(self,start,end):    
+        self.start = datetime.datetime(start)
+        self.end = datetime.datetime(end)
 
-
+size = (200,200)
+left_load = pygame.image.load("assets/Down.gif")
+image = pygame.transform.scale(left_load,size)
+pos = (200,200)
 
 # Champion Unlocks
 def heroUnlock():
@@ -423,6 +437,8 @@ running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
+    #if date_now <= event_end and date_now >= event_start:
+     #   misc_1_area.hide()
 
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, 0))
@@ -562,7 +578,7 @@ while running:
     idle_power_display()
     gold_display(gold)
 
-
+    screen.blit(image,pos)
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
