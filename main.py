@@ -6,6 +6,10 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
+import datetime
+
+date_now = datetime.datetime.now()
+
 
 pygame.init()
 
