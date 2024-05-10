@@ -16,11 +16,15 @@ screen_width = 960
 screen_height = 540
 screen = pygame.display.set_mode((screen_width, screen_height))
 
+window = pygame_gui.UIManager((screen_width, screen_height),theme_path='assets/theme.json')
+
 pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
 background = pygame.image.load("assets/background.png").convert()
 backgroundwidth = background.get_width()
+background_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0 , 0),(screen_width, screen_height)),
+                                              visible=0, manager=window)
 
 scroll = 0
 sections = math.ceil(screen_width / backgroundwidth)
@@ -51,7 +55,6 @@ price_hire = 15
 
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
-window = pygame_gui.UIManager((screen_width, screen_height),theme_path='assets/theme.json')
 
 #Overlap UIPanel
 area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,490),(320,540)),manager=window)
@@ -552,8 +555,7 @@ while running:
                             if gold >= champion.price_hire and not champion.isUnlocked:
                                 champion.hire()
 
-                
-                else:
+                if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
 
         window.process_events(event)
