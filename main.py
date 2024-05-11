@@ -49,8 +49,6 @@ gold = 0
 
 # Champions
 total_champion = 0
-price_hire = 15
-
 
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
@@ -214,14 +212,14 @@ if current_time - last_click_update >= click_check_interval:
 
 # Champions
 class Champion():
-    def __init__(self, name, title, level, lv_mult, init_idle_power, isUnlocked, shown, position, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, name, title, level, lv_mult, init_idle_power, shown, position, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = level
         self.lv_mult = lv_mult
         self.init_idle_power = init_idle_power
         self.idle_power = 0
-        self.isUnlocked = isUnlocked
+        self.isUnlocked = False
         self.shown = shown
         self.pos = position
         self.image = image
@@ -340,20 +338,28 @@ class Champion():
                 self.button_level.disable()
 
 # Champions List 
-# (name, title, level, lv_mult, init_idle_power, isUnlocked, shown, position, price_hire, price_level, image)
-hero = Champion("hero", "You, the Hero", 0, 2, 1, False, True, 0, 15, 20, "assets/images.png")
-pyr = Champion("pyr", "Pyr, the Apprentice", 0, 3, 10, False, False, 200, 1000, 1200, "assets/images.png")
-avani = Champion("avani", "Avani, the Bright", 0, 4, 100, False, False, 400, 2500, 3000, "assets/images.png")
-obek = Champion("obek", "Obek, the Scavenger", 0, 5, 1000, False, False, 600, 10000, 12000, "assets/images.png")
-# azura
+# (name, title, level, lv_mult, init_idle_power, shown, position, price_hire, price_level, image)
+hero = Champion("hero", "You, the Hero", 0, 2, 1, True, 0, 15, 20, "assets/images.png")
+pyr = Champion("pyr", "Pyr, the Apprentice", 0, 3, 10, False, 200, 1000, 1200, "assets/images.png")
+avani = Champion("avani", "Avani, the Bright", 0, 4, 100, False, 400, 2500, 3000, "assets/images.png")
+obek = Champion("obek", "Obek, the Scavenger", 0, 5, 1000, False, 600, 5000, 6000, "assets/images.png")
+azura = Champion("azura", "Azura, the ", 0, 5, 10000, False, 800, 10000, 10000, "assets/images.png")
 
-champions = [hero, pyr, avani, obek]
+champions = [hero, pyr, avani, obek, azura]
 
 # Champion initialization
 hero.showChamp()
 pyr.showChamp()
 avani.showChamp()
 obek.showChamp()
+
+
+class Upgrade():
+    def __init__(self, num_id, name, origin, tooltip):
+        self.num_id = num_id
+        self.name = name
+        self.origin = origin
+        self.tooltip = tooltip
 
 
 clock = pygame.time.Clock()
@@ -545,16 +551,16 @@ while running:
                 if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
 
-        for champion in champions:
-            if champion.shown and gold > champion.price_hire:
-                champion.button_hire.enable()
-            else:
-                champion.button_hire.disable()
+    for champion in champions:
+        if champion.shown and gold >= champion.price_hire:
+            champion.button_hire.enable()
+        else:
+            champion.button_hire.disable()
 
-            if champion.isUnlocked and gold > champion.price_level:
-                champion.button_level.enable()
-            else:
-                champion.button_level.disable()
+        if champion.isUnlocked and gold >= champion.price_level:
+            champion.button_level.enable()
+        else:
+            champion.button_level.disable()
 
         window.process_events(event)
 
