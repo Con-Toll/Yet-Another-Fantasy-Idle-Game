@@ -281,6 +281,11 @@ if current_time - last_click_update >= click_check_interval:
     last_auto_click_time = current_time
 
 
+class Container(pygame_gui.elements.UIPanel):
+    def __init__(self, rect, manager):
+        super().__init__(relative_rect=rect, manager=manager)
+
+
 # Champions
 class Champion():
     def __init__(self, name, title, level, idle_power, isUnlocked, shown, position, price_hire, price_level, image="assets/images.png"):
@@ -299,6 +304,9 @@ class Champion():
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
                                                      container=area_champ_container)
 
+        self.container = Container(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
+                                                     container=area_champ_container)
+        
         # Champion buttons
 
         # Champion info
