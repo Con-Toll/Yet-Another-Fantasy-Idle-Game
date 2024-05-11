@@ -360,10 +360,12 @@ clock = pygame.time.Clock()
 
 total_idle_power = sum(champion.idle_power for champion in champions)
 
+
+
 # Idle Power Display
 def idle_power_display():
-    if total_idle_power > 9999999999:
-        idle_power_format = "{:.4e}".format(total_idle_power)
+    if abs(total_idle_power) > 99999:
+        idle_power_format = "{:.3e}".format(total_idle_power)
     else:
         idle_power_format = "{:,}".format(total_idle_power)
     idle_text = font.render(f"Idle: {idle_power_format}", True, black)
@@ -374,8 +376,8 @@ def idle_power_display():
 
 # Click Power Display
 def click_power_display():
-    if click_power > 9999999999:
-        click_power_format = "{:.4e}".format(click_power)
+    if abs(click_power) > 99999:
+        click_power_format = "{:.3e}".format(click_power)
     else:
         click_power_format = "{:,}".format(click_power)
     click_power_text = font.render(f"Clicks: {click_power_format}", True, black)
@@ -389,8 +391,8 @@ def gold_display(gold):
     score_text = font.render(f"Gold:", True, black)
     score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
         
-    if gold > 9999999999:
-        gold_format = "{:.4e}".format(gold)
+    if abs(gold) > 9999999999:
+        gold_format = "{:.3e}".format(gold)
     else:
         gold_format = "{:,}".format(gold)
 
@@ -542,6 +544,17 @@ while running:
 
                 if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
+
+        for champion in champions:
+            if champion.shown and gold > champion.price_hire:
+                champion.button_hire.enable()
+            else:
+                champion.button_hire.disable()
+
+            if champion.isUnlocked and gold > champion.price_level:
+                champion.button_level.enable()
+            else:
+                champion.button_level.disable()
 
         window.process_events(event)
 
