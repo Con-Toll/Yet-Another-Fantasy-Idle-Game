@@ -39,10 +39,7 @@ main_menu = 1
 
 # Game Variables
 # Clicking
-click_power = 100
-auto_click_power = 0
-click_check_interval = 1000  # in milliseconds
-last_click_update = pygame.time.get_ticks()
+click_power = 10000
 
 # Currency
 gold = 0
@@ -70,8 +67,9 @@ area_misc_container.set_scrollable_area_dimensions((315,400))
 
 
 #Upgrade Area
-upgrade_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,400)),container=area_upgrade_container)
-upgrade_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,400)),container=area_upgrade_container)
+area_buyall = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,56)),container=area_upgrade_container)
+area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,56),(300,400)),container=area_upgrade_container)
+area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,456),(300,400)),container=area_upgrade_container)
 
 
 #Misc Area
@@ -98,9 +96,9 @@ misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320
 
 
 #Upgrade Button
-BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
+BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5,2), (290, 50)),
                                              text='Buy All',
-                                             container=upgrade_1_area,
+                                             container=area_buyall,
                                              )
 
 
@@ -127,87 +125,15 @@ misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), 
                                             )
 
 
-#Upgrade Picture
-
-Upgrade_1_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_2_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_3_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_4_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_5_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_6_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_7_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_8_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_9_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_10_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_11_loaded_image = pygame.image.load("assets/images.png")
-Upgrade_12_loaded_image = pygame.image.load("assets/images.png")
-
-#Upgrade embedded image
-upgrade_grid_image_1 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((10,135),(45,45)),
-    image_surface=Upgrade_1_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_2 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((70,135),(45,45)),
-    image_surface=Upgrade_2_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_3 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((130,135),(45,45)),
-    image_surface=Upgrade_3_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_4 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((190,135),(45,45)),
-    image_surface=Upgrade_4_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_5 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((250,135),(45,45)),
-    image_surface=Upgrade_5_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_6 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((10,200),(45,45)),
-    image_surface=Upgrade_6_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_7 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((70,200),(45,45)),
-    image_surface=Upgrade_7_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_8 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((130,200),(45,45)),
-    image_surface=Upgrade_8_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_9 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((190,200),(45,45)),
-    image_surface=Upgrade_9_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_10 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((250,200),(45,45)),
-    image_surface=Upgrade_10_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_11 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((10,265),(45,45)),
-    image_surface=Upgrade_11_loaded_image,
-    container=upgrade_1_area)
-upgrade_grid_image_12 = pygame_gui.elements.UIImage(
-    relative_rect=pygame.Rect((70,265),(45,45)),
-    image_surface=Upgrade_12_loaded_image,
-    container=upgrade_1_area)
-
 #Upgrade "Available Text"
 
-Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,50),(200,50)),text="Available :",
-                                             container=upgrade_1_area,
+Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(300,50)),text="Available:",
+                                             container=area_upgrade_available,
                                             )
 
-Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,50)),text="Bought :",
-                                             container=upgrade_2_area,
+Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(300,50)),text="Bought:",
+                                             container=area_upgrade_bought,
                                             )
-
-
-# Auto-click
-current_time = pygame.time.get_ticks()
-if current_time - last_click_update >= click_check_interval:
-    gold += auto_click_power
-    last_auto_click_time = current_time
 
 
 # Champions
@@ -225,6 +151,7 @@ class Champion():
         self.image = image
         self.price_hire = price_hire
         self.price_level = price_level
+        self.up_mult = 0
 
         # Champion container
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
@@ -352,15 +279,48 @@ hero.showChamp()
 pyr.showChamp()
 avani.showChamp()
 obek.showChamp()
+azura.showChamp()
+
+# Upgrades
 
 
 class Upgrade():
-    def __init__(self, num_id, name, origin, tooltip):
+    def __init__(self, num_id, x, price, name, origin, tooltip, image="assets/images.png", action=None):
+        self.x = x
+        self.y = 60
         self.num_id = num_id
         self.name = name
         self.origin = origin
         self.tooltip = tooltip
+        self.shown = False
+        self.price = price
+        self.image = image
+        self.isUnlocked = False
+        self.action = action
 
+        self.image_load = pygame.image.load(image)
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((x, self.y), (45, 45)),
+                                                 image_surface=self.image_load,
+                                                 container=area_upgrade_available)
+
+    def available(self):
+        self.shown = True
+
+    def purchase(self):
+        global gold
+        gold = gold - self.price
+        self.isUnlocked = True
+        self.image.set_container(container=area_upgrade_bought)
+        self.action()
+
+
+# Upgrades
+# num_id, x, price, name, origin, tooltip, image
+up_hero1 = Upgrade(1, 10, 10, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
+
+
+set_available = [up_hero1]
+set_bought = []
 
 clock = pygame.time.Clock()
 
@@ -474,65 +434,15 @@ while running:
                     print("Misc. button pressed")
 
                 # Upgrade buttons
-                elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_1.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_1.set_relative_position(position=(10,80))
+                #elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
+                 #   upgrade_grid_image_1.set_container(container=area_upgrade_bought)
+                  #  upgrade_grid_image_1.set_relative_position(position=(10,80))
 
-                    print("Misc. button pressed")
-                elif upgrade_grid_image_2.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_2.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_2.set_relative_position(position=(70,80))
-
-                    print("Misc. button pressed")
-                elif upgrade_grid_image_3.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_3.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_3.set_relative_position(position=(130,80))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_4.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_4.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_4.set_relative_position(position=(190,80))
-
-                    print("Misc. button pressed")   
-                elif upgrade_grid_image_5.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_5.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_5.set_relative_position(position=(250,80))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_6.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_6.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_6.set_relative_position(position=(10,145))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_7.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_7.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_7.set_relative_position(position=(70,145))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_8.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_8.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_8.set_relative_position(position=(130,145))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_9.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_9.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_9.set_relative_position(position=(190,145))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_10.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_10.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_10.set_relative_position(position=(250,145))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_11.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_11.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_11.set_relative_position(position=(10,210))
-
-                    print("Misc. button pressed")    
-                elif upgrade_grid_image_12.rect.collidepoint(mouse_pos):
-                    upgrade_grid_image_12.set_container(container=upgrade_2_area)
-                    upgrade_grid_image_12.set_relative_position(position=(70,210))
-                    print("Misc. button pressed")
+                for upgrade in set_available:
+                    if upgrade.image.rect.collidepoint(mouse_pos):
+                        if gold >= upgrade.price and not upgrade.isUnlocked:
+                            upgrade.purchase()
+                        
 
                 for champion in champions:
                     # Level up button
@@ -551,6 +461,7 @@ while running:
                 if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
 
+    # Champion button gray-out
     for champion in champions:
         if champion.shown and gold >= champion.price_hire:
             champion.button_hire.enable()
@@ -563,6 +474,13 @@ while running:
             champion.button_level.disable()
 
         window.process_events(event)
+
+    # Upgrade button gray-out
+    for upgrade in set_available:
+        if upgrade.shown and gold >= upgrade.price:
+            upgrade.image.enable()
+        else:
+            upgrade.image.disable()
 
     
     click_power_display()
