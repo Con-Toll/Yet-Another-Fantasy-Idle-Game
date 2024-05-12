@@ -1,4 +1,5 @@
 import pygame
+
 import pygame_gui
 import sys
 import os
@@ -9,8 +10,6 @@ import threading
 import datetime
 
 date_now = datetime.datetime.now()
-
-
 
 
 pygame.init()
@@ -389,47 +388,56 @@ pyr.showChamp()
 avani.showChamp()
 obek.showChamp()
 
-
+point = 0
 # Level Champion
 class Event_gui(pygame.sprite.Sprite):
-    def __init__(self,name,perk,pos_x,pos_y) -> None:
+    def __init__(self,name,pos_x,pos_y,direc) -> None:
         super().__init__()
         self.name = name
         self.perk = gold
         self.sprite = []
-        self.sprite.append(pygame.image.load("assets\pixilart-frames (1)\pixil-frame-0.png"))
-        self.sprite.append(pygame.image.load("assets\pixilart-frames (1)\pixil-frame-1.png"))
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-0.png"))
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-1.png"))
         self.is_animating = True
         self.current_sprite = 0
         self.image = self.sprite
         self.image = self.sprite[self.current_sprite]
         self.fade = False
         self.rect = self.image.get_rect()
-        self.rect.topleft = [pos_x,pos_y]
+        self.rect= [pos_x,pos_y]
         self.alpha = 255
-        
-        
+        self.direc = direc
     
         
+        
+        
+        
     def fadeout(self):
+        global point
         if self.fade == True:
+        
             self.alpha=max(0,self.alpha-5)
             self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
             if self.alpha <= 0:
                 self.kill()
-     
-    def animate(self):
-        self.fade = True
     
     def update(self):
-            self.current_sprite += 0.2
+            self.current_sprite += 0.1
             if self.current_sprite >= len(self.sprite):
                 self.current_sprite = 0
                 self.is_animating = False
             self.image = self.sprite[int(self.current_sprite)]
-    
-        
-        
+            keys = pygame.key.get_pressed()
+            if self.direc == "Up" and keys[pygame.K_UP]:
+                self.fade = True
+            elif self.direc == "Down" and keys[pygame.K_DOWN]:
+                self.fade = True
+            elif self.direc == "Left" and keys[pygame.K_LEFT]:
+                self.fade = True
+            elif self.direc == "Right" and keys[pygame.K_RIGHT]:
+                self.fade = True
+            
+            return self.current_sprite
            
     def even_time(self,start,end):    
         self.start = datetime.datetime(start)
@@ -437,15 +445,48 @@ class Event_gui(pygame.sprite.Sprite):
         
         
 moving_image = pygame.sprite.Group()
-player = Event_gui("Upgrade","Add",1,1)
-moving_image.add(player)
 
-size = (100,100)
-left_load = pygame.image.load("assets/Down.gif")
-#image = pygame.transform.scale(left_load,size)
-#pos = (200,200)
 
-# Champion Unlocks
+
+K_u = pygame.K_UP
+K_d = pygame.K_DOWN
+K_l = pygame.K_LEFT
+K_r = pygame.K_RIGHT
+
+class QTE(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.Up = Event_gui("Up",550,1,"Up")
+        self.Down = Event_gui("Down",650,1,"Down")
+        self.Left = Event_gui("Left",750,1,"Left")
+        self.Right = Event_gui("Right",850,1,"Right")
+        
+        moving_image.add(self.Up)
+        moving_image.add(self.Down)
+        moving_image.add(self.Left)
+        moving_image.add(self.Right)
+    
+    
+    def update(self):
+        self.Up.update()
+        self.Down.update()
+        self.Left.update()
+        self.Right.update()
+    
+    def fadeout(self):
+        self.Up.fadeout()
+        self.Down.fadeout()
+        self.Left.fadeout()
+        self.Right.fadeout()
+    
+    def addgame(self,name1,name2,name3,name4):
+        game = [f"self.{name1}",f"self.{name1}" ,f"self.{name1}" ,f"self.{name1}" ]    
+    
+    
+Test = QTE()
+    
+
+# Champion Unlock
 def heroUnlock():
     hero.hire()
     hero.trigger(hero.idle_power)
@@ -613,21 +654,22 @@ while running:
                 else:
                     gold += click_power
                     
-        elif event.type == pygame.KEYDOWN:
-            
-            if event.key == pygame.K_DOWN:
-                player.animate()
+       # elif event.type == pygame.KEYDOWN:
+
+            #if event.key == pygame.K_DOWN:
+                
 
         window.process_events(event)
 
-    player.update()
-    player.fadeout()
+
+    Test.update()
+    Test.fadeout()
     click_power_display()
     idle_power_display()
     gold_display(gold)
     
     moving_image.draw(screen)
-    #screen.blit(image,pos)
+    moving_image.update()
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
