@@ -33,6 +33,8 @@ sections = math.ceil(screen_width / backgroundwidth)
 print(sections)
 
 
+
+
 # Colours
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -174,6 +176,7 @@ upgrade_grid_image_6 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((10,200),(45,45)),
     image_surface=Upgrade_6_loaded_image,
     container=upgrade_1_area)
+
 upgrade_grid_image_7 = pygame_gui.elements.UIImage(
     relative_rect=pygame.Rect((70,200),(45,45)),
     image_surface=Upgrade_7_loaded_image,
@@ -388,20 +391,59 @@ obek.showChamp()
 
 
 # Level Champion
-class Event():
-    def __init__(self,name,perk) -> None:
+class Event_gui(pygame.sprite.Sprite):
+    def __init__(self,name,perk,pos_x,pos_y) -> None:
+        super().__init__()
         self.name = name
-        self.perk = perk
+        self.perk = gold
+        self.sprite = []
+        self.sprite.append(pygame.image.load("assets\pixilart-frames (1)\pixil-frame-0.png"))
+        self.sprite.append(pygame.image.load("assets\pixilart-frames (1)\pixil-frame-1.png"))
+        self.is_animating = True
+        self.current_sprite = 0
+        self.image = self.sprite
+        self.image = self.sprite[self.current_sprite]
+        self.fade = False
+        self.rect = self.image.get_rect()
+        self.rect.topleft = [pos_x,pos_y]
+        self.alpha = 255
+        
+        
     
+        
+    def fadeout(self):
+        if self.fade == True:
+            self.alpha=max(0,self.alpha-5)
+            self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
+            if self.alpha <= 0:
+                self.kill()
+     
+    def animate(self):
+        self.fade = True
+    
+    def update(self):
+            self.current_sprite += 0.2
+            if self.current_sprite >= len(self.sprite):
+                self.current_sprite = 0
+                self.is_animating = False
+            self.image = self.sprite[int(self.current_sprite)]
+    
+        
+        
            
     def even_time(self,start,end):    
         self.start = datetime.datetime(start)
         self.end = datetime.datetime(end)
+        
+        
+moving_image = pygame.sprite.Group()
+player = Event_gui("Upgrade","Add",1,1)
+moving_image.add(player)
 
-size = (200,200)
+size = (100,100)
 left_load = pygame.image.load("assets/Down.gif")
-image = pygame.transform.scale(left_load,size)
-pos = (200,200)
+#image = pygame.transform.scale(left_load,size)
+#pos = (200,200)
 
 # Champion Unlocks
 def heroUnlock():
@@ -570,15 +612,22 @@ while running:
                 
                 else:
                     gold += click_power
+                    
+        elif event.type == pygame.KEYDOWN:
+            
+            if event.key == pygame.K_DOWN:
+                player.animate()
 
         window.process_events(event)
 
-    
+    player.update()
+    player.fadeout()
     click_power_display()
     idle_power_display()
     gold_display(gold)
-
-    screen.blit(image,pos)
+    
+    moving_image.draw(screen)
+    #screen.blit(image,pos)
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
