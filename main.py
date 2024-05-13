@@ -150,7 +150,7 @@ class Champion():
         self.image = image
         self.price_hire = price_hire
         self.price_level = price_level
-        self.up_mult = 0
+        self.up_mult = 1
 
         # Champion container
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
@@ -208,10 +208,10 @@ class Champion():
         # Deduct gold
         gold = gold - self.price_hire
         # Update champion variables and total champion
-        self.level += 1
+        self.level = 1
         total_champion += 1
         self.isUnlocked = True
-        self.idle_power = self.base_idle_power
+        self.idle_power = self.base_idle_power * self.level * self.up_mult
         self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
         self.thread_start()
 
@@ -232,7 +232,7 @@ class Champion():
         self.level += 1
         self.price_level *= 2
         self.price_level_display.set_text(f"{self.price_level}")
-        self.idle_power = self.base_idle_power * self.level
+        self.idle_power = self.base_idle_power * self.level * self.up_mult
         self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
         return self.price_level, self.level, self.idle_power
 
@@ -266,10 +266,16 @@ class Champion():
                 self.button_level.hide()
                 self.button_level.disable()
 
+    def upgrade1(self, mult):
+        self.up_mult = self.up_mult * mult
+        self.idle_power = self.base_idle_power * self.level * self.up_mult
+        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
+        return self.idle_power
+
 
 
 # Champions List 
-# (name, title, level, lv_mult, base_idle_power, shown, position, price_hire, price_level, image)
+# (name, title, level, base_idle_power, shown, position, price_hire, price_level, image)
 hero = Champion("hero", "You, the Hero", 0, 1, True, 0, 15, 20, "assets/images.png")
 pyr = Champion("pyr", "Pyr, the Apprentice", 0, 10, False, 200, 1000, 1200, "assets/images.png")
 avani = Champion("avani", "Avani, the Bright", 0, 100, False, 400, 2500, 3000, "assets/images.png")
@@ -287,7 +293,7 @@ for champion in champions:
 
 # Upgrades
 class Upgrade():
-    def __init__(self, num_id, price, name, origin, tooltip, image="assets/images.png", action=None):
+    def __init__(self, num_id, price, name, origin, tooltip, mult, image="assets/images.png", action=None):
         self.x = 10
         self.y = 60
         self.num_id = num_id
@@ -299,6 +305,7 @@ class Upgrade():
         self.image = image
         self.isUnlocked = False
         self.action = action
+        self.mult = mult
 
         self.image_load = pygame.image.load(image)
         self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
@@ -325,7 +332,7 @@ class Upgrade():
         self.isUnlocked = True
         
         self.image.set_container(container=area_upgrade_bought)
-        self.action()
+        self.action(self.mult)
 
         print("bought")
 
@@ -347,12 +354,14 @@ class Upgrade():
 
 
 # Upgrades
-# num_id, price, name, origin, tooltip, image
-up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
-up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
-up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
+# num_id, price, name, origin, tooltip, mult, image, action
 
-set_available = [up_hero1, up_hero2, up_hero3]
+up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
+up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
+up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
+up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, "assets/placeholder.png", action=(pyr.upgrade1))
+
+set_available = [up_hero1, up_hero2, up_hero3, up_pyr1]
 set_bought = []
 
 for upgrade in set_available:
@@ -496,6 +505,7 @@ while running:
                             upgrade.list_swap()
                             upgrade.available()
                             upgrade.sort()
+                            total_idle_power = sum(champion.idle_power for champion in champions)
 
 
                 if background_area.rect.collidepoint(mouse_pos):
@@ -535,6 +545,9 @@ while running:
         up_hero3.shown = True
         up_hero3.available()
 
+    if pyr.level >= 5 and not up_pyr1.shown:
+        up_pyr1.shown = True
+        up_pyr1.available()
     
     click_power_display()
     idle_power_display()
