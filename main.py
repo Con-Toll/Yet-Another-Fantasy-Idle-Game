@@ -215,18 +215,16 @@ def save_game_state():
         json.dump(game_state, file)
 
 def load_game_state():
-    global gold, total_champion  # Example variables to load
+    global gold  # Example variables to load
 
     try:
         with open("game_state.json", "r") as file:
             game_state = json.load(file)
             gold = game_state["gold"]
-            total_champion = game_state["total_champion"]
             # Load other variables here
     except FileNotFoundError:
         # If the file doesn't exist, start with default values
         gold = 0
-        total_champion = 0
         # Set default values for other variables here
 
 # Call load_game_state() when the game starts to load the previous state
