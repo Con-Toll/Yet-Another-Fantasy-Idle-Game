@@ -468,7 +468,6 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # Left mouse button
                 mouse_pos = pygame.mouse.get_pos()
-                
 
                 # Tab buttons
                 if champ_button.rect.collidepoint(mouse_pos):
@@ -564,13 +563,11 @@ while running:
                     upgrade_grid_image_12.set_container(container=upgrade_2_area)
                     upgrade_grid_image_12.set_relative_position(position=(70,210))
                     print("Misc. button pressed")
-                
-                
 
                 for champion in champions:
                     # Level up button
                     if champion.button_level.rect.collidepoint(mouse_pos):
-                        if champion.isUnlocked:
+                        if gold >= champion.price_level and champion.isUnlocked:
                             champion.level_up()
 
                     # Hire button
@@ -598,5 +595,9 @@ while running:
 
 pygame.quit()
 sys.exit()
+
+
+
+
 
 

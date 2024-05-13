@@ -1,0 +1,72 @@
+[33mcommit 5da7d0bfbfee728536abafc7ba4a4806fb659bac[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mearners[m[33m, [m[1;31morigin/earners[m[33m)[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Sun May 5 06:25:24 2024 +0800
+
+    chore: merged main into earners
+
+[33mcommit 7e4722cf888d31a6e700903855ec6ab864f6d4a3[m
+Merge: 6f3f43d 39bcfef
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Sun May 5 06:19:45 2024 +0800
+
+    Merge branch 'main' into earners
+
+[33mcommit 39bcfef1ea577b70578a90cb40aa3bcdee35505a[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Merge: b506b93 8e4e2d2
+Author: danceinthestars <153062964+danceinthestars@users.noreply.github.com>
+Date:   Sun May 5 06:13:48 2024 +0800
+
+    feat: added font
+    
+    feat: added font
+
+[33mcommit 6f3f43d086595ac7770a0357078081dc96bb6bc2[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Sun May 5 05:55:07 2024 +0800
+
+    feat: earners now work
+    
+    - hire button now functional
+    - champions show up only if previous champion was hired
+    - introduced threading module
+    - earners now generate gold (thank god. it is 6am)
+    
+    TO BE ADDED:
+    - stop threads on window close
+
+[33mcommit 9667a0a793cbf246876e22ad6533b15b4007a285[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Sat May 4 01:42:36 2024 +0800
+
+    feat: added champ 2, price for hiring, price display wip
+
+[33mcommit 451954bad4d13a516c2500820f6f7c24ba84f153[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Sat May 4 01:09:46 2024 +0800
+
+    feat: added hire button, champions implemented, champ details WIP
+
+[33mcommit c83205471e254bb5b50e272e8d90f9d17483e879[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Fri May 3 18:18:04 2024 +0800
+
+    feat: hire button
+
+[33mcommit 35fe7c743c035bfd5276811de9cae1f0657cfc85[m
+Merge: df81d6a b506b93
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Fri May 3 17:47:57 2024 +0800
+
+    Merge branch 'main' into earners
+
+[33mcommit 8e4e2d28bd538445fcd00b48f065e834f985faf1[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Fri May 3 17:28:59 2024 +0800
+
+    chore: removed unnecessary files
+
+[33mcommit 9c47f52d5dcbd65944a17ff92dd75a98af5b837d[m
+Author: danceinthestars <haruzz1337@gmail.com>
+Date:   Fri May 3 17:26:51 2024 +0800
+
+    feat. button font changed
