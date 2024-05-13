@@ -39,7 +39,7 @@ main_menu = 1
 
 # Game Variables
 # Clicking
-click_power = 10000
+click_power = 10000000
 
 # Currency
 gold = 0
@@ -138,12 +138,11 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(300,5
 
 # Champions
 class Champion():
-    def __init__(self, name, title, level, lv_mult, init_idle_power, shown, position, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, name, title, level, base_idle_power, shown, position, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = level
-        self.lv_mult = lv_mult
-        self.init_idle_power = init_idle_power
+        self.base_idle_power = base_idle_power
         self.idle_power = 0
         self.isUnlocked = False
         self.shown = shown
@@ -159,7 +158,7 @@ class Champion():
 
         # Champion info
         self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 55), (160, 70)),
-                                                      html_text=f"<p>Level : {self.level}<p>",
+                                                      html_text=f"Level: {self.level}<br>Idle Power: {self.idle_power}/s",
                                                       container=self.container)
 
         # Champion image
@@ -191,16 +190,6 @@ class Champion():
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
-    # Level Up Function
-    def level_up(self):
-        global gold
-        gold = gold - self.price_level
-        self.level += 1
-        self.text_box.set_text(f"<p>Level : {self.level}<p>")
-        self.price_level *= 2
-        self.price_level_display.set_text(f"{self.price_level}")
-        self.idle_power = self.level * self.lv_mult
-        return self.price_level, self.level, self.idle_power
 
     # Hire Champion Function
     def hire(self):
@@ -220,10 +209,10 @@ class Champion():
         gold = gold - self.price_hire
         # Update champion variables and total champion
         self.level += 1
-        self.text_box.set_text(f"<p>Level : {self.level}<p>")
         total_champion += 1
         self.isUnlocked = True
-        self.idle_power = self.init_idle_power
+        self.idle_power = self.base_idle_power
+        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
         self.thread_start()
 
         # Show next champion
@@ -236,6 +225,18 @@ class Champion():
         return total_champion, self.idle_power
         
 
+    # Level Up Function
+    def level_up(self):
+        global gold
+        gold = gold - self.price_level
+        self.level += 1
+        self.price_level *= 2
+        self.price_level_display.set_text(f"{self.price_level}")
+        self.idle_power = self.base_idle_power * self.level
+        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
+        return self.price_level, self.level, self.idle_power
+
+
     # Idle generation
     def thread_start(self):
         thread = threading.Thread(target=self.increment_gold)
@@ -247,6 +248,7 @@ class Champion():
             time.sleep(1)
             global gold
             gold += self.idle_power
+
 
     # Enable/Disable champion container
     def showChamp(self):
@@ -264,29 +266,29 @@ class Champion():
                 self.button_level.hide()
                 self.button_level.disable()
 
+
+
 # Champions List 
-# (name, title, level, lv_mult, init_idle_power, shown, position, price_hire, price_level, image)
-hero = Champion("hero", "You, the Hero", 0, 2, 1, True, 0, 15, 20, "assets/images.png")
-pyr = Champion("pyr", "Pyr, the Apprentice", 0, 3, 10, False, 200, 1000, 1200, "assets/images.png")
-avani = Champion("avani", "Avani, the Bright", 0, 4, 100, False, 400, 2500, 3000, "assets/images.png")
-obek = Champion("obek", "Obek, the Scavenger", 0, 5, 1000, False, 600, 5000, 6000, "assets/images.png")
-azura = Champion("azura", "Azura, the ", 0, 5, 10000, False, 800, 10000, 10000, "assets/images.png")
+# (name, title, level, lv_mult, base_idle_power, shown, position, price_hire, price_level, image)
+hero = Champion("hero", "You, the Hero", 0, 1, True, 0, 15, 20, "assets/images.png")
+pyr = Champion("pyr", "Pyr, the Apprentice", 0, 10, False, 200, 1000, 1200, "assets/images.png")
+avani = Champion("avani", "Avani, the Bright", 0, 100, False, 400, 2500, 3000, "assets/images.png")
+obek = Champion("obek", "Obek, the Scavenger", 0, 1000, False, 600, 5000, 6000, "assets/images.png")
+azura = Champion("azura", "Azura, the Something", 0, 10000, False, 800, 10000, 10000, "assets/images.png")
 
 champions = [hero, pyr, avani, obek, azura]
 
+
 # Champion initialization
-hero.showChamp()
-pyr.showChamp()
-avani.showChamp()
-obek.showChamp()
-azura.showChamp()
+for champion in champions:
+    champion.showChamp()
+
+
 
 # Upgrades
-
-
 class Upgrade():
-    def __init__(self, num_id, x, price, name, origin, tooltip, image="assets/images.png", action=None):
-        self.x = x
+    def __init__(self, num_id, price, name, origin, tooltip, image="assets/images.png", action=None):
+        self.x = 10
         self.y = 60
         self.num_id = num_id
         self.name = name
@@ -299,43 +301,78 @@ class Upgrade():
         self.action = action
 
         self.image_load = pygame.image.load(image)
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((x, self.y), (45, 45)),
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
                                                  image_surface=self.image_load,
                                                  container=area_upgrade_available)
+        
 
     def available(self):
-        self.shown = True
+        if not self.isUnlocked:
+            index = set_available.index(self)
+            self.x = 10 + (index * 45)
+            if self.x > 250:
+                self.x = 10
 
+        self.image.set_relative_position((self.x, self.y))
+        self.image.enable()
+        self.image.show()
+        print(self.num_id, self.x)
+
+    # Purchase upgrades
     def purchase(self):
         global gold
         gold = gold - self.price
         self.isUnlocked = True
+        
         self.image.set_container(container=area_upgrade_bought)
         self.action()
 
+        print("bought")
+
+    def list_swap(self):
+        if self in set_available:
+            set_available.remove(self)
+        if self not in set_bought:
+            set_bought.append(self)
+        return set_available
+
+
+    def sort(self):
+        index = set_bought.index(self)
+        self.x = 10 + (index * 45)
+        if self.x > 250:
+            self.x = 10
+
+        self.image.set_relative_position((self.x, self.y))
+
 
 # Upgrades
-# num_id, x, price, name, origin, tooltip, image
-up_hero1 = Upgrade(1, 10, 10, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
+# num_id, price, name, origin, tooltip, image
+up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
+up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
+up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", "assets/images.png", action=lambda: setattr(hero, 'idle_power', hero.idle_power * 2))
 
-
-set_available = [up_hero1]
+set_available = [up_hero1, up_hero2, up_hero3]
 set_bought = []
+
+for upgrade in set_available:
+    upgrade.image.disable()
+    upgrade.image.hide()
 
 clock = pygame.time.Clock()
 
-total_idle_power = sum(champion.idle_power for champion in champions)
 
+total_idle_power = sum(champion.idle_power for champion in champions)
 
 
 # Idle Power Display
 def idle_power_display():
     if abs(total_idle_power) > 99999:
-        idle_power_format = "{:.3e}".format(total_idle_power)
+        idle_power_format = "{:.2e}".format(total_idle_power)
     else:
         idle_power_format = "{:,}".format(total_idle_power)
     idle_text = font.render(f"Idle: {idle_power_format}", True, black)
-    idle_text_rect = idle_text.get_rect(center=(screen_width/6, 40))
+    idle_text_rect = idle_text.get_rect(center=(screen_width/10, 80))
 
     screen.blit(idle_text, idle_text_rect)
 
@@ -343,7 +380,7 @@ def idle_power_display():
 # Click Power Display
 def click_power_display():
     if abs(click_power) > 99999:
-        click_power_format = "{:.3e}".format(click_power)
+        click_power_format = "{:.2e}".format(click_power)
     else:
         click_power_format = "{:,}".format(click_power)
     click_power_text = font.render(f"Clicks: {click_power_format}", True, black)
@@ -367,6 +404,7 @@ def gold_display(gold):
 
     screen.blit(score_text, score_text_rect)
     screen.blit(gold_text, gold_text_rect)
+
 
 champion_y = 490
 upgrade_y = 490
@@ -433,17 +471,8 @@ while running:
                     area_misc.set_position(position=(640, misc_y))
                     print("Misc. button pressed")
 
-                # Upgrade buttons
-                #elif upgrade_grid_image_1.rect.collidepoint(mouse_pos):
-                 #   upgrade_grid_image_1.set_container(container=area_upgrade_bought)
-                  #  upgrade_grid_image_1.set_relative_position(position=(10,80))
-
-                for upgrade in set_available:
-                    if upgrade.image.rect.collidepoint(mouse_pos):
-                        if gold >= upgrade.price and not upgrade.isUnlocked:
-                            upgrade.purchase()
                         
-
+                # Champion buttons
                 for champion in champions:
                     # Level up button
                     if champion.button_level.rect.collidepoint(mouse_pos):
@@ -458,8 +487,22 @@ while running:
                                 champion.hire()
                                 total_idle_power = sum(champion.idle_power for champion in champions)
 
+
+                # Upgrade buttons
+                for upgrade in set_available:
+                    if upgrade.image.rect.collidepoint(mouse_pos):
+                        if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
+                            upgrade.purchase()
+                            upgrade.list_swap()
+                            upgrade.available()
+                            upgrade.sort()
+
+
                 if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
+
+        window.process_events(event)
+
 
     # Champion button gray-out
     for champion in champions:
@@ -473,14 +516,24 @@ while running:
         else:
             champion.button_level.disable()
 
-        window.process_events(event)
-
     # Upgrade button gray-out
     for upgrade in set_available:
         if upgrade.shown and gold >= upgrade.price:
             upgrade.image.enable()
         else:
             upgrade.image.disable()
+
+    if hero.level >= 5 and not up_hero1.shown:
+        up_hero1.shown = True
+        up_hero1.available()
+        
+    if hero.level >= 10 and not up_hero2.shown:
+        up_hero2.shown = True
+        up_hero2.available()
+
+    if hero.level >= 15 and not up_hero3.shown:
+        up_hero3.shown = True
+        up_hero3.available()
 
     
     click_power_display()
