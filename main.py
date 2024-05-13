@@ -391,7 +391,7 @@ obek.showChamp()
 point = 0
 # Level Champion
 class Event_gui(pygame.sprite.Sprite):
-    def __init__(self,name,pos_x,pos_y,direc) -> None:
+    def __init__(self,name,pos,direc) -> None:
         super().__init__()
         self.name = name
         self.perk = gold
@@ -404,12 +404,10 @@ class Event_gui(pygame.sprite.Sprite):
         self.image = self.sprite[self.current_sprite]
         self.fade = False
         self.rect = self.image.get_rect()
-        self.rect= [pos_x,pos_y]
+        self.rect= [pos]
         self.alpha = 255
         self.direc = direc
     
-        
-        
         
         
     def fadeout(self):
@@ -456,10 +454,16 @@ K_r = pygame.K_RIGHT
 class QTE(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.Up = Event_gui("Up",550,1,"Up")
-        self.Down = Event_gui("Down",650,1,"Down")
-        self.Left = Event_gui("Left",750,1,"Left")
-        self.Right = Event_gui("Right",850,1,"Right")
+        self.position = {
+        1:[550,1],
+        2:[650,1],
+        3:[750,1],
+        4:[850,1]
+        }
+        self.Up = Event_gui("Up",self.position[1],"Up") 
+        self.Down = Event_gui("Down",self.position[2],"Down")
+        self.Left = Event_gui("Left",self.position[3],"Left")
+        self.Right = Event_gui("Right",self.position[4],"Right")
         
         moving_image.add(self.Up)
         moving_image.add(self.Down)
@@ -480,7 +484,7 @@ class QTE(pygame.sprite.Sprite):
         self.Right.fadeout()
     
     def addgame(self,name1,name2,name3,name4):
-        game = [f"self.{name1}",f"self.{name1}" ,f"self.{name1}" ,f"self.{name1}" ]    
+        game = [f"self.{name1}",f"self.{name2}" ,f"self.{name3}" ,f"self.{name4}" ]    
     
     
 Test = QTE()
