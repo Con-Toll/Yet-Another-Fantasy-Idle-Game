@@ -6,6 +6,7 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
+import json
 
 pygame.init()
 
@@ -203,6 +204,33 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                              container=upgrade_2_area,
                                             )
 
+def save_game_state():
+    game_state = {
+        "gold": gold,  # Example variable to save
+        "total_champion": total_champion,  # Example variable to save
+        # Add other variables you want to save here
+    }
+
+    with open("game_state.json", "w") as file:
+        json.dump(game_state, file)
+
+def load_game_state():
+    global gold, total_champion  # Example variables to load
+
+    try:
+        with open("game_state.json", "r") as file:
+            game_state = json.load(file)
+            gold = game_state["gold"]
+            total_champion = game_state["total_champion"]
+            # Load other variables here
+    except FileNotFoundError:
+        # If the file doesn't exist, start with default values
+        gold = 0
+        total_champion = 0
+        # Set default values for other variables here
+
+# Call load_game_state() when the game starts to load the previous state
+load_game_state()
 
 total_idle_power = 0
 
@@ -434,6 +462,7 @@ while running:
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            save_game_state()
             running = False
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
