@@ -39,7 +39,7 @@ main_menu = 1
 
 # Game Variables
 # Clicking
-click_power = 10000000
+click_power = 10000
 
 # Currency
 gold = 0
@@ -49,6 +49,8 @@ total_champion = 0
 
 # Buttons
 button_layout_rect = pygame.Rect(30,20,100,20)
+button_ascension = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((720, 20), (180, 70)), text="Ascension")
+button_ascension.disable()
 
 #Overlap UIPanel
 area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,490),(320,540)),manager=window)
@@ -376,25 +378,32 @@ total_idle_power = sum(champion.idle_power for champion in champions)
 
 # Idle Power Display
 def idle_power_display():
+    idle_text = font.render(f"Idle P:", True, black)
+    idle_text_rect = idle_text.get_rect(center=(screen_width/10, 40))
     if abs(total_idle_power) > 99999:
         idle_power_format = "{:.2e}".format(total_idle_power)
     else:
         idle_power_format = "{:,}".format(total_idle_power)
-    idle_text = font.render(f"Idle: {idle_power_format}", True, black)
-    idle_text_rect = idle_text.get_rect(center=(screen_width/10, 80))
+    idle_num = font.render(f"Idle: {idle_power_format}", True, black)
+    idle_num_rect = idle_text.get_rect(center=(screen_width/10, 70))
 
     screen.blit(idle_text, idle_text_rect)
+    screen.blit(idle_num, idle_num_rect)
 
 
 # Click Power Display
 def click_power_display():
+    click_text = font.render(f"Click P:", True, black)
+    click_text_rect = click_text.get_rect(center=(screen_width/3, 40))
+
     if abs(click_power) > 99999:
         click_power_format = "{:.2e}".format(click_power)
     else:
         click_power_format = "{:,}".format(click_power)
-    click_power_text = font.render(f"Clicks: {click_power_format}", True, black)
-    click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 40))
+    click_power_text = font.render(f"{click_power_format}", True, black)
+    click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 70))
 
+    screen.blit(click_text, click_text_rect)
     screen.blit(click_power_text, click_power_text_rect)
 
 
