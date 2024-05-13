@@ -404,7 +404,7 @@ class Event_gui(pygame.sprite.Sprite):
         self.image = self.sprite[self.current_sprite]
         self.fade = False
         self.rect = self.image.get_rect()
-        self.rect= [pos]
+        self.rect= [pos,pos]
         self.alpha = 255
         self.direc = direc
     
@@ -418,29 +418,30 @@ class Event_gui(pygame.sprite.Sprite):
             self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
             if self.alpha <= 0:
                 self.kill()
-    
+    def key(self):
+        keys = pygame.key.get_pressed()
+            
+            
+        if self.direc == "Up" and keys[pygame.K_UP]:
+            self.fade = True
+                
+        elif self.direc == "Down" and keys[pygame.K_DOWN]:
+            self.fade = True
+        elif self.direc == "Left" and keys[pygame.K_LEFT]:
+            self.fade = True
+        elif self.direc == "Right" and keys[pygame.K_RIGHT]:
+            self.fade = True
+            
+        
     def update(self):
             self.current_sprite += 0.1
             if self.current_sprite >= len(self.sprite):
                 self.current_sprite = 0
                 self.is_animating = False
             self.image = self.sprite[int(self.current_sprite)]
-            keys = pygame.key.get_pressed()
-            if self.direc == "Up" and keys[pygame.K_UP]:
-                self.fade = True
-            elif self.direc == "Down" and keys[pygame.K_DOWN]:
-                self.fade = True
-            elif self.direc == "Left" and keys[pygame.K_LEFT]:
-                self.fade = True
-            elif self.direc == "Right" and keys[pygame.K_RIGHT]:
-                self.fade = True
-            
-            return self.current_sprite
+            self.key()
            
-    def even_time(self,start,end):    
-        self.start = datetime.datetime(start)
-        self.end = datetime.datetime(end)
-        
+    
         
 moving_image = pygame.sprite.Group()
 
@@ -452,42 +453,62 @@ K_l = pygame.K_LEFT
 K_r = pygame.K_RIGHT
 
 class QTE(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,pos1,pos2,pos3,pos4,start,end):
         super().__init__()
         self.position = {
-        1:[550,1],
-        2:[650,1],
-        3:[750,1],
-        4:[850,1]
+        1:(550,1),
+        2:(650,1),
+        3:(750,1),
+        4:(850,1)
         }
-        self.Up = Event_gui("Up",self.position[1],"Up") 
-        self.Down = Event_gui("Down",self.position[2],"Down")
-        self.Left = Event_gui("Left",self.position[3],"Left")
-        self.Right = Event_gui("Right",self.position[4],"Right")
+        self.start = datetime.datetime(2024,5,start) 
+        self.end = datetime.datetime(2024,5,end)
+        self.Up = Event_gui(pos1,self.position[1],pos1) 
+        self.Down = Event_gui(pos2,self.position[2],pos2)
+        self.Left = Event_gui(pos3,self.position[3],pos3)
+        self.Right = Event_gui(pos4,self.position[4],pos4)
+        self.time = datetime.datetime.now()
+        self.exe = False
         
-        moving_image.add(self.Up)
-        moving_image.add(self.Down)
-        moving_image.add(self.Left)
-        moving_image.add(self.Right)
-    
-    
+        if self.time >= self.start and self.time <=self.end:
+            self.exe =  True
+        else:
+            self.exe = False
+        
+    ku = pygame.K_UP
     def update(self):
-        self.Up.update()
-        self.Down.update()
-        self.Left.update()
-        self.Right.update()
-    
+        if self.exe == True :
+            moving_image.add(self.Up)
+            moving_image.add(self.Down)
+            moving_image.add(self.Left)
+            moving_image.add(self.Right)
+           
+        else:
+            pass
+
     def fadeout(self):
         self.Up.fadeout()
         self.Down.fadeout()
         self.Left.fadeout()
         self.Right.fadeout()
     
-    def addgame(self,name1,name2,name3,name4):
-        game = [f"self.{name1}",f"self.{name2}" ,f"self.{name3}" ,f"self.{name4}" ]    
+    def check(self):
+        keys = pygame.key.get_pressed()
+    
+        if self.Up == "Up" and keys[pygame.K_UP]:
+            self.Up.fade = True
+                
+        elif self.Down == "Down" and keys[pygame.K_DOWN]:
+            self.Down.fade = True
+        elif self.Left == "Left" and keys[pygame.K_LEFT]:
+            self.Left.fade = True
+        elif self.Right == "Right" and keys[pygame.K_RIGHT]:
+            self.Right.fade = True
+       
     
     
-Test = QTE()
+Test = QTE("Up","Up","Down","Left",13,14)
+
     
 
 # Champion Unlock
@@ -524,8 +545,7 @@ running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-    #if date_now <= event_end and date_now >= event_start:
-     #   misc_1_area.hide()
+    print(time_delta)
 
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, 0))
@@ -537,6 +557,7 @@ while running:
     if abs(scroll) > backgroundwidth:
       scroll = 0
 
+    
 
     # Event handling
     for event in pygame.event.get():
@@ -657,10 +678,7 @@ while running:
                 
                 else:
                     gold += click_power
-                    
-       # elif event.type == pygame.KEYDOWN:
-
-            #if event.key == pygame.K_DOWN:
+     
                 
 
         window.process_events(event)
