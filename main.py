@@ -360,10 +360,11 @@ up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "as
 up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
 up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, "assets/placeholder.png", action=(pyr.upgrade1))
 
-list_available = [up_hero1, up_hero2, up_hero3, up_pyr1]
+list_upgrades = [up_hero1, up_hero2, up_hero3, up_pyr1]
+list_available = []
 list_bought = []
 
-for upgrade in list_available:
+for upgrade in list_upgrades:
     upgrade.image.disable()
     upgrade.image.hide()
 
@@ -509,13 +510,15 @@ while running:
                         if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
                             # Buy upgrade
                             upgrade.purchase()
-                            # Move bought upgrade from available to bought
+                            # Move bought upgrade from available to bought                        lists make me wanna commit a crime
                             list_available.remove(upgrade)
+                            print(list_available)
                             list_bought.append(upgrade)
+                            print(list_bought)
                             # Update list of available upgrades
                             for upgrade in list_available:
                                 upgrade.available()
-                            # Update list of bought
+                            # Update list of bought upgrades
                             for upgrade in list_bought:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
@@ -540,27 +543,24 @@ while running:
             champion.button_level.disable()
 
     # Upgrade button gray-out
-    for upgrade in list_available:
-        if upgrade.shown and gold >= upgrade.price:
-            upgrade.image.enable()
-        else:
-            upgrade.image.disable()
+    for upgrade in list_upgrades:
+        if upgrade not in list_available:
+            if upgrade not in list_bought: # God I feel like a genius figuring this out after 3 #$*&ing days
+                if upgrade.shown:
+                    list_available.append(upgrade)
+                    upgrade.available()
 
     if hero.level >= 5 and not up_hero1.shown:
         up_hero1.shown = True
-        up_hero1.available()
         
     if hero.level >= 10 and not up_hero2.shown:
         up_hero2.shown = True
-        up_hero2.available()
 
     if hero.level >= 15 and not up_hero3.shown:
         up_hero3.shown = True
-        up_hero3.available()
 
     if pyr.level >= 5 and not up_pyr1.shown:
         up_pyr1.shown = True
-        up_pyr1.available()
     
     click_power_display()
     idle_power_display()
