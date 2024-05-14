@@ -39,7 +39,7 @@ main_menu = 1
 
 # Game Variables
 # Clicking
-click_power = 10000
+click_power = 100000
 
 # Currency
 gold = 0
@@ -316,15 +316,18 @@ class Upgrade():
         
 
     def available(self):
+        if self.shown:
+            self.image.enable()
+            self.image.show()
+
         if not self.isUnlocked:
-            index = set_available.index(self)
+            index = list_available.index(self)
             self.x = 10 + (index * 45)
             if self.x > 250:
                 self.x = 10
 
         self.image.set_relative_position((self.x, self.y))
-        self.image.enable()
-        self.image.show()
+
         print(self.num_id, self.x)
 
     # Purchase upgrades
@@ -338,21 +341,15 @@ class Upgrade():
 
         print("bought")
 
-    def list_swap(self):
-        if self in set_available:
-            set_available.remove(self)
-        if self not in set_bought:
-            set_bought.append(self)
-        return set_available
-
 
     def sort(self):
-        index = set_bought.index(self)
-        self.x = 10 + (index * 45)
-        if self.x > 250:
-            self.x = 10
+        if self.isUnlocked == True:
+            index = list_bought.index(self)
+            self.x = 10 + (index * 45)
+            if self.x > 250:
+                self.x = 10
 
-        self.image.set_relative_position((self.x, self.y))
+            self.image.set_relative_position((self.x, self.y))
 
 
 # Upgrades
@@ -363,10 +360,10 @@ up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "as
 up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
 up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, "assets/placeholder.png", action=(pyr.upgrade1))
 
-set_available = [up_hero1, up_hero2, up_hero3, up_pyr1]
-set_bought = []
+list_available = [up_hero1, up_hero2, up_hero3, up_pyr1]
+list_bought = []
 
-for upgrade in set_available:
+for upgrade in list_available:
     upgrade.image.disable()
     upgrade.image.hide()
 
@@ -384,7 +381,7 @@ def idle_power_display():
         idle_power_format = "{:.2e}".format(total_idle_power)
     else:
         idle_power_format = "{:,}".format(total_idle_power)
-    idle_num = font.render(f"Idle: {idle_power_format}", True, black)
+    idle_num = font.render(f"{idle_power_format}", True, black)
     idle_num_rect = idle_text.get_rect(center=(screen_width/10, 70))
 
     screen.blit(idle_text, idle_text_rect)
@@ -507,13 +504,20 @@ while running:
 
 
                 # Upgrade buttons
-                for upgrade in set_available:
+                for upgrade in list_available:
                     if upgrade.image.rect.collidepoint(mouse_pos):
                         if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
+                            # Buy upgrade
                             upgrade.purchase()
-                            upgrade.list_swap()
-                            upgrade.available()
-                            upgrade.sort()
+                            # Move bought upgrade from available to bought
+                            list_available.remove(upgrade)
+                            list_bought.append(upgrade)
+                            # Update list of available upgrades
+                            for upgrade in list_available:
+                                upgrade.available()
+                            # Update list of bought
+                            for upgrade in list_bought:
+                                upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
 
@@ -536,7 +540,7 @@ while running:
             champion.button_level.disable()
 
     # Upgrade button gray-out
-    for upgrade in set_available:
+    for upgrade in list_available:
         if upgrade.shown and gold >= upgrade.price:
             upgrade.image.enable()
         else:
