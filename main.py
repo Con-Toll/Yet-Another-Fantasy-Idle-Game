@@ -47,95 +47,51 @@ gold = 0
 # Champions
 total_champion = 0
 
-# Buttons
-button_layout_rect = pygame.Rect(30,20,100,20)
-button_ascension = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((720, 20), (180, 70)), text="Ascension")
-button_ascension.disable()
 
-#Overlap UIPanel
-area_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,490),(320,540)),manager=window)
-area_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((320,490),(320,540)),manager=window)
-area_misc = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((640,490),(320,540)),manager=window)
+# Main tab button
+area_tabs = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-3, screen_height/2.5), (969, screen_height/3*2)))
+button_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (966, 30)), 
+                                          text="",
+                                          container=area_tabs)
+
+
 
 #Container
-area_champ_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_champ,allow_scroll_x=False)
-area_upgrade_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_upgrade,allow_scroll_x=False)
-area_misc_container = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((0,50),(315,490)),container=area_misc,allow_scroll_x=False)
-
-#scroll
-area_champ_container.set_scrollable_area_dimensions((315,400))
-area_upgrade_container.set_scrollable_area_dimensions((315,400))
-area_misc_container.set_scrollable_area_dimensions((315,400))
+container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((4, 30), (440, 290)),
+                                                                container=area_tabs,
+                                                                allow_scroll_x=False)
+container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((445, 30), (440, 290)),
+                                                                  container=area_tabs,
+                                                                  allow_scroll_x=False)
 
 
 #Upgrade Area
-area_buyall = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,56)),container=area_upgrade_container)
-area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,56),(300,400)),container=area_upgrade_container)
-area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,456),(300,400)),container=area_upgrade_container)
-
-
-#Misc Area
-misc_1_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(300,200)),container=area_misc_container)
-misc_2_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,200),(300,200)),container=area_misc_container)
-misc_3_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,400),(300,200)),container=area_misc_container)
-misc_4_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,600),(300,200)),container=area_misc_container)
-misc_5_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,800),(300,200)),container=area_misc_container)
-
-
-#Button
-champ_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text='Champions',
-                                             container=area_champ,
-                                             )
-upgrade_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (320, 50)),
-                                             text='Upgrades',
-                                             container=area_upgrade,
-                                             )
-misc_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,0), (320, 50)),
-                                             text='Misc.',
-                                             container=area_misc,
-                                             )
+area_up_buyall = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(422, 56)),
+                                          container=container_upgrade)
+area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,56),(422,400)),
+                                                     container=container_upgrade)
+area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,456),(422,400)),
+                                                  container=container_upgrade)
 
 
 #Upgrade Button
-BuyAll_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5,2), (290, 50)),
-                                             text='Buy All',
-                                             container=area_buyall,
+button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5,2), (422, 56)),
+                                             text="Buy All",
+                                             container=area_up_buyall,
                                              )
 
-
-#Misc Button
-misc_1_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 1',
-                                             container=misc_1_area,
-                                             )
-misc_2_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 2',
-                                             container=misc_2_area,
-                                             )
-misc_3_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 3',
-                                             container=misc_3_area,
-                                             )
-misc_4_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 4',
-                                             container=misc_4_area,
-                                             )
-misc_5_button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0,150), (320, 50)),
-                                             text='Misc 5',
-                                             container=misc_5_area,
-                                            )
 
 
 #Upgrade "Available Text"
-
-Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(300,50)),text="Available:",
+Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+                                             text="Available:",
                                              container=area_upgrade_available,
                                             )
 
-Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(300,50)),text="Bought:",
-                                             container=area_upgrade_bought,
-                                            )
+Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+                                          text="Bought:",
+                                          container=area_upgrade_bought,
+                                         )
 
 
 # Champions
@@ -155,24 +111,42 @@ class Champion():
         self.up_mult = 1
 
         # Champion container
-        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
-                                                     container=area_champ_container)
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(420, 200)),
+                                                     container=container_champ)
 
         # Champion info
-        self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 55), (160, 70)),
-                                                      html_text=f"Level: {self.level}<br>Idle Power: {self.idle_power}/s",
-                                                      container=self.container)
+        self.image_level_load = pygame.image.load("assets/images.png")
+        self.image_level = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((108, 30), (35, 35)),
+                                                       image_surface=self.image_level_load,
+                                                       container=self.container)
+        
+        self.text_level = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((143, 30), (140, 35)),
+                                                                     text=f"{self.level}",
+                                                                     container=self.container,
+                                                                     object_id=ObjectID(class_id="@champ_info"))
+
+
+        self.image_idle_load = pygame.image.load("assets/images.png")
+        self.image_idle = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((108, 65), (35, 35)),
+                                                       image_surface=self.image_idle_load,
+                                                       container=self.container)
+
+        self.text_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((143, 65), (140, 35)),
+                                                                     text=f"{self.idle_power} /s",
+                                                                     container=self.container,
+                                                                     object_id=ObjectID(class_id="@champ_info"))
 
         # Champion image
         self.image_load = pygame.image.load(image)
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 50),(80, 80)),
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((5, 0), (80, 80)),
                                                  image_surface=self.image_load,
                                                  container=self.container)
 
         # Champion title
-        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5),(300, 35)),
+        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((110, 5),(310, 25)),
                                                  text=f"{self.title}",
-                                                 container=self.container)
+                                                 container=self.container,
+                                                 object_id=ObjectID(class_id="@champ_title"))
 
         # Level Champion
         self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
@@ -214,7 +188,7 @@ class Champion():
         total_champion += 1
         self.isUnlocked = True
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
+        self.update_stats()
         self.thread_start()
 
         # Show next champion
@@ -235,9 +209,13 @@ class Champion():
         self.price_level *= 2
         self.price_level_display.set_text(f"{self.price_level}")
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
+        self.update_stats()
         return self.price_level, self.level, self.idle_power
 
+
+    def update_stats(self):
+        self.text_level.set_text(f"{self.level}")
+        self.text_idle.set_text(f"{self.idle_power}/s")
 
     # Idle generation
     def thread_start(self):
@@ -271,7 +249,7 @@ class Champion():
     def upgrade1(self, mult):
         self.up_mult = self.up_mult * mult
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.text_box.set_text(f"Level: {self.level}<br>Idle Power: {self.idle_power}/s")
+        self.update_stats()
         return self.idle_power
 
 
@@ -295,7 +273,7 @@ for champion in champions:
 
 # Upgrades
 class Upgrade():
-    def __init__(self, num_id, price, name, origin, tooltip, mult, image="assets/images.png", action=None):
+    def __init__(self, num_id, price, name, origin, tooltip, mult, action=None):
         self.x = 10
         self.y = 60
         self.num_id = num_id
@@ -304,21 +282,19 @@ class Upgrade():
         self.tooltip = tooltip
         self.shown = False
         self.price = price
-        self.image = image
         self.isUnlocked = False
         self.action = action
         self.mult = mult
 
-        self.image_load = pygame.image.load(image)
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
-                                                 image_surface=self.image_load,
-                                                 container=area_upgrade_available)
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
+                                                   text="",
+                                                   container=area_upgrade_available)
         
 
     def available(self):
         if self.shown:
-            self.image.enable()
-            self.image.show()
+            self.button.enable()
+            self.button.show()
 
         if not self.isUnlocked:
             index = list_available.index(self)
@@ -326,7 +302,7 @@ class Upgrade():
             if self.x > 250:
                 self.x = 10
 
-        self.image.set_relative_position((self.x, self.y))
+        self.button.set_relative_position((self.x, self.y))
 
         print(self.num_id, self.x)
 
@@ -336,7 +312,7 @@ class Upgrade():
         gold = gold - self.price
         self.isUnlocked = True
         
-        self.image.set_container(container=area_upgrade_bought)
+        self.button.set_container(container=area_upgrade_bought)
         self.action(self.mult)
 
         print("bought")
@@ -349,24 +325,24 @@ class Upgrade():
             if self.x > 250:
                 self.x = 10
 
-            self.image.set_relative_position((self.x, self.y))
+            self.button.set_relative_position((self.x, self.y))
 
 
 # Upgrades
-# num_id, price, name, origin, tooltip, mult, image, action
+# num_id, price, name, origin, tooltip, mult, action
 
-up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
-up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
-up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, "assets/images.png", action=(hero.upgrade1))
-up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, "assets/placeholder.png", action=(pyr.upgrade1))
+up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
+up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
+up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
+up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
 
 list_upgrades = [up_hero1, up_hero2, up_hero3, up_pyr1]
 list_available = []
 list_bought = []
 
 for upgrade in list_upgrades:
-    upgrade.image.disable()
-    upgrade.image.hide()
+    upgrade.button.disable()
+    upgrade.button.hide()
 
 clock = pygame.time.Clock()
 
@@ -424,7 +400,6 @@ def gold_display(gold):
 
 champion_y = 490
 upgrade_y = 490
-misc_y = 490
 
 
 # Game loop \o/
@@ -454,38 +429,23 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
 
                 # Tab buttons
-                if champ_button.rect.collidepoint(mouse_pos):
-                    if champion_y == 490:
-                        champion_y = 0
-                        upgrade_y = 490
-                        misc_y = 490
-                    else:
-                        champion_y = 490
-                    area_champ.set_position(position=(0, champion_y))
-                    area_upgrade.set_position(position=(320, upgrade_y))
-                    area_misc.set_position(position=(640, misc_y))
-                elif upgrade_button.rect.collidepoint(mouse_pos):
-                    if upgrade_y == 490:
-                        champion_y = 490
-                        upgrade_y = 0
-                        misc_y = 490
-                    else:
-                        upgrade_y = 490
-                    area_champ.set_position(position=(0, champion_y))
-                    area_upgrade.set_position(position=(320, upgrade_y))
-                    area_misc.set_position(position=(640, misc_y))
-                    print("Upgrade button pressed")
-                elif misc_button.rect.collidepoint(mouse_pos):
-                    if misc_y == 490:
-                        champion_y = 490
-                        upgrade_y = 490
-                        misc_y = 0
-                    else:
-                        misc_y = 490
-                    area_champ.set_position(position=(0, champion_y))
-                    area_upgrade.set_position(position=(320, upgrade_y))
-                    area_misc.set_position(position=(640, misc_y))
-                    print("Misc. button pressed")
+#                if champ_button.rect.collidepoint(mouse_pos):
+ #                   if champion_y == 490:
+  #                      champion_y = 0
+   #                     upgrade_y = 490
+    #                else:
+     #                   champion_y = 490
+      #              area_champ.set_position(position=(0, champion_y))
+       #             area_upgrade.set_position(position=(320, upgrade_y))
+        #        elif upgrade_button.rect.collidepoint(mouse_pos):
+         #           if upgrade_y == 490:
+          #              champion_y = 490
+           #             upgrade_y = 0
+            #        else:
+             #           upgrade_y = 490
+              #      area_champ.set_position(position=(0, champion_y))
+               #     area_upgrade.set_position(position=(320, upgrade_y))
+                #    print("Upgrade button pressed")
 
                         
                 # Champion buttons
@@ -506,7 +466,7 @@ while running:
 
                 # Upgrade buttons
                 for upgrade in list_available:
-                    if upgrade.image.rect.collidepoint(mouse_pos):
+                    if upgrade.button.rect.collidepoint(mouse_pos):
                         if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
                             # Buy upgrade
                             upgrade.purchase()
