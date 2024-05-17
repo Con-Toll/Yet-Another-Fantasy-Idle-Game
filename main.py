@@ -204,31 +204,22 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
                                              container=upgrade_2_area,
                                             )
 
-def save_game_state():
-    game_state = {
-        "gold": gold,  # Example variable to save
-        "total_champion": total_champion,  # Example variable to save
-        # Add other variables you want to save here
-    }
 
-    with open("game_state.json", "w") as file:
-        json.dump(game_state, file)
 
-def load_game_state():
-    global gold  # Example variables to load
 
-    try:
-        with open("game_state.json", "r") as file:
-            game_state = json.load(file)
-            gold = game_state["gold"]
-            # Load other variables here
-    except FileNotFoundError:
-        # If the file doesn't exist, start with default values
-        gold = 0
+
+
+
+        
+        
         # Set default values for other variables here
 
-# Call load_game_state() when the game starts to load the previous state
-load_game_state()
+
+
+# load the previous state
+
+
+
 
 total_idle_power = 0
 
@@ -336,6 +327,21 @@ class Champion():
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            name=data.get("name", ""),
+            title=data.get("title", ""),
+            level=data.get("level", 0),
+            idle_power=data.get("idle_power", 0),
+            isUnlocked=data.get("isUnlocked", False),
+            shown=data.get("shown", False),
+            position=data.get("position", 0),
+            price_hire=data.get("price_hire", 0),
+            price_level=data.get("price_level", 0),
+            image=data.get("image", "assets/images.png")
+        )
+
     def level_up(self):
         global gold
         gold = gold - self.price_level
@@ -391,6 +397,11 @@ class Champion():
             if self.isUnlocked == False:
                 self.button_hire.show()
                 self.button_hire.enable()
+    
+
+
+
+
 
 # Champions List
 hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, 15, 20, "assets/images.png")
@@ -460,7 +471,6 @@ while running:
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            save_game_state()
             running = False
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
