@@ -10,12 +10,13 @@
         "misc":
         {
              "shape": "rounded_rectangle",
-             "border_width": ""
+             "border_width": "1",
+             "shadow_width": "0"
         },
         "font":
         {
            "name": "chava",
-           "size": "25",
+           "size": "24",
            "regular_path": "assets/Chava-Regular.ttf"
 
         }
@@ -33,7 +34,8 @@
             "name": "chava",
             "size": "20",
             "regular_path": "assets/Chava-Regular.ttf"
-
+         },
+         "misc":{
          }
         },
         "@champ_info":
@@ -63,6 +65,13 @@
         {
             "misc":{
                 "shadow_width": "0"
+            }
+        },
+        "@button_level":
+        {
+            "font":{
+                "name": "chava",
+                "size": "22"
             }
         }
 }   

@@ -96,7 +96,7 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,5
 
 # Champions
 class Champion():
-    def __init__(self, name, title, level, base_idle_power, shown, position, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, index, name, title, level, base_idle_power, shown, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = level
@@ -104,65 +104,67 @@ class Champion():
         self.idle_power = 0
         self.isUnlocked = False
         self.shown = shown
-        self.pos = position
+        self.index = index
         self.image = image
         self.price_hire = price_hire
         self.price_level = price_level
         self.up_mult = 1
 
         # Champion container
-        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(420, 200)),
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, (self.index * 100)),(420, 100)),
                                                      container=container_champ)
 
         # Champion info
+        # Level icon + number
         self.image_level_load = pygame.image.load("assets/images.png")
-        self.image_level = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((108, 30), (35, 35)),
+        self.image_level = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((100, 29), (35, 35)),
                                                        image_surface=self.image_level_load,
                                                        container=self.container)
         
-        self.text_level = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((143, 30), (140, 35)),
+        self.text_level = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((135, 29), (140, 35)),
                                                                      text=f"{self.level}",
                                                                      container=self.container,
                                                                      object_id=ObjectID(class_id="@champ_info"))
 
-
+        # Idle power icon + number
         self.image_idle_load = pygame.image.load("assets/images.png")
-        self.image_idle = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((108, 65), (35, 35)),
+        self.image_idle = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((100, 64), (35, 35)),
                                                        image_surface=self.image_idle_load,
                                                        container=self.container)
 
-        self.text_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((143, 65), (140, 35)),
+        self.text_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((135, 64), (140, 35)),
                                                                      text=f"{self.idle_power} /s",
                                                                      container=self.container,
                                                                      object_id=ObjectID(class_id="@champ_info"))
 
         # Champion image
         self.image_load = pygame.image.load(image)
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((5, 0), (80, 80)),
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((10, 10), (80, 80)),
                                                  image_surface=self.image_load,
                                                  container=self.container)
 
         # Champion title
-        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((110, 5),(310, 25)),
+        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((100, 3), (320, 25)),
                                                  text=f"{self.title}",
                                                  container=self.container,
                                                  object_id=ObjectID(class_id="@champ_title"))
 
-        # Level Champion
-        self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
+        # Level Champion button + price
+        self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((278, 28), (136, 35)),
                                                          text="Level up",
-                                                         container=self.container)
+                                                         container=self.container,
+                                                         object_id=ObjectID(class_id="@button_level"))
     
-        self.price_level_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+        self.price_level_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((280, 63), (132, 35)),
                                                                text=f"{self.price_level}",
                                                                container=self.container)
         
-        # Hire Champion
-        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
+        # Hire Champion button + price
+        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((278, 28), (136, 35)),
                                                         text="Hire",
                                                         container=self.container)
 
-        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((280, 63),(132, 35)),
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
@@ -212,7 +214,7 @@ class Champion():
         self.update_stats()
         return self.price_level, self.level, self.idle_power
 
-
+    # Update champ info
     def update_stats(self):
         self.text_level.set_text(f"{self.level}")
         self.text_idle.set_text(f"{self.idle_power}/s")
@@ -246,6 +248,7 @@ class Champion():
                 self.button_level.hide()
                 self.button_level.disable()
 
+    # Champ upgrades
     def upgrade1(self, mult):
         self.up_mult = self.up_mult * mult
         self.idle_power = self.base_idle_power * self.level * self.up_mult
@@ -255,12 +258,12 @@ class Champion():
 
 
 # Champions List 
-# (name, title, level, base_idle_power, shown, position, price_hire, price_level, image)
-hero = Champion("hero", "You, the Hero", 0, 1, True, 0, 15, 20, "assets/images.png")
-pyr = Champion("pyr", "Pyr, the Apprentice", 0, 10, False, 200, 1000, 1200, "assets/images.png")
-avani = Champion("avani", "Avani, the Bright", 0, 100, False, 400, 2500, 3000, "assets/images.png")
-obek = Champion("obek", "Obek, the Scavenger", 0, 1000, False, 600, 5000, 6000, "assets/images.png")
-azura = Champion("azura", "Azura, the Something", 0, 10000, False, 800, 10000, 10000, "assets/images.png")
+# (index, name, title, level, base_idle_power, shown, price_hire, price_level, image)
+hero = Champion(0,"hero", "You, the Hero", 0, 1, True, 15, 20, "assets/images.png")
+pyr = Champion(1, "pyr", "Pyr, the Apprentice", 0, 10, False, 1000, 1200, "assets/images.png")
+avani = Champion(2, "avani", "Avani, the Bright", 0, 100, False, 2500, 3000, "assets/images.png")
+obek = Champion(3, "obek", "Obek, the Scavenger", 0, 1000, False, 5000, 6000, "assets/images.png")
+azura = Champion(4, "azura", "Azura, the Something", 0, 10000, False, 10000, 10000, "assets/images.png")
 
 champions = [hero, pyr, avani, obek, azura]
 
