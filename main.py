@@ -408,13 +408,23 @@ class Event_gui(pygame.sprite.Sprite):
         self.rect= [pos,pos]
         self.alpha = 255
         self.direc = direc
+        self.access = False
+        self.nice = False
     
         
         
     
         
     
-        
+    def key(self):
+        if self.access == True:
+            if event.type == pygame.KEYUP:
+                if event.key == getattr(pygame,f"K_{self.direc}"):
+                    self.fade=True
+                    self.access = False
+                    self.nice = True
+                    
+                            
     def update(self):
         if self.is_animating==True:
             self.current_sprite += 0.1
@@ -466,31 +476,40 @@ class QTE(pygame.sprite.Sprite):
         self.current_key = 0
         self.prev_key = None
         self.exe =True
+        if self.Up.access and self.Down.access and self.Left.access and self.Right.access == True:
+            gold+=1000
         
     def key(self):
-        if event.type == pygame.KEYUP:
-            if event.key == getattr(pygame,f"K_{self.different[1]}"):
-                print(self.different[1])
-                if event.key == getattr(pygame,f"K_{self.different[2]}"):
-                    print(self.different[2])
-                    if event.key == getattr(pygame,f"K_{self.different[3]}"):
-                        print(self.different[3])
-               
-       
-       
-                                                 
+        global gold
+        if self.exe == True:
+            self.Up.access = True
+            self.Up.key()
+            if self.Up.nice == True:
+                self.Down.key()
+                self.Down.access = True
+                if self.Down.nice == True:
+                    self.Left.key() == True
+                    self.Left.access = True
+                    if self.Left.nice == True:
+                        self.Right.key()
+                        self.Right.access = True
+                        if self.Right.nice == True:
+                            gold+=10000
+                            self.exe = False
+                        
+    def reset(self):
+        pass
+        
                     
+        
     def update(self):
         if self.exe == True:
             moving_image.add(self.Up)
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
+            
         
-                    
-   
-        
-
     def fadeout(self):
         self.Up.fadeout()
         self.Down.fadeout()
@@ -673,8 +692,9 @@ while running:
                 
                 else:
                     gold += click_power
-     
-        Test.key()    
+                    
+        Test.key()
+        
 
         window.process_events(event)
 
@@ -698,5 +718,5 @@ sys.exit()
 
 
 
-
+print(point)
 
