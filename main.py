@@ -306,6 +306,7 @@ class Upgrade():
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
                                                    text="",
+                                                   tool_tip_text=f"{self.name}\nOrigin: {self.origin}\n{self.tooltip}",
                                                    container=area_upgrade_available)
         
 
@@ -319,6 +320,8 @@ class Upgrade():
             self.x = 10 + (index * 45)
             if self.x > 250:
                 self.x = 10
+                # if (index % 10) > 1, self.y = 60 + (index * 45)
+                # could use math module for this tbh
 
         self.button.set_relative_position((self.x, self.y))
 
