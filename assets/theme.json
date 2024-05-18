@@ -18,7 +18,6 @@
            "name": "chava",
            "size": "24",
            "regular_path": "assets/Chava-Regular.ttf"
-
         }
     },
     "label":
@@ -37,6 +36,12 @@
          },
          "misc":{
          }
+        },
+        "@text_tabs":{
+            "font":{
+                "name": "chava",
+                "size": "32"
+            }
         },
         "@champ_info":
         {
@@ -73,5 +78,11 @@
                 "name": "chava",
                 "size": "22"
             }
+        },
+    "panel":
+    {
+        "misc":{
+            "shadow_width": "0"
         }
+    }
 }   

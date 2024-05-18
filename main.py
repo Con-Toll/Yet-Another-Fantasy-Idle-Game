@@ -20,14 +20,15 @@ window = pygame_gui.UIManager((screen_width, screen_height),theme_path='assets/t
 pygame.display.set_caption("Yet Another Idle Clicker")
 
 #background image 
-background = pygame.image.load("assets/background.png").convert()
-backgroundwidth = background.get_width()
-background_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0 , 0),(screen_width, screen_height)),
-                                              visible=0, manager=window)
+background = pygame.image.load("assets/background.png")
+backgroundwidth = screen_width
+backgroundheight = 0
+background_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (screen_width, screen_height)),
+                                              visible=0, 
+                                              manager=window)
 
 scroll = 0
 sections = math.ceil(screen_width / backgroundwidth)
-print(sections)
 
 
 # Colours
@@ -49,46 +50,60 @@ total_champion = 0
 
 
 # Main tab button
-area_tabs = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-3, screen_height/2.5), (969, screen_height/3*2)))
+area_tabs = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-3, screen_height-31), (969, screen_height/3*2)))
 button_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (966, 30)), 
                                           text="",
                                           container=area_tabs)
+# False = Closed, True = Open
+area_tabs_status = False
 
 
-
-#Container
-container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((4, 30), (440, 290)),
+# Containers
+container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((5, 90), (440, 230)),
                                                                 container=area_tabs,
                                                                 allow_scroll_x=False)
-container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((445, 30), (440, 290)),
+container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 290)),
                                                                   container=area_tabs,
                                                                   allow_scroll_x=False)
 
+area_tab_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((7, 32), (438, 56)),
+                                          container=area_tabs)
+text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (436, 52)),
+                                               text="Champions",
+                                               object_id=ObjectID(class_id="@text_tabs"),
+                                               container=area_tab_champ)
 
-#Upgrade Area
-area_up_buyall = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0),(422, 56)),
-                                          container=container_upgrade)
-area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,56),(422,400)),
-                                                     container=container_upgrade)
-area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,456),(422,400)),
-                                                  container=container_upgrade)
+# Upgrade Area
+# Header that says "UPGRADES"
+area_tab_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((450, 32), (440, 56)),
+                                          container=area_tabs)
+text_tab_upgrade = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (283, 52)),
+                                               text="Upgrades",
+                                               object_id=ObjectID(class_id="@text_tabs"),
+                                               container=area_tab_upgrade)
 
-
-#Upgrade Button
-button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((5,2), (422, 56)),
+# Upgrade "Buy All" button
+button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((290, 6), (144, 44)),
                                              text="Buy All",
-                                             container=area_up_buyall,
+                                             container=area_tab_upgrade,
                                              )
 
 
+# Containers for available and bought upgrades
+area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0), (422,400)),
+                                                     container=container_upgrade)
+area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,404),(422,400)),
+                                                  container=container_upgrade)
 
-#Upgrade "Available Text"
-Available_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+
+
+# "Available" and "Bought" text
+text_available = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
                                              text="Available:",
                                              container=area_upgrade_available,
                                             )
 
-Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+text_bought = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
                                           text="Bought:",
                                           container=area_upgrade_bought,
                                          )
@@ -111,7 +126,7 @@ class Champion():
         self.up_mult = 1
 
         # Champion container
-        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, (self.index * 100)),(420, 100)),
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, (self.index * 100)), (416, 100)),
                                                      container=container_champ)
 
         # Champion info
@@ -160,11 +175,11 @@ class Champion():
                                                                container=self.container)
         
         # Hire Champion button + price
-        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((278, 28), (136, 35)),
+        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((278, 28), (134, 35)),
                                                         text="Hire",
                                                         container=self.container)
 
-        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((280, 63),(132, 35)),
+        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((280, 63),(128, 35)),
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
@@ -412,7 +427,7 @@ while running:
     time_delta = clock.tick(60)/1000.0
 
     for i in range(0, sections + 1):  
-     screen.blit(background, (i * backgroundwidth + scroll, 0))
+     screen.blit(background, (i * backgroundwidth + scroll, backgroundheight))
     
     
     #scrolling background
@@ -432,24 +447,15 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
 
                 # Tab buttons
-#                if champ_button.rect.collidepoint(mouse_pos):
- #                   if champion_y == 490:
-  #                      champion_y = 0
-   #                     upgrade_y = 490
-    #                else:
-     #                   champion_y = 490
-      #              area_champ.set_position(position=(0, champion_y))
-       #             area_upgrade.set_position(position=(320, upgrade_y))
-        #        elif upgrade_button.rect.collidepoint(mouse_pos):
-         #           if upgrade_y == 490:
-          #              champion_y = 490
-           #             upgrade_y = 0
-            #        else:
-             #           upgrade_y = 490
-              #      area_champ.set_position(position=(0, champion_y))
-               #     area_upgrade.set_position(position=(320, upgrade_y))
-                #    print("Upgrade button pressed")
-
+                if button_tab.rect.collidepoint(mouse_pos):
+                    if area_tabs_status:
+                        area_tabs.set_relative_position((-3, screen_height-31))
+                        area_tabs_status = False
+                        backgroundheight = 0
+                    elif not area_tabs_status:
+                        area_tabs.set_relative_position((-3, screen_height/2.5))
+                        area_tabs_status = True
+                        backgroundheight = (0-screen_height/2.9)
                         
                 # Champion buttons
                 for champion in champions:
