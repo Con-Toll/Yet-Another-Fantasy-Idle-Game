@@ -291,10 +291,11 @@ for champion in champions:
 
 # Upgrades
 class Upgrade():
-    def __init__(self, num_id, price, name, origin, tooltip, mult, action=None):
+    def __init__(self,  num_id, requirement, price, name, origin, tooltip, mult, action=None):
         self.x = 10
         self.y = 60
         self.num_id = num_id
+        self.requirement = requirement
         self.name = name
         self.origin = origin
         self.tooltip = tooltip
@@ -306,7 +307,7 @@ class Upgrade():
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
                                                    text="",
-                                                   tool_tip_text=f"{self.name}\nOrigin: {self.origin}\n{self.tooltip}",
+                                                   tool_tip_text=f"{self.name}\n{self.tooltip}\nPrice: {self.price}",
                                                    container=area_upgrade_available)
         
 
@@ -317,15 +318,21 @@ class Upgrade():
 
         if not self.isUnlocked:
             index = list_available.index(self)
-            self.x = 10 + (index * 45)
-            if self.x > 250:
-                self.x = 10
-                # if (index % 10) > 1, self.y = 60 + (index * 45)
-                # could use math module for this tbh
+            # x values: 10, 55, 100, 145, 190, 235, 280, 325, 370, 415; the container is (422, 400)
+            
+            if index >= 8:
+                self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
+                self.y = 60 + 51
+            elif index >= 0:
+                self.x = 10 + (index * 49) + (index * 2)
+                self.y = 60
+
+            # note for future improvement:
+            # for index % 8 = 0, modifier = index, self.x = 10 + 
 
         self.button.set_relative_position((self.x, self.y))
 
-        print(self.num_id, self.x)
+        #print(self.num_id, self.x)
 
     # Purchase upgrades
     def purchase(self):
@@ -350,14 +357,25 @@ class Upgrade():
 
 
 # Upgrades
-# num_id, price, name, origin, tooltip, mult, action
+# num_id, requirement, price, name, origin, tooltip, mult, action
 
-up_hero1 = Upgrade(1, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
-up_hero2 = Upgrade(2, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
-up_hero3 = Upgrade(3, 100000, "Hero 1", "Hero", "This is hero upgrade 1", 2, action=(hero.upgrade1))
-up_pyr1 = Upgrade(4, 100000, "Pyr 1", "Pyr", "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
+up_hero1 = Upgrade(1, 2, 100000, "Hero 1", hero, "This is hero upgrade 1", 2, action=(hero.upgrade1))
+up_hero2 = Upgrade(2, 3, 100000, "Hero 2", hero, "This is hero upgrade 2", 2, action=(hero.upgrade1))
+up_hero3 = Upgrade(3, 4, 100000, "Hero 3", hero, "This is hero upgrade 3", 2, action=(hero.upgrade1))
+up_hero4 = Upgrade(4, 5, 100000, "Hero 4", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
+up_hero5 = Upgrade(5, 6, 100000, "Hero 5", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
+up_hero6 = Upgrade(6, 7, 100000, "Hero 6", hero, "This is hero upgrade 6", 2, action=(hero.upgrade1))
+up_pyr1 = Upgrade(7, 2, 100000, "Pyr 1", pyr, "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
+up_pyr2 = Upgrade(8, 3, 100000, "Pyr 2", pyr, "This is pyr upgrade 2", 2, action=(pyr.upgrade1))
+up_pyr3 = Upgrade(9, 4, 100000, "Pyr 3", pyr, "This is pyr upgrade 3", 2, action=(pyr.upgrade1))
+up_pyr4 = Upgrade(10, 5, 100000, "Pyr 4", pyr, "This is pyr upgrade 4", 2, action=(pyr.upgrade1))
+up_pyr5 = Upgrade(11, 6, 100000, "Pyr 5", pyr, "This is pyr upgrade 5", 2, action=(pyr.upgrade1))
+up_pyr6 = Upgrade(12, 7, 100000, "Pyr 6", pyr, "This is pyr upgrade 6", 2, action=(pyr.upgrade1))
 
-list_upgrades = [up_hero1, up_hero2, up_hero3, up_pyr1]
+list_upgrades = [
+    up_hero1, up_hero2, up_hero3, up_hero4, up_hero5, up_hero6, 
+    up_pyr1, up_pyr2, up_pyr3, up_pyr4, up_pyr5, up_pyr6
+    ]
 list_available = []
 list_bought = []
 
@@ -453,10 +471,12 @@ while running:
                 if button_tab.rect.collidepoint(mouse_pos):
                     if area_tabs_status:
                         area_tabs.set_relative_position((-3, screen_height-31))
+                        background_area.set_relative_position((0, 0-31))
                         area_tabs_status = False
                         backgroundheight = 0
                     elif not area_tabs_status:
                         area_tabs.set_relative_position((-3, screen_height/2.5))
+                        background_area.set_relative_position((0, 0-324))
                         area_tabs_status = True
                         backgroundheight = (0-screen_height/2.9)
                         
@@ -522,17 +542,11 @@ while running:
                     list_available.append(upgrade)
                     upgrade.available()
 
-    if hero.level >= 5 and not up_hero1.shown:
-        up_hero1.shown = True
         
-    if hero.level >= 10 and not up_hero2.shown:
-        up_hero2.shown = True
+        if upgrade.origin.level >= upgrade.requirement:
+            upgrade.shown = True
 
-    if hero.level >= 15 and not up_hero3.shown:
-        up_hero3.shown = True
 
-    if pyr.level >= 5 and not up_pyr1.shown:
-        up_pyr1.shown = True
     
     click_power_display()
     idle_power_display()
