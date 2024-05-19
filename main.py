@@ -463,10 +463,10 @@ class QTE(pygame.sprite.Sprite):
     def __init__(self, start, end):
         super().__init__()
         self.position = {
-            1: (550, 1),
-            2: (650, 1),
-            3: (750, 1),
-            4: (850, 1)
+            1: (350, 3),
+            2: (450, 3),
+            3: (550, 3),
+            4: (650, 3)
         }
         self.different = ["UP", "DOWN", "LEFT", "RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
@@ -476,8 +476,7 @@ class QTE(pygame.sprite.Sprite):
         self.current_key = 0
         self.prev_key = None
         self.exe =True
-        if self.Up.access and self.Down.access and self.Left.access and self.Right.access == True:
-            gold+=1000
+        
         
     def key(self):
         global gold
@@ -496,9 +495,13 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             gold+=10000
                             self.exe = False
-                        
+                            self.reset()
+                            
     def reset(self):
-        pass
+        self.Down.direc = random.choice(self.different)
+        self.Up.direc = random.choice(self.different)
+        self.Left.direc = random.choice(self.different)
+        self.Right.direc = random.choice(self.different)
         
                     
         
@@ -553,7 +556,7 @@ champion_y = 490
 upgrade_y = 490
 misc_y = 490
 
-time = [20,10,30]
+
 # Game loop \o/
 running = True
 while running:
@@ -697,7 +700,6 @@ while running:
         
 
         window.process_events(event)
-
     
     Test.update()
     Test.fadeout()
@@ -712,11 +714,12 @@ while running:
     pygame.display.update
     pygame.display.flip()
 
+print(time_delta)
+print(clock)
 pygame.quit()
 sys.exit()
 
 
 
 
-print(point)
 
