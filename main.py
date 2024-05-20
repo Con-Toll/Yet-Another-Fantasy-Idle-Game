@@ -36,9 +36,11 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
-main_menu = 1
 
 # Game Variables
+# Pause
+paused = False
+
 # Clicking
 click_power = 100000
 
@@ -47,6 +49,7 @@ gold = 0
 
 # Champions
 total_champion = 0
+
 
 
 # Main tab button
@@ -58,14 +61,11 @@ button_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (966
 area_tabs_status = False
 
 
-# Containers
+# Champion Area
 container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((5, 90), (440, 230)),
                                                                 container=area_tabs,
                                                                 allow_scroll_x=False)
-container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 290)),
-                                                                  container=area_tabs,
-                                                                  allow_scroll_x=False)
-
+# Header that says "CHAMPIONS"
 area_tab_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((7, 32), (438, 56)),
                                           container=area_tabs)
 text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (436, 52)),
@@ -74,6 +74,9 @@ text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (
                                                container=area_tab_champ)
 
 # Upgrade Area
+container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 290)),
+                                                                  container=area_tabs,
+                                                                  allow_scroll_x=False)
 # Header that says "UPGRADES"
 area_tab_upgrade = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((450, 32), (440, 56)),
                                           container=area_tabs)
@@ -90,9 +93,9 @@ button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((290, 
 
 
 # Containers for available and bought upgrades
-area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0), (422,400)),
+area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0), (422, 315)),
                                                      container=container_upgrade)
-area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,404),(422,400)),
+area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,319), (422, 315)),
                                                   container=container_upgrade)
 
 
@@ -107,6 +110,27 @@ text_bought = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,5
                                           text="Bought:",
                                           container=area_upgrade_bought,
                                          )
+
+
+# Tab switch buttons
+current_tab = 1
+button_next_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((901, 40), (50, 275)),
+                                              text=">",
+                                              container=area_tabs)
+button_prev_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((14, 40), (50, 275)),
+                                              text="<",
+                                              container=area_tabs)
+
+# Ascension wao
+button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((750, 40), (160, 40)),
+                                                text="Transcend")
+area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)))
+area_prestige.disable()
+area_prestige.hide()
+text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (screen_width, 75)),
+                                            text="T R A N S C E N D E N C E",
+                                            container=area_prestige,
+                                            object_id=ObjectID(class_id="@text_prestige"))
 
 
 # Champions
@@ -318,7 +342,7 @@ class Upgrade():
 
         if not self.isUnlocked:
             index = list_available.index(self)
-            # x values: 10, 55, 100, 145, 190, 235, 280, 325, 370, 415; the container is (422, 400)
+            # x values: 10, 55, 100, 145, 190, 235, 280, 325, 370, 415; the container is (422, 315)
             
             if index >= 8:
                 self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
@@ -437,9 +461,6 @@ def gold_display(gold):
     screen.blit(gold_text, gold_text_rect)
 
 
-champion_y = 490
-upgrade_y = 490
-
 
 # Game loop \o/
 running = True
@@ -462,13 +483,30 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:  # Left mouse button
-                mouse_pos = pygame.mouse.get_pos()
+
+        elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == button_prestige:
+                paused = not paused
+                area_tabs.hide()
+                area_tabs.disable()
+                area_prestige.show()
+                area_prestige.enable()
+                button_prestige.hide()
+                button_prestige.disable()
+                text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_IN)
+
+                for champion in champions:
+                    champion.isUnlocked = False
+            
+            if not paused:
+                if event.ui_element == button_next_tab:
+                    current_tab = 2
+
+                elif event.ui_element == button_prev_tab:
+                    current_tab = 1
 
                 # Tab buttons
-                if button_tab.rect.collidepoint(mouse_pos):
+                elif event.ui_element == button_tab:
                     if area_tabs_status:
                         area_tabs.set_relative_position((-3, screen_height-31))
                         background_area.set_relative_position((0, 0-31))
@@ -483,14 +521,14 @@ while running:
                 # Champion buttons
                 for champion in champions:
                     # Level up button
-                    if champion.button_level.rect.collidepoint(mouse_pos):
+                    if event.ui_element == champion.button_level:
                         if gold >= champion.price_level and champion.isUnlocked:
                             champion.level_up()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
                     # Hire button
                     if champion.button_hire.is_enabled:
-                        if champion.button_hire.rect.collidepoint(mouse_pos):
+                        if event.ui_element == champion.button_hire:
                             if gold >= champion.price_hire and not champion.isUnlocked:
                                 champion.hire()
                                 total_idle_power = sum(champion.idle_power for champion in champions)
@@ -498,7 +536,7 @@ while running:
 
                 # Upgrade buttons
                 for upgrade in list_available:
-                    if upgrade.button.rect.collidepoint(mouse_pos):
+                    if event.ui_element == upgrade.button:
                         if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
                             # Buy upgrade
                             upgrade.purchase()
@@ -515,12 +553,26 @@ while running:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
-
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                
                 if background_area.rect.collidepoint(mouse_pos):
                     gold += click_power
 
         window.process_events(event)
 
+    # Tab
+    if current_tab == 1 and not paused:
+        button_next_tab.show()
+        button_next_tab.enable()
+        button_prev_tab.hide()
+        button_prev_tab.disable()
+    elif current_tab == 2 and not paused:
+        button_prev_tab.show()
+        button_prev_tab.enable()
+        button_next_tab.hide()
+        button_next_tab.disable()
 
     # Champion button gray-out
     for champion in champions:
