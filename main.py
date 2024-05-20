@@ -19,6 +19,19 @@ window = pygame_gui.UIManager((screen_width, screen_height),theme_path='assets/t
 
 pygame.display.set_caption("Yet Another Idle Clicker")
 
+
+# Main Menu
+main_menu = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)),
+                                              manager=window)
+main_menu_status = True
+
+button_game_start = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (150, 50)),
+                                                 text="Start",
+                                                 container=main_menu,
+                                                 anchors={'center': 'center'})
+
+
+
 #background image 
 background = pygame.image.load("assets/background.png")
 backgroundwidth = screen_width
@@ -39,7 +52,7 @@ font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
 
 # Game Variables
 # Pause
-paused = False
+paused = True
 
 # Clicking
 click_power = 100000
@@ -373,9 +386,13 @@ class Upgrade():
     def sort(self):
         if self.isUnlocked == True:
             index = list_bought.index(self)
-            self.x = 10 + (index * 45)
-            if self.x > 250:
-                self.x = 10
+            
+            if index >= 8:
+                self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
+                self.y = 60 + 51
+            elif index >= 0:
+                self.x = 10 + (index * 49) + (index * 2)
+                self.y = 60
 
             self.button.set_relative_position((self.x, self.y))
 
@@ -460,6 +477,30 @@ def gold_display(gold):
     screen.blit(score_text, score_text_rect)
     screen.blit(gold_text, gold_text_rect)
 
+    # Main menu
+def init_main_menu():
+    global paused
+    area_tabs.hide()
+    area_tabs.disable()
+    button_prestige.hide()
+    button_prestige.disable()
+    main_menu.show()
+    main_menu.enable()
+    paused = True
+    return paused
+    
+def game_start():
+    global paused, main_menu_status
+    area_tabs.show()
+    area_tabs.enable()
+    button_prestige.show()
+    button_prestige.enable() 
+    main_menu.hide()
+    main_menu.disable()
+    main_menu_status = False
+    paused = False
+    print("worked")
+    return paused, main_menu_status
 
 
 # Game loop \o/
@@ -497,6 +538,8 @@ while running:
 
                 for champion in champions:
                     champion.isUnlocked = False
+
+
             
             if not paused:
                 if event.ui_element == button_next_tab:
@@ -553,14 +596,21 @@ while running:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
+            if event.ui_element == button_game_start:
+                game_start()
+
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
                 
-                if background_area.rect.collidepoint(mouse_pos):
-                    gold += click_power
+                if not paused:
+                    if background_area.rect.collidepoint(mouse_pos):
+                        gold += click_power
 
         window.process_events(event)
+
+
+
 
     # Tab
     if current_tab == 1 and not paused:
@@ -603,6 +653,9 @@ while running:
     click_power_display()
     idle_power_display()
     gold_display(gold)
+    
+    if main_menu_status == True:
+        init_main_menu()
 
 
     window.update(time_delta)
