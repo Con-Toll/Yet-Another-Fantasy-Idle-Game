@@ -52,7 +52,7 @@ font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
 
 # Game Variables
 # Pause
-paused = True
+paused = False
 
 # Clicking
 click_power = 100000
@@ -316,8 +316,13 @@ pyr = Champion(1, "pyr", "Pyr, the Apprentice", 0, 10, False, 1000, 1200, "asset
 avani = Champion(2, "avani", "Avani, the Bright", 0, 100, False, 2500, 3000, "assets/images.png")
 obek = Champion(3, "obek", "Obek, the Scavenger", 0, 1000, False, 5000, 6000, "assets/images.png")
 azura = Champion(4, "azura", "Azura, the Something", 0, 10000, False, 10000, 10000, "assets/images.png")
+champ6 = Champion(5, "c6", "6th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
+champ7 = Champion(6, "c7", "7th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
+champ8 = Champion(7, "c8", "Champ, the 8th", 0, 10000, False, 10000, 10000, "assets/images.png")
+champ9 = Champion(8, "c9", "Champ, the 9th", 0, 10000, False, 10000, 10000, "assets/images.png")
+champ10 = Champion(9, "c10", "Champ, the 10th", 0, 10000, False, 10000, 10000, "assets/images.png")
 
-champions = [hero, pyr, avani, obek, azura]
+champions = [hero, pyr, avani, obek, azura, champ6, champ7, champ8, champ9, champ10]
 
 
 # Champion initialization
