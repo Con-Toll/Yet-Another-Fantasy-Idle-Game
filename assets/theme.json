@@ -10,31 +10,101 @@
         "misc":
         {
              "shape": "rounded_rectangle",
-             "border_width": ""
+             "border_width": "1",
+             "shadow_width": "0",
+             "tool_tip_delay": "0"
         },
         "font":
         {
            "name": "chava",
-           "size": "25",
+           "size": "24",
            "regular_path": "assets/Chava-Regular.ttf"
-
         }
     },
     "label":
-     {
+    {
          "colours":
          {
-             "dark_bg": "#25292e",
+             "dark_bg": "#142020",
              "normal_text": "#c5cbd8",
              "text_shadow": "#505050"
          },
          "font":
          {
             "name": "chava",
-            "size": "25",
+            "size": "20",
             "regular_path": "assets/Chava-Regular.ttf"
-
+         },
+         "misc":{
          }
+    },
+    "@text_tabs":
+    {
+        "font":{
+            "name": "chava",
+            "size": "32"
+            }
+    },
+    "@champ_info":
+    {
+        "font":{
+            "name": "chava",
+            "size": "20",
+            "regular_path": "assets/Chava-Regular.ttf"
+            },
+            "colours":{
+                "dark_bg": "#142020"
+            },
+            "misc":{
+                "text_horiz_alignment": "left",
+                "text_horiz_alignment_padding": "5"
+            }
+    },
+    "@champ_title":
+    {
+        "font":{
+            "name": "chava",
+            "size": "20",
+            "regular_path": "assets/Chava-Regular.ttf"
+        }            
+    },
+    "vertical_scroll_bar":
+    {
+        "misc":{
+            "shadow_width": "0"
         }
-    
-}   
+    },
+    "@button_level":
+    {
+        "font":{
+            "name": "chava",
+            "size": "22"
+        }
+    },
+    "panel":
+    {
+        "misc":{
+            "shadow_width": "0"
+        }
+    },
+    "@text_prestige":
+    {
+        "font":{
+            "name": "chava",
+            "size": "40"
+        }
+    },
+    "@background_area":{
+        "colours": {
+            "normal_bg": "#00000000",
+            "hovered_bg": "#00000000",
+            "disabled_bg": "#00000000",
+            "normal_border": "#00000000",
+            "hovered_border": "#00000000",
+            "disabled_border": "#00000000",
+            "normal_text": "#00000000",
+            "hovered_text": "#00000000",
+            "disabled_text": "#00000000"
+        }
+    }   
+}
