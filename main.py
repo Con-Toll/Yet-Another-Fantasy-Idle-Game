@@ -21,14 +21,14 @@ pygame.display.set_caption("Yet Another Idle Clicker")
 
 
 # Main Menu
-main_menu = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)),
-                                              manager=window)
-main_menu_status = True
+#main_menu = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)),
+ #                                             manager=window)
+#main_menu_status = True
 
-button_game_start = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (150, 50)),
-                                                 text="Start",
-                                                 container=main_menu,
-                                                 anchors={'center': 'center'})
+#button_game_start = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (150, 50)),
+ #                                                text="Start",
+  #                                               container=main_menu,
+   #                                              anchors={'center': 'center'})
 
 
 
@@ -63,7 +63,8 @@ gold = 0
 # Champions
 total_champion = 0
 
-
+# Info bar container
+container_info_bars = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2,-2), (screen_width+4, 102)))
 
 # Main tab button
 area_tabs = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-3, screen_height-31), (969, screen_height/3*2)))
@@ -87,7 +88,7 @@ text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (
                                                container=area_tab_champ)
 
 # Upgrade Area
-container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 290)),
+container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 230)),
                                                                   container=area_tabs,
                                                                   allow_scroll_x=False)
 # Header that says "UPGRADES"
@@ -106,9 +107,9 @@ button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((290, 
 
 
 # Containers for available and bought upgrades
-area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0), (422, 315)),
+area_upgrade_available = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,0), (422, 500)),
                                                      container=container_upgrade)
-area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,319), (422, 315)),
+area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,504), (422, 500)),
                                                   container=container_upgrade)
 
 
@@ -135,8 +136,9 @@ button_prev_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((14, 40
                                               container=area_tabs)
 
 # Ascension wao
-button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((750, 40), (160, 40)),
-                                                text="Transcend")
+button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((730, 20), (200, 60)),
+                                                text="Transcend",
+                                                container=container_info_bars)
 area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)))
 area_prestige.disable()
 area_prestige.hide()
@@ -360,14 +362,35 @@ class Upgrade():
 
         if not self.isUnlocked:
             index = list_available.index(self)
-            # x values: 10, 55, 100, 145, 190, 235, 280, 325, 370, 415; the container is (422, 315)
-            
-            if index >= 8:
+            #the container is (422, 315)
+            if index >= 64:
+                self.x = 10 + ((index-64) * 49) + ((index-64) * 2)
+                self.y = 60 + (8 * 51)
+            elif index >= 56:
+                self.x = 10 + ((index-56) * 49) + ((index-56) * 2)
+                self.y = 60 + (7 * 51)
+            elif index >= 48:
+                self.x = 10 + ((index-48) * 49) + ((index-48) * 2)
+                self.y = 60 + (6 * 51)
+            elif index >= 40:
+                self.x = 10 + ((index-40) * 49) + ((index-40) * 2)
+                self.y = 60 + (5 * 51)
+            elif index >= 32:
+                self.x = 10 + ((index-32) * 49) + ((index-32) * 2)
+                self.y = 60 + (4 * 51)
+            elif index >= 24:
+                self.x = 10 + ((index-24) * 49) + ((index-24) * 2)
+                self.y = 60 + (3 * 51)
+            elif index >= 16:
+                self.x = 10 + ((index-16) * 49) + ((index-16) * 2)
+                self.y = 60 + (2 * 51)
+            elif index >= 8:
                 self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
-                self.y = 60 + 51
+                self.y = 60 + (1 * 51)
             elif index >= 0:
                 self.x = 10 + (index * 49) + (index * 2)
                 self.y = 60
+            print(index, self.x, self.y)
 
             # note for future improvement:
             # for index % 8 = 0, modifier = index, self.x = 10 + 
@@ -405,22 +428,88 @@ class Upgrade():
 # Upgrades
 # num_id, requirement, price, name, origin, tooltip, mult, action
 
+# Hero
 up_hero1 = Upgrade(1, 2, 100000, "Hero 1", hero, "This is hero upgrade 1", 2, action=(hero.upgrade1))
 up_hero2 = Upgrade(2, 3, 100000, "Hero 2", hero, "This is hero upgrade 2", 2, action=(hero.upgrade1))
 up_hero3 = Upgrade(3, 4, 100000, "Hero 3", hero, "This is hero upgrade 3", 2, action=(hero.upgrade1))
 up_hero4 = Upgrade(4, 5, 100000, "Hero 4", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
 up_hero5 = Upgrade(5, 6, 100000, "Hero 5", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
-up_hero6 = Upgrade(6, 7, 100000, "Hero 6", hero, "This is hero upgrade 6", 2, action=(hero.upgrade1))
-up_pyr1 = Upgrade(7, 2, 100000, "Pyr 1", pyr, "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
-up_pyr2 = Upgrade(8, 3, 100000, "Pyr 2", pyr, "This is pyr upgrade 2", 2, action=(pyr.upgrade1))
-up_pyr3 = Upgrade(9, 4, 100000, "Pyr 3", pyr, "This is pyr upgrade 3", 2, action=(pyr.upgrade1))
-up_pyr4 = Upgrade(10, 5, 100000, "Pyr 4", pyr, "This is pyr upgrade 4", 2, action=(pyr.upgrade1))
-up_pyr5 = Upgrade(11, 6, 100000, "Pyr 5", pyr, "This is pyr upgrade 5", 2, action=(pyr.upgrade1))
-up_pyr6 = Upgrade(12, 7, 100000, "Pyr 6", pyr, "This is pyr upgrade 6", 2, action=(pyr.upgrade1))
+
+# Pyr
+up_pyr1 = Upgrade(6, 2, 100000, "Pyr 1", pyr, "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
+up_pyr2 = Upgrade(7, 3, 100000, "Pyr 2", pyr, "This is pyr upgrade 2", 2, action=(pyr.upgrade1))
+up_pyr3 = Upgrade(8, 4, 100000, "Pyr 3", pyr, "This is pyr upgrade 3", 2, action=(pyr.upgrade1))
+up_pyr4 = Upgrade(9, 5, 100000, "Pyr 4", pyr, "This is pyr upgrade 4", 2, action=(pyr.upgrade1))
+up_pyr5 = Upgrade(10, 6, 100000, "Pyr 5", pyr, "This is pyr upgrade 5", 2, action=(pyr.upgrade1))
+
+# Avani
+up_avani1 = Upgrade(11, 2, 100000, "avani 1", avani, "This is avani upgrade 1", 2, action=(avani.upgrade1))
+up_avani2 = Upgrade(12, 3, 100000, "avani 2", avani, "This is avani upgrade 2", 2, action=(avani.upgrade1))
+up_avani3 = Upgrade(13, 4, 100000, "avani 3", avani, "This is avani upgrade 3", 2, action=(avani.upgrade1))
+up_avani4 = Upgrade(14, 5, 100000, "avani 4", avani, "This is avani upgrade 4", 2, action=(avani.upgrade1))
+up_avani5 = Upgrade(15, 6, 100000, "avani 5", avani, "This is avani upgrade 5", 2, action=(avani.upgrade1))
+
+# Obek
+up_obek1 = Upgrade(16, 2, 100000, "obek 1", obek, "This is obek upgrade 1", 2, action=(obek.upgrade1))
+up_obek2 = Upgrade(17, 3, 100000, "obek 2", obek, "This is obek upgrade 2", 2, action=(obek.upgrade1))
+up_obek3 = Upgrade(18, 4, 100000, "obek 3", obek, "This is obek upgrade 3", 2, action=(obek.upgrade1))
+up_obek4 = Upgrade(19, 5, 100000, "obek 4", obek, "This is obek upgrade 4", 2, action=(obek.upgrade1))
+up_obek5 = Upgrade(20, 6, 100000, "obek 5", obek, "This is obek upgrade 5", 2, action=(obek.upgrade1))
+
+# Azura
+up_azura1 = Upgrade(26, 2, 100000, "azura 1", azura, "This is azura upgrade 1", 2, action=(azura.upgrade1))
+up_azura2 = Upgrade(27, 3, 100000, "azura 2", azura, "This is azura upgrade 2", 2, action=(azura.upgrade1))
+up_azura3 = Upgrade(28, 4, 100000, "azura 3", azura, "This is azura upgrade 3", 2, action=(azura.upgrade1))
+up_azura4 = Upgrade(29, 5, 100000, "azura 4", azura, "This is azura upgrade 4", 2, action=(azura.upgrade1))
+up_azura5 = Upgrade(30, 6, 100000, "azura 5", azura, "This is azura upgrade 5", 2, action=(azura.upgrade1))
+
+# Champ 6
+up_champ6_1 = Upgrade(6, 2, 100000, "champ6 1", champ6, "This is champ6 upgrade 1", 2, action=(champ6.upgrade1))
+up_champ6_2 = Upgrade(7, 3, 100000, "champ6 2", champ6, "This is champ6 upgrade 2", 2, action=(champ6.upgrade1))
+up_champ6_3 = Upgrade(8, 4, 100000, "champ6 3", champ6, "This is champ6 upgrade 3", 2, action=(champ6.upgrade1))
+up_champ6_4 = Upgrade(9, 5, 100000, "champ6 4", champ6, "This is champ6 upgrade 4", 2, action=(champ6.upgrade1))
+up_champ6_5 = Upgrade(10, 6, 100000, "champ6 5", champ6, "This is champ6 upgrade 5", 2, action=(champ6.upgrade1))
+
+# Champ 7
+up_champ7_1 = Upgrade(6, 2, 100000, "champ7 1", champ7, "This is champ7 upgrade 1", 2, action=(champ7.upgrade1))
+up_champ7_2 = Upgrade(7, 3, 100000, "champ7 2", champ7, "This is champ7 upgrade 2", 2, action=(champ7.upgrade1))
+up_champ7_3 = Upgrade(8, 4, 100000, "champ7 3", champ7, "This is champ7 upgrade 3", 2, action=(champ7.upgrade1))
+up_champ7_4 = Upgrade(9, 5, 100000, "champ7 4", champ7, "This is champ7 upgrade 4", 2, action=(champ7.upgrade1))
+up_champ7_5 = Upgrade(10, 6, 100000, "champ7 5", champ7, "This is champ7 upgrade 5", 2, action=(champ7.upgrade1))
+
+# Champ 8
+up_champ8_1 = Upgrade(6, 2, 100000, "champ8 1", champ8, "This is champ8 upgrade 1", 2, action=(champ8.upgrade1))
+up_champ8_2 = Upgrade(7, 3, 100000, "champ8 2", champ8, "This is champ8 upgrade 2", 2, action=(champ8.upgrade1))
+up_champ8_3 = Upgrade(8, 4, 100000, "champ8 3", champ8, "This is champ8 upgrade 3", 2, action=(champ8.upgrade1))
+up_champ8_4 = Upgrade(9, 5, 100000, "champ8 4", champ8, "This is champ8 upgrade 4", 2, action=(champ8.upgrade1))
+up_champ8_5 = Upgrade(10, 6, 100000, "champ8 5", champ8, "This is champ8 upgrade 5", 2, action=(champ8.upgrade1))
+
+# Champ 9
+up_champ9_1 = Upgrade(6, 2, 100000, "champ9 1", champ9, "This is champ9 upgrade 1", 2, action=(champ9.upgrade1))
+up_champ9_2 = Upgrade(7, 3, 100000, "champ9 2", champ9, "This is champ9 upgrade 2", 2, action=(champ9.upgrade1))
+up_champ9_3 = Upgrade(8, 4, 100000, "champ9 3", champ9, "This is champ9 upgrade 3", 2, action=(champ9.upgrade1))
+up_champ9_4 = Upgrade(9, 5, 100000, "champ9 4", champ9, "This is champ9 upgrade 4", 2, action=(champ9.upgrade1))
+up_champ9_5 = Upgrade(10, 6, 100000, "champ9 5", champ9, "This is champ9 upgrade 5", 2, action=(champ9.upgrade1))
+
+# Champ 10
+up_champ10_1 = Upgrade(6, 2, 100000, "champ10 1", champ10, "This is champ10 upgrade 1", 2, action=(champ10.upgrade1))
+up_champ10_2 = Upgrade(7, 3, 100000, "champ10 2", champ10, "This is champ10 upgrade 2", 2, action=(champ10.upgrade1))
+up_champ10_3 = Upgrade(8, 4, 100000, "champ10 3", champ10, "This is champ10 upgrade 3", 2, action=(champ10.upgrade1))
+up_champ10_4 = Upgrade(9, 5, 100000, "champ10 4", champ10, "This is champ10 upgrade 4", 2, action=(champ10.upgrade1))
+up_champ10_5 = Upgrade(10, 6, 100000, "champ10 5", champ10, "This is champ10 upgrade 5", 2, action=(champ10.upgrade1))
+
 
 list_upgrades = [
-    up_hero1, up_hero2, up_hero3, up_hero4, up_hero5, up_hero6, 
-    up_pyr1, up_pyr2, up_pyr3, up_pyr4, up_pyr5, up_pyr6
+    up_hero1, up_hero2, up_hero3, up_hero4, up_hero5,
+    up_pyr1, up_pyr2, up_pyr3, up_pyr4, up_pyr5,
+    up_avani1, up_avani2, up_avani3, up_avani4, up_avani5,
+    up_obek1, up_obek2, up_obek3, up_obek4, up_obek5,
+    up_azura1, up_azura2, up_azura3, up_azura4, up_azura5,
+    up_champ6_1, up_champ6_2, up_champ6_3, up_champ6_4, up_champ6_5,
+    up_champ7_1, up_champ7_2, up_champ7_3, up_champ7_4, up_champ7_5,
+    up_champ8_1, up_champ8_2, up_champ8_3, up_champ8_4, up_champ8_5,
+    up_champ9_1, up_champ9_2, up_champ9_3, up_champ9_4, up_champ9_5,
+    up_champ10_1, up_champ10_2, up_champ10_3, up_champ10_4, up_champ10_5
     ]
 list_available = []
 list_bought = []
@@ -435,77 +524,80 @@ clock = pygame.time.Clock()
 total_idle_power = sum(champion.idle_power for champion in champions)
 
 
-# Idle Power Display
-def idle_power_display():
-    idle_text = font.render(f"Idle P:", True, black)
-    idle_text_rect = idle_text.get_rect(center=(screen_width/10, 40))
-    if abs(total_idle_power) > 99999:
-        idle_power_format = "{:.2e}".format(total_idle_power)
+
+# Info bars
+
+
+container_info_click = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 4), (210, 49)),
+                                                  container=container_info_bars)
+icon_click_power_load = pygame.image.load("assets/images.png")
+icon_click_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (47, 47)),
+                                              image_surface=icon_click_power_load,
+                                              container=container_info_click)
+info_num_click = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), (163, 47)),
+                                             text=f"{click_power}",
+                                             container=container_info_click)
+
+
+container_info_idle = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 51), (210, 49)),
+                                                  container=container_info_bars)
+icon_idle_power_load = pygame.image.load("assets/images.png")
+icon_idle_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (47, 47)),
+                                              image_surface=icon_idle_power_load,
+                                              container=container_info_idle)
+info_num_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), (163, 47)),
+                                             text=f"{total_idle_power}",
+                                             container=container_info_idle)
+
+
+container_info_gold = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((420, 4), (250, 96)),
+                                                  container=container_info_bars)
+info_text_gold = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (248, 47)),
+                                             text="GOLD",
+                                             container=container_info_gold)
+info_num_gold = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), (248, 47)),
+                                             text=f"{gold}",
+                                             container=container_info_gold)
+
+
+
+# Format
+def format_num(value):
+    if abs(value) > 99999:
+        return f"{value:.2e}"
     else:
-        idle_power_format = "{:,}".format(total_idle_power)
-    idle_num = font.render(f"{idle_power_format}", True, black)
-    idle_num_rect = idle_text.get_rect(center=(screen_width/10, 70))
+        return f"{value:,}"
 
-    screen.blit(idle_text, idle_text_rect)
-    screen.blit(idle_num, idle_num_rect)
-
-
-# Click Power Display
-def click_power_display():
-    click_text = font.render(f"Click P:", True, black)
-    click_text_rect = click_text.get_rect(center=(screen_width/3, 40))
-
-    if abs(click_power) > 99999:
-        click_power_format = "{:.2e}".format(click_power)
+def format_gold(value):
+    if abs(value) > 999999999:
+        return f"{value:.2e}"
     else:
-        click_power_format = "{:,}".format(click_power)
-    click_power_text = font.render(f"{click_power_format}", True, black)
-    click_power_text_rect = click_power_text.get_rect(center=(screen_width/3, 70))
-
-    screen.blit(click_text, click_text_rect)
-    screen.blit(click_power_text, click_power_text_rect)
-
-
-# Gold Display
-def gold_display(gold):
-    score_text = font.render(f"Gold:", True, black)
-    score_text_rect = score_text.get_rect(center=(screen_width/2, 40))
-        
-    if abs(gold) > 9999999999:
-        gold_format = "{:.3e}".format(gold)
-    else:
-        gold_format = "{:,}".format(gold)
-
-    gold_text = font.render(f"{gold_format}", True, black)
-    gold_text_rect = gold_text.get_rect(center=(screen_width/2, 70))
-
-    screen.blit(score_text, score_text_rect)
-    screen.blit(gold_text, gold_text_rect)
+        return f"{value:,}"
 
     # Main menu
-def init_main_menu():
-    global paused
-    area_tabs.hide()
-    area_tabs.disable()
-    button_prestige.hide()
-    button_prestige.disable()
-    main_menu.show()
-    main_menu.enable()
-    paused = True
-    return paused
+#def init_main_menu():
+ #   global paused
+  #  area_tabs.hide()
+   # area_tabs.disable()
+#    button_prestige.hide()
+ #   button_prestige.disable()
+  #  main_menu.show()
+   # main_menu.enable()
+#    paused = True
+ #   return paused
     
-def game_start():
-    global paused, main_menu_status
-    area_tabs.show()
-    area_tabs.enable()
-    button_prestige.show()
-    button_prestige.enable() 
-    main_menu.hide()
-    main_menu.disable()
-    main_menu_status = False
-    paused = False
-    print("worked")
-    return paused, main_menu_status
+#def game_start():
+#    global paused, main_menu_status
+ #   area_tabs.show()
+  #  area_tabs.enable()
+   # button_prestige.show()
+#    button_prestige.enable() 
+ #   main_menu.hide()
+  #  main_menu.disable()
+   # main_menu_status = False
+#    paused = False
+ #   print("worked")
+  #  return paused, main_menu_status
 
 
 # Game loop \o/
@@ -533,6 +625,8 @@ while running:
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == button_prestige:
                 paused = not paused
+                container_info_bars.hide()
+                container_info_bars.disable()
                 area_tabs.hide()
                 area_tabs.disable()
                 area_prestige.show()
@@ -549,9 +643,17 @@ while running:
             if not paused:
                 if event.ui_element == button_next_tab:
                     current_tab = 2
+                    area_tab_champ.hide()
+                    area_tab_upgrade.hide()
+                    container_champ.hide()
+                    container_upgrade.hide()
 
                 elif event.ui_element == button_prev_tab:
                     current_tab = 1
+                    area_tab_champ.show()
+                    area_tab_upgrade.show()
+                    container_champ.show()
+                    container_upgrade.show()
 
                 # Tab buttons
                 elif event.ui_element == button_tab:
@@ -601,8 +703,8 @@ while running:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
-            if event.ui_element == button_game_start:
-                game_start()
+        #    if event.ui_element == button_game_start:
+         #       game_start()
 
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -653,15 +755,13 @@ while running:
         if upgrade.origin.level >= upgrade.requirement:
             upgrade.shown = True
 
-
     
-    click_power_display()
-    idle_power_display()
-    gold_display(gold)
-    
-    if main_menu_status == True:
-        init_main_menu()
+#    if main_menu_status == True:
+ #       init_main_menu()
 
+    info_num_click.set_text(f"{format_num(click_power)}")
+    info_num_idle.set_text(f"{format_num(total_idle_power)}")
+    info_num_gold.set_text(f"{format_gold(gold)}")
 
     window.update(time_delta)
     window.draw_ui(screen)
