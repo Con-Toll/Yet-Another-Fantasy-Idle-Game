@@ -11,6 +11,8 @@ import json
 pygame.init()
 
 
+
+
 # -- VARIABLES --
 # Screen info
 screen_width = 960
@@ -23,10 +25,11 @@ pygame.display.set_caption("Yet Another Idle Clicker")
 background = pygame.image.load("assets/background.png").convert()
 backgroundwidth = background.get_width()
 
+
 scroll = 0
 sections = math.ceil(screen_width / backgroundwidth)
 print(sections)
-
+start_game = False
 
 # Colours
 white = (255, 255, 255)
@@ -41,6 +44,8 @@ click_power = 100
 auto_click_power = 0
 click_check_interval = 1000  # in milliseconds
 last_click_update = pygame.time.get_ticks()
+
+
 
 # Currency
 gold = 0
@@ -212,11 +217,11 @@ Bought_text = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,10),(200,
 
         
         
-        # Set default values for other variables here
+        
 
 
 
-# load the previous state
+
 
 
 
@@ -270,6 +275,18 @@ if current_time - last_click_update >= click_check_interval:
     gold += auto_click_power
     last_auto_click_time = current_time
 
+class UILabel:
+    def __init__(self, text, position, font_size):
+        self.text = text
+        self.position = position
+        self.font_size = font_size
+
+    def to_dict(self):
+        return {
+            "text": self.text,
+            "position": self.position,
+            "font_size": self.font_size
+        }
 
 # Champions
 class Champion():
@@ -442,6 +459,26 @@ def avaniUnlock():
     # Display next champion's container
     obek.showChamp()
 
+def save_game_state(file_path='game_state.json'):
+    pass
+6
+
+def load_game_state():
+    global gold, champions
+
+    try:
+        with open('game_state.json', 'r') as file:
+            game_state = json.load(file)
+            gold = game_state["gold"]
+            champions_data = game_state["champions"]
+
+
+
+            champions = [Champion.from_dict(champion_data) for champion_data in champions_data]
+    except FileNotFoundError:
+        print("No game state found")
+
+load_game_state()
 
 clock = pygame.time.Clock()
 
@@ -449,6 +486,8 @@ clock = pygame.time.Clock()
 champion_y = 490
 upgrade_y = 490
 misc_y = 490
+
+
 
 
 # Game loop \o/
@@ -471,6 +510,7 @@ while running:
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            save_game_state()
             running = False
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
@@ -595,7 +635,7 @@ while running:
     idle_power_display()
     gold_display(gold)
 
-
+    
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update

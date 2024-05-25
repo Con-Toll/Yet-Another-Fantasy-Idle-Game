@@ -1,0 +1,52 @@
+{
+    "gold": 0,
+    "click_power": 10,
+    "auto_click_power": 5,
+    "total_champion": 3,
+    "champions": [
+        {
+            "name": "Champion1",
+            "title": "The Brave",
+            "level": 10,
+            "idle_power": 15,
+            "isUnlocked": true,
+            "shown": true,
+            "position": 1,
+            "price_hire": 100,
+            "price_level": 200,
+            "image": "champion1.png"
+        },
+        {
+            "name": "Champion2",
+            "title": "The Wise",
+            "level": 5,
+            "idle_power": 8,
+            "isUnlocked": true,
+            "shown": false,
+            "position": 2,
+            "price_hire": 200,
+            "price_level": 400,
+            "image": "champion2.png"
+        },
+        {
+            "name": "Champion3",
+            "title": "The Strong",
+            "level": 1,
+            "idle_power": 3,
+            "isUnlocked": false,
+            "shown": false,
+            "position": 3,
+            "price_hire": 500,
+            "price_level": 1000,
+            "image": "champion3.png"
+        }
+    ],
+    "label": {
+        "text": "Game Over",
+        "position": [
+            100,
+            200
+        ],
+        "font_size": 16
+    }
+}
