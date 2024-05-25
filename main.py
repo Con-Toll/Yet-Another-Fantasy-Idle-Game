@@ -568,6 +568,122 @@ info_num_gold = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), (
                                              text=f"{gold}",
                                              container=container_info_gold)
 
+#QTE
+class Event_gui(pygame.sprite.Sprite):
+    def __init__(self,pos,direc,name="none") -> None:
+        super().__init__()
+        self.name = name
+        self.perk = gold
+        self.sprite = []
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-0.png"))
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-1.png"))
+        self.is_animating = True
+        self.current_sprite = 0
+        self.image = self.sprite
+        self.image = self.sprite[self.current_sprite]
+        self.fade = False
+        self.rect = self.image.get_rect()
+        self.rect= [pos,pos]
+        self.alpha = 255
+        self.direc = direc
+        self.access = False
+        self.nice = False
+    
+    def key(self):
+        if self.access == True:
+            if event.type == pygame.KEYUP:
+                if event.key == getattr(pygame,f"K_{self.direc}"):
+                    self.fade=True
+                    self.access = False
+                    self.nice = True
+                    
+                            
+    def update(self):
+        if self.is_animating==True:
+            self.current_sprite += 0.1
+            if self.current_sprite >= len(self.sprite):
+                self.current_sprite = 0
+                
+            self.image = self.sprite[int(self.current_sprite)]
+            
+        
+    def fadeout(self):
+            global point
+            if self.fade == True:
+                self.alpha=max(0,self.alpha-5)
+                self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
+                if self.alpha <= 0:
+                    self.kill()
+                    self.is_animating = False
+                
+             
+           
+    
+        
+moving_image = pygame.sprite.Group()
+
+
+class QTE(pygame.sprite.Sprite):
+    def __init__(self, start, end):
+        super().__init__()
+        self.position = {
+            1: (350, 3),
+            2: (450, 3),
+            3: (550, 3),
+            4: (650, 3)
+        }
+        self.different = ["UP", "DOWN", "LEFT", "RIGHT"]
+        self.Up = Event_gui(self.position[1], random.choice(self.different))#1
+        self.Down = Event_gui(self.position[2], random.choice(self.different))#2
+        self.Left = Event_gui(self.position[3], random.choice(self.different))#3
+        self.Right = Event_gui(self.position[4], random.choice(self.different))
+        self.current_key = 0
+        self.prev_key = None
+        self.exe =True
+        
+        
+    def key(self):
+        global gold
+        if self.exe == True:
+            self.Up.access = True
+            self.Up.key()
+            if self.Up.nice == True:
+                self.Down.key()
+                self.Down.access = True
+                if self.Down.nice == True:
+                    self.Left.key() == True
+                    self.Left.access = True
+                    if self.Left.nice == True:
+                        self.Right.key()
+                        self.Right.access = True
+                        if self.Right.nice == True:
+                            gold+=10000
+                            self.exe = False
+                            self.reset()
+                            
+    def reset(self):
+        self.Down.direc = random.choice(self.different)
+        self.Up.direc = random.choice(self.different)
+        self.Left.direc = random.choice(self.different)
+        self.Right.direc = random.choice(self.different)
+        
+                    
+        
+    def update(self):
+        if self.exe == True:
+            moving_image.add(self.Up)
+            moving_image.add(self.Down)
+            moving_image.add(self.Left)
+            moving_image.add(self.Right)
+            
+        
+    def fadeout(self):
+        self.Up.fadeout()
+        self.Down.fadeout()
+        self.Left.fadeout()
+        self.Right.fadeout()
+
+
 
 
 # Format
