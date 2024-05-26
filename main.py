@@ -6,6 +6,9 @@ import math
 import time
 import threading
 
+import pygame_gui.elements.ui_tool_tip
+
+
 pygame.init()
 
 
@@ -49,6 +52,8 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
+window.add_font_paths("canva", "assets/Chava-Regular.ttf")
+window.preload_fonts([{'name': 'canva', 'point-size': 14, 'style': 'regular'}])
 
 # Game Variables
 # Pause
@@ -351,9 +356,19 @@ class Upgrade():
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
                                                    text="",
-                                                   tool_tip_text=f"{self.name}\n{self.tooltip}\nPrice: {self.price}",
-                                                   container=area_upgrade_available)
-        
+                                                   container=area_upgrade_available,
+                                                   manager=window)
+    
+        self.button_tooltip = None
+
+    def create_tooltip(self):
+        self.button_tooltip = pygame_gui.elements.UITooltip(html_text="<font face=canva>"
+                                                            f"{self.name}\n{self.tooltip}\nPrice: {self.price}"
+                                                            "</font>",
+                                                            hover_distance=(-1, -1),
+                                                            manager=window)
+        return self.button_tooltip
+
 
     def available(self):
         if self.shown:
@@ -518,6 +533,29 @@ for upgrade in list_upgrades:
     upgrade.button.disable()
     upgrade.button.hide()
 
+
+
+class Prestige():
+    def __init__(self, x, y, num_id, requirement, price, name, tooltip, mult, action=None):
+        self.x = x
+        self.y = y
+        self.num_id = num_id
+        self.requirement = requirement
+        self.price = price
+        self.name = name
+        self.tooltip = tooltip
+        self.mult = mult
+        self.isUnlocked = False
+
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
+                                                   text="",
+                                                   tool_tip_text=f"{self.name}\n{self.tooltip}\nPrice: {self.price}",
+                                                   container=area_prestige)
+
+
+
+
+
 clock = pygame.time.Clock()
 
 
@@ -526,8 +564,6 @@ total_idle_power = sum(champion.idle_power for champion in champions)
 
 
 # Info bars
-
-
 container_info_click = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 4), (210, 49)),
                                                   container=container_info_bars)
 icon_click_power_load = pygame.image.load("assets/images.png")
@@ -622,6 +658,20 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
+        # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA I FINALLY FIXED THE TOOLTIP
+        if event.type == pygame_gui.UI_BUTTON_ON_HOVERED:
+            for upgrade in list_available:
+                if event.ui_element == upgrade.button:
+                    if upgrade.button_tooltip is None:
+                        upgrade.button_tooltip = upgrade.create_tooltip()
+
+        if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
+            for upgrade in list_available:
+                if event.ui_element == upgrade.button:
+                    if upgrade.button_tooltip is not None:
+                        upgrade.button_tooltip.kill()
+                        upgrade.button_tooltip = None
+
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == button_prestige:
                 paused = not paused
@@ -703,6 +753,9 @@ while running:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
+
+
+
         #    if event.ui_element == button_game_start:
          #       game_start()
 
@@ -755,7 +808,13 @@ while running:
         if upgrade.origin.level >= upgrade.requirement:
             upgrade.shown = True
 
-    
+
+    for upgrade in list_available:
+        if upgrade.button_tooltip is not None:
+            mouse_pos = pygame.mouse.get_pos()
+            adjusted_mouse_pos = (mouse_pos[0] + 20, mouse_pos[1] - 20)
+            upgrade.button_tooltip.find_valid_position((adjusted_mouse_pos))
+
 #    if main_menu_status == True:
  #       init_main_menu()
 
