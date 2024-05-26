@@ -106,5 +106,45 @@
             "hovered_text": "#00000000",
             "disabled_text": "#00000000"
         }
+    },
+    "@button_prestige":{
+        "font":{
+            "name":"chava",
+            "size":"20"
+        },
+        "misc":{
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
+        }
+    },
+    "@prestige_price":{
+        "font":{
+            "name": "chava",
+            "size": "32"
+        },
+        "misc":{
+            "text_horiz_alignment": "left",
+            "text_horiz_alignment_padding": "15"
+        }
+    },
+    "@prestige_credits":{
+        "font":{
+            "name": "chava",
+            "size": "32"
+        },
+        "misc":{
+            "text_horiz_alignment": "right",
+            "text_horiz_alignment_padding": "15"
+        }
+    },
+    "@prestige_tooltip":{
+        "font":{
+            "name": "chava",
+            "size": "24"
+        },
+        "misc":{
+            "text_horiz_alignment": "left",
+            "text_horiz_alignment_padding": "15"
+        }
     }
 }

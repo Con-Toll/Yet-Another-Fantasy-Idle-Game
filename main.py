@@ -6,10 +6,8 @@ import math
 import time
 import threading
 
-import pygame_gui.elements.ui_tool_tip
-
-
 pygame.init()
+
 
 
 # -- VARIABLES --
@@ -74,7 +72,7 @@ container_info_bars = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2,
 # Main tab button
 area_tabs = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-3, screen_height-31), (969, screen_height/3*2)))
 button_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (966, 30)), 
-                                          text="",
+                                          text="^",
                                           container=area_tabs)
 # False = Closed, True = Open
 area_tabs_status = False
@@ -88,7 +86,7 @@ container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.
 area_tab_champ = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((7, 32), (438, 56)),
                                           container=area_tabs)
 text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (436, 52)),
-                                               text="Champions",
+                                               text="\"Champions\"",
                                                object_id=ObjectID(class_id="@text_tabs"),
                                                container=area_tab_champ)
 
@@ -140,17 +138,23 @@ button_prev_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((14, 40
                                               text="<",
                                               container=area_tabs)
 
+area_tab2 = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((70, 32), (890, 288)),
+                                        container=area_tabs)
+
 # Ascension wao
-button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((730, 20), (200, 60)),
-                                                text="Transcend",
-                                                container=container_info_bars)
-area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (screen_width+4, screen_height+4)))
+button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 5), (200, 60)),
+                                                text="Sembreak !!",
+                                                container=area_tab2)
+area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (964, 544)))
 area_prestige.disable()
 area_prestige.hide()
-text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (screen_width, 75)),
-                                            text="T R A N S C E N D E N C E",
+text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (screen_width, 80)),
+                                            text="Sembreak Start !!",
                                             container=area_prestige,
                                             object_id=ObjectID(class_id="@text_prestige"))
+button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((15, 11), (200, 60)),
+                                                      text="RESPEC",
+                                                      container=area_prestige)
 
 
 # Champions
@@ -326,10 +330,8 @@ azura = Champion(4, "azura", "Azura, the Something", 0, 10000, False, 10000, 100
 champ6 = Champion(5, "c6", "6th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
 champ7 = Champion(6, "c7", "7th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
 champ8 = Champion(7, "c8", "Champ, the 8th", 0, 10000, False, 10000, 10000, "assets/images.png")
-champ9 = Champion(8, "c9", "Champ, the 9th", 0, 10000, False, 10000, 10000, "assets/images.png")
-champ10 = Champion(9, "c10", "Champ, the 10th", 0, 10000, False, 10000, 10000, "assets/images.png")
 
-champions = [hero, pyr, avani, obek, azura, champ6, champ7, champ8, champ9, champ10]
+champions = [hero, pyr, avani, obek, azura, champ6, champ7, champ8]
 
 
 # Champion initialization
@@ -499,19 +501,6 @@ up_champ8_3 = Upgrade(8, 4, 100000, "champ8 3", champ8, "This is champ8 upgrade 
 up_champ8_4 = Upgrade(9, 5, 100000, "champ8 4", champ8, "This is champ8 upgrade 4", 2, action=(champ8.upgrade1))
 up_champ8_5 = Upgrade(10, 6, 100000, "champ8 5", champ8, "This is champ8 upgrade 5", 2, action=(champ8.upgrade1))
 
-# Champ 9
-up_champ9_1 = Upgrade(6, 2, 100000, "champ9 1", champ9, "This is champ9 upgrade 1", 2, action=(champ9.upgrade1))
-up_champ9_2 = Upgrade(7, 3, 100000, "champ9 2", champ9, "This is champ9 upgrade 2", 2, action=(champ9.upgrade1))
-up_champ9_3 = Upgrade(8, 4, 100000, "champ9 3", champ9, "This is champ9 upgrade 3", 2, action=(champ9.upgrade1))
-up_champ9_4 = Upgrade(9, 5, 100000, "champ9 4", champ9, "This is champ9 upgrade 4", 2, action=(champ9.upgrade1))
-up_champ9_5 = Upgrade(10, 6, 100000, "champ9 5", champ9, "This is champ9 upgrade 5", 2, action=(champ9.upgrade1))
-
-# Champ 10
-up_champ10_1 = Upgrade(6, 2, 100000, "champ10 1", champ10, "This is champ10 upgrade 1", 2, action=(champ10.upgrade1))
-up_champ10_2 = Upgrade(7, 3, 100000, "champ10 2", champ10, "This is champ10 upgrade 2", 2, action=(champ10.upgrade1))
-up_champ10_3 = Upgrade(8, 4, 100000, "champ10 3", champ10, "This is champ10 upgrade 3", 2, action=(champ10.upgrade1))
-up_champ10_4 = Upgrade(9, 5, 100000, "champ10 4", champ10, "This is champ10 upgrade 4", 2, action=(champ10.upgrade1))
-up_champ10_5 = Upgrade(10, 6, 100000, "champ10 5", champ10, "This is champ10 upgrade 5", 2, action=(champ10.upgrade1))
 
 
 list_upgrades = [
@@ -522,9 +511,7 @@ list_upgrades = [
     up_azura1, up_azura2, up_azura3, up_azura4, up_azura5,
     up_champ6_1, up_champ6_2, up_champ6_3, up_champ6_4, up_champ6_5,
     up_champ7_1, up_champ7_2, up_champ7_3, up_champ7_4, up_champ7_5,
-    up_champ8_1, up_champ8_2, up_champ8_3, up_champ8_4, up_champ8_5,
-    up_champ9_1, up_champ9_2, up_champ9_3, up_champ9_4, up_champ9_5,
-    up_champ10_1, up_champ10_2, up_champ10_3, up_champ10_4, up_champ10_5
+    up_champ8_1, up_champ8_2, up_champ8_3, up_champ8_4, up_champ8_5
     ]
 list_available = []
 list_bought = []
@@ -547,14 +534,35 @@ class Prestige():
         self.mult = mult
         self.isUnlocked = False
 
-        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
-                                                   text="",
-                                                   tool_tip_text=f"{self.name}\n{self.tooltip}\nPrice: {self.price}",
-                                                   container=area_prestige)
+        self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (150, 75)),
+                                                   text=f"{self.name}",
+                                                   anchors={"center": "center"},
+                                                   container=area_prestige,
+                                                   object_id=ObjectID(class_id="@button_prestige"))
+        
+        self.show_price = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 350), (480, 60)),
+                                                      text="",
+                                                      container=area_prestige,
+                                                      object_id=ObjectID(class_id="@prestige_price"))
+        
+        self.show_tooltip = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 410), (960, 130)),
+                                                        text="",
+                                                        container=area_prestige,
+                                                        object_id=ObjectID(class_id="@prestige_tooltip"))
 
+# x, y, num_id, requirement, price, name, tooltip, mult
+# requirement is for prestige branches
+prestige_1 = Prestige(-300, -50, 1, 1, 1, "Foundation", "The end of your first year!", 1)
 
+list_prestige = [
+                 prestige_1
+                 ]
 
-
+total_credits = 0
+show_credits = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((480, 350), (480, 60)),
+                                           text=f"College Credits: {total_credits}",
+                                           container=area_prestige,
+                                           object_id=ObjectID(class_id="@prestige_credits"))
 
 clock = pygame.time.Clock()
 
@@ -665,12 +673,22 @@ while running:
                     if upgrade.button_tooltip is None:
                         upgrade.button_tooltip = upgrade.create_tooltip()
 
+            for upgrade in list_prestige:
+                if event.ui_element == upgrade.button:
+                    upgrade.show_price.set_text(f"Cost: {upgrade.price}")
+                    upgrade.show_tooltip.set_text(f"{upgrade.tooltip}")
+                    
         if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
             for upgrade in list_available:
                 if event.ui_element == upgrade.button:
                     if upgrade.button_tooltip is not None:
                         upgrade.button_tooltip.kill()
                         upgrade.button_tooltip = None
+
+            for upgrade in list_prestige:
+                if event.ui_element == upgrade.button:
+                    upgrade.show_price.set_text("")
+                    upgrade.show_tooltip.set_text("")
 
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == button_prestige:
@@ -683,7 +701,7 @@ while running:
                 area_prestige.enable()
                 button_prestige.hide()
                 button_prestige.disable()
-                text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_FADE_IN)
+                text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
 
                 for champion in champions:
                     champion.isUnlocked = False
@@ -707,16 +725,20 @@ while running:
 
                 # Tab buttons
                 elif event.ui_element == button_tab:
+                    # if open, close tab
                     if area_tabs_status:
                         area_tabs.set_relative_position((-3, screen_height-31))
                         background_area.set_relative_position((0, 0-31))
                         area_tabs_status = False
                         backgroundheight = 0
+                        button_tab.set_text("^")
+                    # if closed, open tab
                     elif not area_tabs_status:
                         area_tabs.set_relative_position((-3, screen_height/2.5))
                         background_area.set_relative_position((0, 0-324))
                         area_tabs_status = True
                         backgroundheight = (0-screen_height/2.9)
+                        button_tab.set_text("v")
                         
                 # Champion buttons
                 for champion in champions:
@@ -774,15 +796,33 @@ while running:
 
     # Tab
     if current_tab == 1 and not paused:
+        # enable tab 1 stuff
         button_next_tab.show()
         button_next_tab.enable()
+        area_tab_champ.show()
+        area_tab_champ.enable()
+        area_tab_upgrade.show()
+        area_tab_upgrade.enable()
+
         button_prev_tab.hide()
         button_prev_tab.disable()
+        area_tab2.hide()
+        area_tab2.disable()
     elif current_tab == 2 and not paused:
+        # enable tab 2 stuff
         button_prev_tab.show()
         button_prev_tab.enable()
+        area_tab2.show()
+        area_tab2.enable()
+
+        # disable tab 1 stuff
         button_next_tab.hide()
         button_next_tab.disable()
+        area_tab_champ.hide()
+        area_tab_champ.disable()
+        area_tab_upgrade.hide()
+        area_tab_upgrade.disable()
+
 
     # Champion button gray-out
     for champion in champions:
@@ -812,7 +852,7 @@ while running:
     for upgrade in list_available:
         if upgrade.button_tooltip is not None:
             mouse_pos = pygame.mouse.get_pos()
-            adjusted_mouse_pos = (mouse_pos[0] + 20, mouse_pos[1] - 20)
+            adjusted_mouse_pos = (mouse_pos[0] - 75, mouse_pos[1] - 108)
             upgrade.button_tooltip.find_valid_position((adjusted_mouse_pos))
 
 #    if main_menu_status == True:
