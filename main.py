@@ -61,7 +61,7 @@ paused = False
 click_power = 100000
 
 # Currency
-gold = 0
+money = 0
 
 # Champions
 total_champion = 0
@@ -159,10 +159,10 @@ button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect(
 
 # Champions
 class Champion():
-    def __init__(self, index, name, title, level, base_idle_power, shown, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, index, name, title, base_idle_power, shown, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
-        self.level = level
+        self.level = 0
         self.base_idle_power = base_idle_power
         self.idle_power = 0
         self.isUnlocked = False
@@ -243,11 +243,11 @@ class Champion():
         self.button_level.enable()
         self.button_level.show()
 
-        global gold
+        global money
         global total_champion
 
-        # Deduct gold
-        gold = gold - self.price_hire
+        # Deduct money
+        money = money - self.price_hire
         # Update champion variables and total champion
         self.level = 1
         total_champion += 1
@@ -268,8 +268,8 @@ class Champion():
 
     # Level Up Function
     def level_up(self):
-        global gold
-        gold = gold - self.price_level
+        global money
+        money = money - self.price_level
         self.level += 1
         self.price_level *= 2
         self.price_level_display.set_text(f"{self.price_level}")
@@ -284,15 +284,15 @@ class Champion():
 
     # Idle generation
     def thread_start(self):
-        thread = threading.Thread(target=self.increment_gold)
+        thread = threading.Thread(target=self.increment_money)
         thread.daemon = True
         thread.start()
 
-    def increment_gold(self):
+    def increment_money(self):
         while True:
             time.sleep(1)
-            global gold
-            gold += self.idle_power
+            global money
+            money += self.idle_power
 
 
     # Enable/Disable champion container
@@ -321,17 +321,17 @@ class Champion():
 
 
 # Champions List 
-# (index, name, title, level, base_idle_power, shown, price_hire, price_level, image)
-hero = Champion(0,"hero", "You, the Hero", 0, 1, True, 15, 20, "assets/images.png")
-pyr = Champion(1, "pyr", "Pyr, the Apprentice", 0, 10, False, 1000, 1200, "assets/images.png")
-avani = Champion(2, "avani", "Avani, the Bright", 0, 100, False, 2500, 3000, "assets/images.png")
-obek = Champion(3, "obek", "Obek, the Scavenger", 0, 1000, False, 5000, 6000, "assets/images.png")
-azura = Champion(4, "azura", "Azura, the Something", 0, 10000, False, 10000, 10000, "assets/images.png")
-champ6 = Champion(5, "c6", "6th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
-champ7 = Champion(6, "c7", "7th, the Champ", 0, 10000, False, 10000, 10000, "assets/images.png")
-champ8 = Champion(7, "c8", "Champ, the 8th", 0, 10000, False, 10000, 10000, "assets/images.png")
+# (index, name, title, base_idle_power, shown, price_hire, price_level, image)
+hero = Champion(0, "hero", "The Protagonist", 1, True, 15, 20, "assets/images.png")
+reliable = Champion(1, "reliable", "The Reliable", 10, False, 1000, 1200, "assets/images.png")
+incon = Champion(2, "incon", "The Inconsistent", 100, False, 2500, 3000, "assets/images.png")
+leader = Champion(3, "leader", "The Group Leader", 1000, False, 5000, 6000, "assets/images.png")
+perfect = Champion(4, "perfect", "The Perfectionist", 10000, False, 10000, 10000, "assets/images.png")
+president = Champion(5, "president", "The Club President", 10000, False, 10000, 10000, "assets/images.png")
+lect = Champion(6, "lect", "The Lecturer", 10000, False, 10000, 10000, "assets/images.png")
+gpt = Champion(7, "gpt", "ChatGGEZ", 10000, False, 10000, 10000, "assets/images.png")
 
-champions = [hero, pyr, avani, obek, azura, champ6, champ7, champ8]
+champions = [hero, reliable, incon, leader, perfect, president, lect, gpt]
 
 
 # Champion initialization
@@ -418,8 +418,8 @@ class Upgrade():
 
     # Purchase upgrades
     def purchase(self):
-        global gold
-        gold = gold - self.price
+        global money
+        money = money - self.price
         self.isUnlocked = True
         
         self.button.set_container(container=area_upgrade_bought)
@@ -452,66 +452,66 @@ up_hero3 = Upgrade(3, 4, 100000, "Hero 3", hero, "This is hero upgrade 3", 2, ac
 up_hero4 = Upgrade(4, 5, 100000, "Hero 4", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
 up_hero5 = Upgrade(5, 6, 100000, "Hero 5", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
 
-# Pyr
-up_pyr1 = Upgrade(6, 2, 100000, "Pyr 1", pyr, "This is pyr upgrade 1", 2, action=(pyr.upgrade1))
-up_pyr2 = Upgrade(7, 3, 100000, "Pyr 2", pyr, "This is pyr upgrade 2", 2, action=(pyr.upgrade1))
-up_pyr3 = Upgrade(8, 4, 100000, "Pyr 3", pyr, "This is pyr upgrade 3", 2, action=(pyr.upgrade1))
-up_pyr4 = Upgrade(9, 5, 100000, "Pyr 4", pyr, "This is pyr upgrade 4", 2, action=(pyr.upgrade1))
-up_pyr5 = Upgrade(10, 6, 100000, "Pyr 5", pyr, "This is pyr upgrade 5", 2, action=(pyr.upgrade1))
+# reliable
+up_reliable1 = Upgrade(6, 2, 100000, "reliable 1", reliable, "This is reliable upgrade 1", 2, action=(reliable.upgrade1))
+up_reliable2 = Upgrade(7, 3, 100000, "reliable 2", reliable, "This is reliable upgrade 2", 2, action=(reliable.upgrade1))
+up_reliable3 = Upgrade(8, 4, 100000, "reliable 3", reliable, "This is reliable upgrade 3", 2, action=(reliable.upgrade1))
+up_reliable4 = Upgrade(9, 5, 100000, "reliable 4", reliable, "This is reliable upgrade 4", 2, action=(reliable.upgrade1))
+up_reliable5 = Upgrade(10, 6, 100000, "reliable 5", reliable, "This is reliable upgrade 5", 2, action=(reliable.upgrade1))
 
-# Avani
-up_avani1 = Upgrade(11, 2, 100000, "avani 1", avani, "This is avani upgrade 1", 2, action=(avani.upgrade1))
-up_avani2 = Upgrade(12, 3, 100000, "avani 2", avani, "This is avani upgrade 2", 2, action=(avani.upgrade1))
-up_avani3 = Upgrade(13, 4, 100000, "avani 3", avani, "This is avani upgrade 3", 2, action=(avani.upgrade1))
-up_avani4 = Upgrade(14, 5, 100000, "avani 4", avani, "This is avani upgrade 4", 2, action=(avani.upgrade1))
-up_avani5 = Upgrade(15, 6, 100000, "avani 5", avani, "This is avani upgrade 5", 2, action=(avani.upgrade1))
+# incon
+up_incon1 = Upgrade(11, 2, 100000, "incon 1", incon, "This is incon upgrade 1", 2, action=(incon.upgrade1))
+up_incon2 = Upgrade(12, 3, 100000, "incon 2", incon, "This is incon upgrade 2", 2, action=(incon.upgrade1))
+up_incon3 = Upgrade(13, 4, 100000, "incon 3", incon, "This is incon upgrade 3", 2, action=(incon.upgrade1))
+up_incon4 = Upgrade(14, 5, 100000, "incon 4", incon, "This is incon upgrade 4", 2, action=(incon.upgrade1))
+up_incon5 = Upgrade(15, 6, 100000, "incon 5", incon, "This is incon upgrade 5", 2, action=(incon.upgrade1))
 
-# Obek
-up_obek1 = Upgrade(16, 2, 100000, "obek 1", obek, "This is obek upgrade 1", 2, action=(obek.upgrade1))
-up_obek2 = Upgrade(17, 3, 100000, "obek 2", obek, "This is obek upgrade 2", 2, action=(obek.upgrade1))
-up_obek3 = Upgrade(18, 4, 100000, "obek 3", obek, "This is obek upgrade 3", 2, action=(obek.upgrade1))
-up_obek4 = Upgrade(19, 5, 100000, "obek 4", obek, "This is obek upgrade 4", 2, action=(obek.upgrade1))
-up_obek5 = Upgrade(20, 6, 100000, "obek 5", obek, "This is obek upgrade 5", 2, action=(obek.upgrade1))
+# leader
+up_leader1 = Upgrade(16, 2, 100000, "leader 1", leader, "This is leader upgrade 1", 2, action=(leader.upgrade1))
+up_leader2 = Upgrade(17, 3, 100000, "leader 2", leader, "This is leader upgrade 2", 2, action=(leader.upgrade1))
+up_leader3 = Upgrade(18, 4, 100000, "leader 3", leader, "This is leader upgrade 3", 2, action=(leader.upgrade1))
+up_leader4 = Upgrade(19, 5, 100000, "leader 4", leader, "This is leader upgrade 4", 2, action=(leader.upgrade1))
+up_leader5 = Upgrade(20, 6, 100000, "leader 5", leader, "This is leader upgrade 5", 2, action=(leader.upgrade1))
 
-# Azura
-up_azura1 = Upgrade(26, 2, 100000, "azura 1", azura, "This is azura upgrade 1", 2, action=(azura.upgrade1))
-up_azura2 = Upgrade(27, 3, 100000, "azura 2", azura, "This is azura upgrade 2", 2, action=(azura.upgrade1))
-up_azura3 = Upgrade(28, 4, 100000, "azura 3", azura, "This is azura upgrade 3", 2, action=(azura.upgrade1))
-up_azura4 = Upgrade(29, 5, 100000, "azura 4", azura, "This is azura upgrade 4", 2, action=(azura.upgrade1))
-up_azura5 = Upgrade(30, 6, 100000, "azura 5", azura, "This is azura upgrade 5", 2, action=(azura.upgrade1))
+# perfect
+up_perfect1 = Upgrade(26, 2, 100000, "perfect 1", perfect, "This is perfect upgrade 1", 2, action=(perfect.upgrade1))
+up_perfect2 = Upgrade(27, 3, 100000, "perfect 2", perfect, "This is perfect upgrade 2", 2, action=(perfect.upgrade1))
+up_perfect3 = Upgrade(28, 4, 100000, "perfect 3", perfect, "This is perfect upgrade 3", 2, action=(perfect.upgrade1))
+up_perfect4 = Upgrade(29, 5, 100000, "perfect 4", perfect, "This is perfect upgrade 4", 2, action=(perfect.upgrade1))
+up_perfect5 = Upgrade(30, 6, 100000, "perfect 5", perfect, "This is perfect upgrade 5", 2, action=(perfect.upgrade1))
 
 # Champ 6
-up_champ6_1 = Upgrade(6, 2, 100000, "champ6 1", champ6, "This is champ6 upgrade 1", 2, action=(champ6.upgrade1))
-up_champ6_2 = Upgrade(7, 3, 100000, "champ6 2", champ6, "This is champ6 upgrade 2", 2, action=(champ6.upgrade1))
-up_champ6_3 = Upgrade(8, 4, 100000, "champ6 3", champ6, "This is champ6 upgrade 3", 2, action=(champ6.upgrade1))
-up_champ6_4 = Upgrade(9, 5, 100000, "champ6 4", champ6, "This is champ6 upgrade 4", 2, action=(champ6.upgrade1))
-up_champ6_5 = Upgrade(10, 6, 100000, "champ6 5", champ6, "This is champ6 upgrade 5", 2, action=(champ6.upgrade1))
+up_president_1 = Upgrade(6, 2, 100000, "president 1", president, "This is president upgrade 1", 2, action=(president.upgrade1))
+up_president_2 = Upgrade(7, 3, 100000, "president 2", president, "This is president upgrade 2", 2, action=(president.upgrade1))
+up_president_3 = Upgrade(8, 4, 100000, "president 3", president, "This is president upgrade 3", 2, action=(president.upgrade1))
+up_president_4 = Upgrade(9, 5, 100000, "president 4", president, "This is president upgrade 4", 2, action=(president.upgrade1))
+up_president_5 = Upgrade(10, 6, 100000, "president 5", president, "This is president upgrade 5", 2, action=(president.upgrade1))
 
 # Champ 7
-up_champ7_1 = Upgrade(6, 2, 100000, "champ7 1", champ7, "This is champ7 upgrade 1", 2, action=(champ7.upgrade1))
-up_champ7_2 = Upgrade(7, 3, 100000, "champ7 2", champ7, "This is champ7 upgrade 2", 2, action=(champ7.upgrade1))
-up_champ7_3 = Upgrade(8, 4, 100000, "champ7 3", champ7, "This is champ7 upgrade 3", 2, action=(champ7.upgrade1))
-up_champ7_4 = Upgrade(9, 5, 100000, "champ7 4", champ7, "This is champ7 upgrade 4", 2, action=(champ7.upgrade1))
-up_champ7_5 = Upgrade(10, 6, 100000, "champ7 5", champ7, "This is champ7 upgrade 5", 2, action=(champ7.upgrade1))
+up_lect_1 = Upgrade(6, 2, 100000, "lect 1", lect, "This is lect upgrade 1", 2, action=(lect.upgrade1))
+up_lect_2 = Upgrade(7, 3, 100000, "lect 2", lect, "This is lect upgrade 2", 2, action=(lect.upgrade1))
+up_lect_3 = Upgrade(8, 4, 100000, "lect 3", lect, "This is lect upgrade 3", 2, action=(lect.upgrade1))
+up_lect_4 = Upgrade(9, 5, 100000, "lect 4", lect, "This is lect upgrade 4", 2, action=(lect.upgrade1))
+up_lect_5 = Upgrade(10, 6, 100000, "lect 5", lect, "This is lect upgrade 5", 2, action=(lect.upgrade1))
 
 # Champ 8
-up_champ8_1 = Upgrade(6, 2, 100000, "champ8 1", champ8, "This is champ8 upgrade 1", 2, action=(champ8.upgrade1))
-up_champ8_2 = Upgrade(7, 3, 100000, "champ8 2", champ8, "This is champ8 upgrade 2", 2, action=(champ8.upgrade1))
-up_champ8_3 = Upgrade(8, 4, 100000, "champ8 3", champ8, "This is champ8 upgrade 3", 2, action=(champ8.upgrade1))
-up_champ8_4 = Upgrade(9, 5, 100000, "champ8 4", champ8, "This is champ8 upgrade 4", 2, action=(champ8.upgrade1))
-up_champ8_5 = Upgrade(10, 6, 100000, "champ8 5", champ8, "This is champ8 upgrade 5", 2, action=(champ8.upgrade1))
+up_gpt_1 = Upgrade(6, 2, 100000, "Legally Distinct AI Model", gpt, "Increases ChatGGEZ's idle power by 100%.", 2, action=(gpt.upgrade1))
+up_gpt_2 = Upgrade(7, 3, 100000, "As an AI language model", gpt, "This is gpt upgrade 2", 2, action=(gpt.upgrade1))
+up_gpt_3 = Upgrade(8, 4, 100000, "gpt 3", gpt, "This is gpt upgrade 3", 2, action=(gpt.upgrade1))
+up_gpt_4 = Upgrade(9, 5, 100000, "gpt 4", gpt, "This is gpt upgrade 4", 2, action=(gpt.upgrade1))
+up_gpt_5 = Upgrade(10, 6, 100000, "gpt 5", gpt, "This is gpt upgrade 5", 2, action=(gpt.upgrade1))
 
 
 
 list_upgrades = [
     up_hero1, up_hero2, up_hero3, up_hero4, up_hero5,
-    up_pyr1, up_pyr2, up_pyr3, up_pyr4, up_pyr5,
-    up_avani1, up_avani2, up_avani3, up_avani4, up_avani5,
-    up_obek1, up_obek2, up_obek3, up_obek4, up_obek5,
-    up_azura1, up_azura2, up_azura3, up_azura4, up_azura5,
-    up_champ6_1, up_champ6_2, up_champ6_3, up_champ6_4, up_champ6_5,
-    up_champ7_1, up_champ7_2, up_champ7_3, up_champ7_4, up_champ7_5,
-    up_champ8_1, up_champ8_2, up_champ8_3, up_champ8_4, up_champ8_5
+    up_reliable1, up_reliable2, up_reliable3, up_reliable4, up_reliable5,
+    up_incon1, up_incon2, up_incon3, up_incon4, up_incon5,
+    up_leader1, up_leader2, up_leader3, up_leader4, up_leader5,
+    up_perfect1, up_perfect2, up_perfect3, up_perfect4, up_perfect5,
+    up_president_1, up_president_2, up_president_3, up_president_4, up_president_5,
+    up_lect_1, up_lect_2, up_lect_3, up_lect_4, up_lect_5,
+    up_gpt_1, up_gpt_2, up_gpt_3, up_gpt_4, up_gpt_5
     ]
 list_available = []
 list_bought = []
@@ -552,7 +552,7 @@ class Prestige():
 
 # x, y, num_id, requirement, price, name, tooltip, mult
 # requirement is for prestige branches
-prestige_1 = Prestige(-300, -50, 1, 1, 1, "Foundation", "The end of your first year!", 1)
+prestige_1 = Prestige(-380, -55, 1, 1, 0, "Foundation", "The end of your first year!", 1)
 
 list_prestige = [
                  prestige_1
@@ -594,14 +594,14 @@ info_num_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), (
                                              container=container_info_idle)
 
 
-container_info_gold = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((420, 4), (250, 96)),
+container_info_money = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((420, 4), (250, 96)),
                                                   container=container_info_bars)
-info_text_gold = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (248, 47)),
-                                             text="GOLD",
-                                             container=container_info_gold)
-info_num_gold = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), (248, 47)),
-                                             text=f"{gold}",
-                                             container=container_info_gold)
+info_text_money = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (248, 47)),
+                                             text="money",
+                                             container=container_info_money)
+info_num_money = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), (248, 47)),
+                                             text=f"{money}",
+                                             container=container_info_money)
 
 
 
@@ -612,7 +612,7 @@ def format_num(value):
     else:
         return f"{value:,}"
 
-def format_gold(value):
+def format_money(value):
     if abs(value) > 999999999:
         return f"{value:.2e}"
     else:
@@ -677,7 +677,7 @@ while running:
                 if event.ui_element == upgrade.button:
                     upgrade.show_price.set_text(f"Cost: {upgrade.price}")
                     upgrade.show_tooltip.set_text(f"{upgrade.tooltip}")
-                    
+
         if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
             for upgrade in list_available:
                 if event.ui_element == upgrade.button:
@@ -706,7 +706,12 @@ while running:
                 for champion in champions:
                     champion.isUnlocked = False
 
-
+            for upgrade in list_prestige:
+                if event.ui_element == upgrade.button:
+                    if total_credits >= upgrade.price:
+                        total_credits = total_credits - upgrade.price
+                        upgrade.isUnlocked = True
+                        upgrade.button.disable()
             
             if not paused:
                 if event.ui_element == button_next_tab:
@@ -744,14 +749,14 @@ while running:
                 for champion in champions:
                     # Level up button
                     if event.ui_element == champion.button_level:
-                        if gold >= champion.price_level and champion.isUnlocked:
+                        if money >= champion.price_level and champion.isUnlocked:
                             champion.level_up()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
                     # Hire button
                     if champion.button_hire.is_enabled:
                         if event.ui_element == champion.button_hire:
-                            if gold >= champion.price_hire and not champion.isUnlocked:
+                            if money >= champion.price_hire and not champion.isUnlocked:
                                 champion.hire()
                                 total_idle_power = sum(champion.idle_power for champion in champions)
 
@@ -759,7 +764,7 @@ while running:
                 # Upgrade buttons
                 for upgrade in list_available:
                     if event.ui_element == upgrade.button:
-                        if gold >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
+                        if money >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
                             # Buy upgrade
                             upgrade.purchase()
                             # Move bought upgrade from available to bought                        lists make me wanna commit a crime
@@ -787,7 +792,7 @@ while running:
                 
                 if not paused:
                     if background_area.rect.collidepoint(mouse_pos):
-                        gold += click_power
+                        money += click_power
 
         window.process_events(event)
 
@@ -826,12 +831,12 @@ while running:
 
     # Champion button gray-out
     for champion in champions:
-        if champion.shown and gold >= champion.price_hire:
+        if champion.shown and money >= champion.price_hire:
             champion.button_hire.enable()
         else:
             champion.button_hire.disable()
 
-        if champion.isUnlocked and gold >= champion.price_level:
+        if champion.isUnlocked and money >= champion.price_level:
             champion.button_level.enable()
         else:
             champion.button_level.disable()
@@ -860,7 +865,7 @@ while running:
 
     info_num_click.set_text(f"{format_num(click_power)}")
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
-    info_num_gold.set_text(f"{format_gold(gold)}")
+    info_num_money.set_text(f"{format_money(money)}")
 
     window.update(time_delta)
     window.draw_ui(screen)
