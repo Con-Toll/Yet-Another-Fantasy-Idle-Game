@@ -685,7 +685,7 @@ class QTE(pygame.sprite.Sprite):
 
 
 Test = QTE()
-end_time = time.time()
+
 class box():
     def __init__(self):
         self.size=50
@@ -696,16 +696,18 @@ class box():
         self.x = self.start
         self.rect = pygame.Rect(self.x,self.y,self.size,self.size)
         self.on = True
-        
+        self.end_time = time.time()
+        self.current_time = None
         
     def move(self):
+        
         if self.on == True:
             self.x += self.speed
             if self.x > self.end:
                 self.x = self.start
-                current_time = time.time()
-                if current_time - end_time > 60:
-                    end_time = current_time
+                self.current_time = time.time()
+                if self.current_time - self.end_time > 60:
+                    end_time = self.current_time
                 else:
                     self.x = self.start
                     self.rect.x = self.x      
