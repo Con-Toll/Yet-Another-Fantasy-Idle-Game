@@ -289,7 +289,7 @@ class UILabel:
         }
 
 # Champions
-class Champion():
+class Champion:
     def __init__(self, name, title, level, idle_power, isUnlocked, shown, position, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
@@ -298,16 +298,15 @@ class Champion():
         self.isUnlocked = isUnlocked
         self.shown = shown
         self.pos = position
-        self.image = image
+        self.image_path = image
         self.price_hire = price_hire
         self.price_level = price_level
 
         # Champion container
-        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos),(300, 200)),
+        self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, self.pos), (300, 200)),
                                                      container=area_champ_container)
 
         # Champion buttons
-
         # Champion info
         self.text_box = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((120, 55), (160, 70)),
                                                       html_text=f"<p>Level : {self.level}<p>",
@@ -315,32 +314,30 @@ class Champion():
 
         # Champion image
         self.image_load = pygame.image.load(image)
-        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 50),(80, 80)),
+        self.image = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((20, 50), (80, 80)),
                                                  image_surface=self.image_load,
                                                  container=self.container)
 
         # Champion title
-        self.title = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5),(300, 35)),
-                                                 text=f"{self.title}",
-                                                 container=self.container)
-        
+        self.title_label = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5), (300, 35)),
+                                                       text=f"{self.title}",
+                                                       container=self.container)
 
         # Level Champion
-        self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
+        self.button_level = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 140), (150, 50)),
                                                          text="Level up",
                                                          container=self.container)
-    
-        self.price_level_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+
+        self.price_level_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140), (150, 50)),
                                                                text=f"{self.price_level}",
                                                                container=self.container)
 
-
         # Hire Champion
-        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10,140), (150, 50)),
+        self.button_hire = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 140), (150, 50)),
                                                         text="Hire",
                                                         container=self.container)
 
-        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140),(150, 50)),
+        self.price_hire_display = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((160, 140), (150, 50)),
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
@@ -359,9 +356,23 @@ class Champion():
             image=data.get("image", "assets/images.png")
         )
 
+    def to_dict(self):
+        return {
+            "name": self.name,
+            "title": self.title,
+            "level": self.level,
+            "idle_power": self.idle_power,
+            "isUnlocked": self.isUnlocked,
+            "shown": self.shown,
+            "position": self.pos,
+            "price_hire": self.price_hire,
+            "price_level": self.price_level,
+            "image": self.image_path  # Save image path instead of surface
+        }
+
     def level_up(self):
         global gold
-        gold = gold - self.price_level
+        gold -= self.price_level
         self.level += 1
         self.text_box.set_text(f"<p>Level : {self.level}<p>")
         self.price_level *= 2
@@ -377,7 +388,7 @@ class Champion():
         global gold
         global total_champion
 
-        gold = gold - self.price_hire
+        gold -= self.price_hire
         self.level += 1
         self.text_box.set_text(f"<p>Level : {self.level}<p>")
         total_champion += 1
@@ -389,7 +400,6 @@ class Champion():
             next_champion = champions[index + 1]
             next_champion.shown = True
             next_champion.showChamp()
-        
 
     # Idle generation
     def trigger(self, idle_power):
@@ -403,15 +413,15 @@ class Champion():
 
     # Enable/Disable champion container
     def showChamp(self):
-        if self.shown == False:
+        if not self.shown:
             self.container.hide()
             self.container.disable()
             self.button_hire.hide()
             self.button_hire.disable()
-        elif self.shown == True:
+        else:
             self.container.show()
             self.container.enable()
-            if self.isUnlocked == False:
+            if not self.isUnlocked:
                 self.button_hire.show()
                 self.button_hire.enable()
     
@@ -459,25 +469,52 @@ def avaniUnlock():
     # Display next champion's container
     obek.showChamp()
 
-def save_game_state(file_path='game_state.json'):
-    pass
-6
+def save_game_state():
+    global gold, total_champion, click_power, auto_click_power
+    game_state = {
+        "click_power": click_power,
+        "auto_click_power": auto_click_power,
+        "gold": gold,
+        "champions": [champion.to_dict() for champion in champions]
+    }
+    with open('game_state.json', 'w') as file:
+        json.dump(game_state, file)
+    print("Game state saved.")
 
 def load_game_state():
-    global gold, champions
-
-    try:
+    global gold, total_champion, click_power, auto_click_power, champions
+    if os.path.exists('game_state.json'):
         with open('game_state.json', 'r') as file:
             game_state = json.load(file)
-            gold = game_state["gold"]
+            gold = game_state.get('gold', 0)
+            total_champion = game_state.get('total_champion', 0)
+            click_power = game_state.get('click_power', 100)
+            auto_click_power = game_state.get('auto_click_power', 0)
             champions_data = game_state["champions"]
+            # Reinitialize champions based on saved data
+            for i, champ_data in enumerate(champions_data):
+                champions[i].name = champ_data["name"]
+                champions[i].title = champ_data["title"]
+                champions[i].level = champ_data["level"]
+                champions[i].idle_power = champ_data["idle_power"]
+                champions[i].isUnlocked = champ_data["isUnlocked"]
+                champions[i].shown = champ_data["shown"]
+                champions[i].pos = champ_data["position"]
+                champions[i].price_hire = champ_data["price_hire"]
+                champions[i].price_level = champ_data["price_level"]
+                champions[i].image_path = champ_data["image"]
+                champions[i].text_box.set_text(f"<p>Level : {champions[i].level}<p>")
+                champions[i].price_level_display.set_text(f"{champions[i].price_level}")
+                champions[i].price_hire_display.set_text(f"{champions[i].price_hire}")
+                if champions[i].isUnlocked:
+                    champions[i].hire()
+                if champions[i].shown:
+                    champions[i].showChamp()
+        print("Game state loaded.")
+    else:
+        print("No save file found. Starting with default values.")
 
-
-
-            champions = [Champion.from_dict(champion_data) for champion_data in champions_data]
-    except FileNotFoundError:
-        print("No game state found")
-
+# Load game state on startup
 load_game_state()
 
 clock = pygame.time.Clock()
