@@ -624,13 +624,13 @@ moving_image = pygame.sprite.Group()
 
 
 class QTE(pygame.sprite.Sprite):
-    def __init__(self, start, end):
+    def __init__(self):
         super().__init__()
         self.position = {
-            1: (350, 3),
-            2: (450, 3),
-            3: (550, 3),
-            4: (650, 3)
+            1: (350, 200),
+            2: (450, 200),
+            3: (550, 200),
+            4: (650, 200)
         }
         self.different = ["UP", "DOWN", "LEFT", "RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
@@ -670,6 +670,8 @@ class QTE(pygame.sprite.Sprite):
                     
         
     def update(self):
+        moving_image.update()
+        moving_image.draw(screen)
         if self.exe == True:
             moving_image.add(self.Up)
             moving_image.add(self.Down)
@@ -684,7 +686,7 @@ class QTE(pygame.sprite.Sprite):
         self.Right.fadeout()
 
 
-
+Test = QTE()
 
 # Format
 def format_num(value):
@@ -842,7 +844,7 @@ while running:
                         gold += click_power
 
         window.process_events(event)
-
+        Test.key()
 
 
 
@@ -890,6 +892,8 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
+    Test.fadeout()
+    Test.update()
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
