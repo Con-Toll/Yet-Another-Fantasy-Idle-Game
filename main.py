@@ -6,10 +6,9 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
-import datetime
+
 import random
 
-date_now = datetime.datetime.now()
 
 
 pygame.init()
@@ -637,9 +636,7 @@ class QTE(pygame.sprite.Sprite):
         self.Down = Event_gui(self.position[2], random.choice(self.different))#2
         self.Left = Event_gui(self.position[3], random.choice(self.different))#3
         self.Right = Event_gui(self.position[4], random.choice(self.different))
-        self.current_key = 0
-        self.prev_key = None
-        self.exe =True
+        self.exe =False
         
         
     def key(self):
@@ -677,6 +674,7 @@ class QTE(pygame.sprite.Sprite):
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
+        self.fadeout()
             
         
     def fadeout(self):
@@ -687,7 +685,54 @@ class QTE(pygame.sprite.Sprite):
 
 
 Test = QTE()
+end_time = time.time()
+class box():
+    def __init__(self):
+        self.size=50
+        self.speed =4
+        self.start = -self.size
+        self.end = screen_width
+        self.y = (screen_height - self.size) // 2
+        self.x = self.start
+        self.rect = pygame.Rect(self.x,self.y,self.size,self.size)
+        self.on = True
+        
+        
+    def move(self):
+        if self.on == True:
+            self.x += self.speed
+            if self.x > self.end:
+                self.x = self.start
+                current_time = time.time()
+                if current_time - end_time > 60:
+                    end_time = current_time
+                else:
+                    self.x = self.start
+                    self.rect.x = self.x      
+                    pygame.time.wait(60000)
+     
+        self.rect.x = self.x
+        self.rect.y = self.y
+        pygame.draw.rect(screen,(255,0,0),self.rect)
+        
+    
+        
+    def click(self):
+        
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:
+                mouse_pos = pygame.mouse.get_pos()
+                if boxs.rect.collidepoint(mouse_pos):
+                    Test.exe = True
+                  
+                    
+                    
+                   
+                    
+                               
+        
 
+boxs = box()
 # Format
 def format_num(value):
     if abs(value) > 99999:
@@ -744,13 +789,14 @@ while running:
     if abs(scroll) > backgroundwidth:
       scroll = 0
 
+    boxs.move()
     
 
     # Event handling
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == button_prestige:
                 paused = not paused
@@ -842,7 +888,8 @@ while running:
                 if not paused:
                     if background_area.rect.collidepoint(mouse_pos):
                         gold += click_power
-
+                
+        
         window.process_events(event)
         Test.key()
 
@@ -880,7 +927,7 @@ while running:
                     list_available.append(upgrade)
                     upgrade.available()
 
-        
+
         if upgrade.origin.level >= upgrade.requirement:
             upgrade.shown = True
 
@@ -892,7 +939,7 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
-    Test.fadeout()
+    boxs.click()
     Test.update()
     window.update(time_delta)
     window.draw_ui(screen)
