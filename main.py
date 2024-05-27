@@ -375,6 +375,8 @@ class Champion():
                 self.button_hire.show()
                 self.button_hire.enable()
 
+
+
 # Champions List
 hero = Champion("hero", "You, the Hero", 0, 1, False, True, 0, 15, 20, "assets/images.png")
 pyr = Champion("pyr", "Pyr, the Apprentice", 0, 2, False, False, 200, 1000, 1200, "assets/images.png")
@@ -562,7 +564,7 @@ running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-    
+
 
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, 0))
@@ -714,8 +716,7 @@ while running:
     pygame.display.update
     pygame.display.flip()
 
-print(time_delta)
-print(clock)
+
 pygame.quit()
 sys.exit()
 
