@@ -77,6 +77,28 @@ button_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((0, 0), (966
 # False = Closed, True = Open
 area_tabs_status = False
 
+def tab_openclose():
+    global backgroundheight, area_tabs_status
+    if area_tabs_status:
+        area_tabs.set_relative_position((-3, screen_height-31))
+        background_area.set_relative_position((0, 0-31))
+        area_tabs_status = False
+        backgroundheight = 0
+        button_tab.set_text("^")
+        return area_tabs_status
+
+    if not area_tabs_status:
+        area_tabs.set_relative_position((-3, screen_height/2.5))
+        background_area.set_relative_position((0, 0-324))
+        area_tabs_status = True
+        backgroundheight = (0-screen_height/2.9)
+        button_tab.set_text("v")
+        return area_tabs_status
+
+# debug button
+#button_test = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((400, 400), (150, 75)), 
+ #                                         text="",
+  #                                        container=None)
 
 # Champion Area
 container_champ = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((5, 90), (440, 230)),
@@ -148,13 +170,17 @@ button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 5
 area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (964, 544)))
 area_prestige.disable()
 area_prestige.hide()
-text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (screen_width, 80)),
+text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((220, 0), (screen_width-440, 80)),
                                             text="Sembreak Start !!",
                                             container=area_prestige,
                                             object_id=ObjectID(class_id="@text_prestige"))
-button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((15, 11), (200, 60)),
+button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 11), (200, 60)),
                                                       text="RESPEC",
                                                       container=area_prestige)
+button_prestige_continue = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((750, 11), (200, 60)),
+                                                        text="Back to\n campus\n ",
+                                                        container=area_prestige,
+                                                        object_id=ObjectID(class_id="@prestige_continue"))
 
 
 # Champions
@@ -540,23 +566,22 @@ class Prestige():
                                                    container=area_prestige,
                                                    object_id=ObjectID(class_id="@button_prestige"))
         
-        self.show_price = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 350), (480, 60)),
-                                                      text="",
-                                                      container=area_prestige,
-                                                      object_id=ObjectID(class_id="@prestige_price"))
-        
-        self.show_tooltip = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 410), (960, 130)),
-                                                        text="",
-                                                        container=area_prestige,
-                                                        object_id=ObjectID(class_id="@prestige_tooltip"))
+    
+
 
 # x, y, num_id, requirement, price, name, tooltip, mult
 # requirement is for prestige branches
-prestige_1 = Prestige(-380, -55, 1, 1, 0, "Foundation", "The end of your first year!", 1)
+prestige1 = Prestige(-380, -55, 1, 1, 0, "Foundation", "The end of your first year!", 1)
+prestige2a = Prestige(-190, -115, 1, 1, 0, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n(+100% Click Power)", 1)
+prestige2b = Prestige(-190, 5, 1, 1, 0, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 1)
+prestige3 = Prestige(0, -55, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige3a = Prestige(0, -140, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige3b = Prestige(0, 30, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige4a = Prestige(190, -115, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige4b = Prestige(190, 5, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige5 = Prestige(380, -55, 1, 1, 0, "Graduation", "Congratulations, it's finally over! (+The End)", 1)
 
-list_prestige = [
-                 prestige_1
-                 ]
+list_prestige = [prestige1, prestige2a, prestige2b, prestige3, prestige3a, prestige3b, prestige4a, prestige4b, prestige5]
 
 total_credits = 0
 show_credits = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((480, 350), (480, 60)),
@@ -569,7 +594,16 @@ clock = pygame.time.Clock()
 
 total_idle_power = sum(champion.idle_power for champion in champions)
 
-
+# Prestige Tooltips
+prestige_show_price = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 350), (480, 60)),
+                                              text="",
+                                              container=area_prestige,
+                                              object_id=ObjectID(class_id="@prestige_price"))
+        
+prestige_show_tooltip = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((0, 410), (960, 130)),
+                                                html_text="",
+                                                container=area_prestige,
+                                                object_id=ObjectID(class_id="@prestige_tooltip"))
 
 # Info bars
 container_info_click = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 4), (210, 49)),
@@ -675,8 +709,9 @@ while running:
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
-                    upgrade.show_price.set_text(f"Cost: {upgrade.price}")
-                    upgrade.show_tooltip.set_text(f"{upgrade.tooltip}")
+                    prestige_show_price.set_text(f"Cost: {upgrade.price}")
+                    prestige_show_tooltip.set_text(f"{upgrade.tooltip}")
+                    print("set")
 
         if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
             for upgrade in list_available:
@@ -687,24 +722,43 @@ while running:
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
-                    upgrade.show_price.set_text("")
-                    upgrade.show_tooltip.set_text("")
+                    prestige_show_price.set_text("")
+                    prestige_show_tooltip.set_text("")
+                    print("deleted")
 
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == button_prestige:
-                paused = not paused
-                container_info_bars.hide()
-                container_info_bars.disable()
-                area_tabs.hide()
-                area_tabs.disable()
-                area_prestige.show()
-                area_prestige.enable()
-                button_prestige.hide()
-                button_prestige.disable()
+                tab_openclose()
+                if area_tabs_status == False:
+                    button_tab.disable()
+                    button_tab.hide()
+                    current_tab = 1
+                    paused = True
+                    container_info_bars.hide()
+                    container_info_bars.disable()
+                    area_prestige.show()
+                    area_prestige.enable()
+
+            #    area_tab2.hide()
+             #   area_tab2.disable()
                 text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
 
-                for champion in champions:
-                    champion.isUnlocked = False
+            #    for champion in champions:
+             #       champion.isUnlocked = False
+
+            # debug button lol
+    #        elif event.ui_element == button_test:
+     #           area_tabs.hide()
+      #          area_tabs.show()
+
+            elif event.ui_element == button_prestige_continue:
+                paused = False
+                button_tab.enable()
+                button_tab.show()
+                container_info_bars.show()
+                container_info_bars.enable()
+                area_prestige.hide()
+                area_prestige.disable()
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
@@ -716,35 +770,19 @@ while running:
             if not paused:
                 if event.ui_element == button_next_tab:
                     current_tab = 2
-                    area_tab_champ.hide()
-                    area_tab_upgrade.hide()
-                    container_champ.hide()
-                    container_upgrade.hide()
 
                 elif event.ui_element == button_prev_tab:
                     current_tab = 1
-                    area_tab_champ.show()
-                    area_tab_upgrade.show()
-                    container_champ.show()
-                    container_upgrade.show()
 
                 # Tab buttons
                 elif event.ui_element == button_tab:
                     # if open, close tab
                     if area_tabs_status:
-                        area_tabs.set_relative_position((-3, screen_height-31))
-                        background_area.set_relative_position((0, 0-31))
-                        area_tabs_status = False
-                        backgroundheight = 0
-                        button_tab.set_text("^")
+                        tab_openclose()
                     # if closed, open tab
                     elif not area_tabs_status:
-                        area_tabs.set_relative_position((-3, screen_height/2.5))
-                        background_area.set_relative_position((0, 0-324))
-                        area_tabs_status = True
-                        backgroundheight = (0-screen_height/2.9)
-                        button_tab.set_text("v")
-                        
+                        tab_openclose()
+
                 # Champion buttons
                 for champion in champions:
                     # Level up button
@@ -804,15 +842,17 @@ while running:
         # enable tab 1 stuff
         button_next_tab.show()
         button_next_tab.enable()
-        area_tab_champ.show()
-        area_tab_champ.enable()
-        area_tab_upgrade.show()
-        area_tab_upgrade.enable()
+        area_tab_champ.set_relative_position((7, 32))
+        container_champ.set_relative_position((5, 90))
+        area_tab_upgrade.set_relative_position((450, 32))
+        container_upgrade.set_relative_position((450, 90))
 
+        # disable tab 2 stuff
         button_prev_tab.hide()
         button_prev_tab.disable()
         area_tab2.hide()
         area_tab2.disable()
+
     elif current_tab == 2 and not paused:
         # enable tab 2 stuff
         button_prev_tab.show()
@@ -823,10 +863,12 @@ while running:
         # disable tab 1 stuff
         button_next_tab.hide()
         button_next_tab.disable()
-        area_tab_champ.hide()
-        area_tab_champ.disable()
-        area_tab_upgrade.hide()
-        area_tab_upgrade.disable()
+        area_tab_champ.set_relative_position((1000, 1000))
+        container_champ.set_relative_position((1000, 1000))
+        area_tab_upgrade.set_relative_position((1000, 1000))
+        container_upgrade.set_relative_position((1000, 1000))
+        # i hate that this works LOL
+        # its so botched but at least its technically fixed??
 
 
     # Champion button gray-out
