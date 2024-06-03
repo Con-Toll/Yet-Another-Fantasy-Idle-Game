@@ -37,7 +37,7 @@ pygame.display.set_caption("Yet Another Idle Clicker")
 background = pygame.image.load("assets/background.png")
 backgroundwidth = screen_width
 backgroundheight = 0
-background_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (screen_width, screen_height)),
+generatable_area = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (screen_width, screen_height)),
                                               visible=0, 
                                               manager=window)
 
@@ -54,17 +54,9 @@ window.add_font_paths("canva", "assets/Chava-Regular.ttf")
 window.preload_fonts([{'name': 'canva', 'point-size': 14, 'style': 'regular'}])
 
 # Game Variables
-# Pause
 paused = False
-
-# Clicking
 click_power = 100000
-
-# Currency
 money = 0
-
-# Champions
-total_champion = 0
 
 # Info bar container
 container_info_bars = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2,-2), (screen_width+4, 102)))
@@ -81,7 +73,7 @@ def tab_openclose():
     global backgroundheight, area_tabs_status
     if area_tabs_status:
         area_tabs.set_relative_position((-3, screen_height-31))
-        background_area.set_relative_position((0, 0-31))
+        generatable_area.set_relative_position((0, 0-31))
         area_tabs_status = False
         backgroundheight = 0
         button_tab.set_text("^")
@@ -89,7 +81,7 @@ def tab_openclose():
 
     if not area_tabs_status:
         area_tabs.set_relative_position((-3, screen_height/2.5))
-        background_area.set_relative_position((0, 0-324))
+        generatable_area.set_relative_position((0, 0-324))
         area_tabs_status = True
         backgroundheight = (0-screen_height/2.9)
         button_tab.set_text("v")
@@ -160,13 +152,37 @@ button_prev_tab = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((14, 40
                                               text="<",
                                               container=area_tabs)
 
+# Tab 2
 area_tab2 = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((70, 32), (890, 288)),
                                         container=area_tabs)
-
-# Ascension wao
-button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 5), (200, 60)),
-                                                text="Sembreak !!",
+button_prestige = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((345, 92), (200, 60)),
+                                                text="IT'S TIME",
                                                 container=area_tab2)
+text_tab2 = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5), (880, 52)),
+                                               text="SEMESTER BREAK",
+                                               object_id=ObjectID(class_id="@text_tabs"),
+                                               container=area_tab2)
+
+# the thing that makes prestige prestige-able
+total_prestige_points = 0
+
+class MyProgressBar(pygame_gui.elements.UIProgressBar):
+    def __init__(self, x, y, w, h, ui_container):
+        super().__init__(relative_rect=pygame.Rect((x, y), (w, h)), container=ui_container)
+        global money, total_prestige_points
+        self.current_progress = money
+        self.maximum_progress = 1000000
+
+    def status_text(self):
+        return f"{self.current_progress:,}/{self.maximum_progress:,}"
+    
+    def set_current_progress(self, progress: float):
+        return super().set_current_progress(progress)
+    
+progress_prestige = MyProgressBar(5, 62, 875, 25, area_tab2)
+
+
+# Prestige waoooo
 area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (964, 544)))
 area_prestige.disable()
 area_prestige.hide()
@@ -185,14 +201,14 @@ button_prestige_continue = pygame_gui.elements.UIButton(relative_rect=pygame.Rec
 
 # Champions
 class Champion():
-    def __init__(self, index, name, title, base_idle_power, shown, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, index, name, title, base_idle_power, forHire, price_hire, price_level, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = 0
         self.base_idle_power = base_idle_power
         self.idle_power = 0
         self.isUnlocked = False
-        self.shown = shown
+        self.forHire = forHire
         self.index = index
         self.image = image
         self.price_hire = price_hire
@@ -260,36 +276,25 @@ class Champion():
 
     # Hire Champion Function
     def hire(self):
-        # Disable Hire Button/Price Display
-        self.button_hire.disable()
-        self.button_hire.hide()
-        self.price_hire_display.disable()
-        self.price_hire_display.hide()
-        # Enable level up buttons
-        self.button_level.enable()
-        self.button_level.show()
-
         global money
-        global total_champion
 
         # Deduct money
         money = money - self.price_hire
         # Update champion variables and total champion
         self.level = 1
-        total_champion += 1
         self.isUnlocked = True
+        bought_champs.append(self)
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.update_stats()
         self.thread_start()
 
         # Show next champion
         index = champions.index(self)
         if index < len(champions) - 1:
             next_champion = champions[index + 1]
-            next_champion.shown = True
+            next_champion.forHire = True
             next_champion.showChamp()
 
-        return total_champion, self.idle_power
+        return self.idle_power
         
 
     # Level Up Function
@@ -298,16 +303,12 @@ class Champion():
         money = money - self.price_level
         self.level += 1
         self.price_level *= 2
-        self.price_level_display.set_text(f"{self.price_level}")
+        
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.update_stats()
         return self.price_level, self.level, self.idle_power
 
     # Update champ info
-    def update_stats(self):
-        self.text_level.set_text(f"{self.level}")
-        self.text_idle.set_text(f"{self.idle_power}/s")
-
+        
     # Idle generation
     def thread_start(self):
         thread = threading.Thread(target=self.increment_money)
@@ -323,12 +324,12 @@ class Champion():
 
     # Enable/Disable champion container
     def showChamp(self):
-        if self.shown == False:
+        if self.forHire == False:
             self.container.hide()
             self.container.disable()
             self.button_hire.hide()
             self.button_hire.disable()
-        elif self.shown == True:
+        elif self.forHire == True:
             self.container.show()
             self.container.enable()
             if self.isUnlocked == False:
@@ -341,13 +342,12 @@ class Champion():
     def upgrade1(self, mult):
         self.up_mult = self.up_mult * mult
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.update_stats()
         return self.idle_power
 
 
 
 # Champions List 
-# (index, name, title, base_idle_power, shown, price_hire, price_level, image)
+# (index, name, title, base_idle_power, forHire, price_hire, price_level, image)
 hero = Champion(0, "hero", "The Protagonist", 1, True, 15, 20, "assets/images.png")
 reliable = Champion(1, "reliable", "The Reliable", 10, False, 1000, 1200, "assets/images.png")
 incon = Champion(2, "incon", "The Inconsistent", 100, False, 2500, 3000, "assets/images.png")
@@ -358,7 +358,8 @@ lect = Champion(6, "lect", "The Lecturer", 10000, False, 10000, 10000, "assets/i
 gpt = Champion(7, "gpt", "ChatGGEZ", 10000, False, 10000, 10000, "assets/images.png")
 
 champions = [hero, reliable, incon, leader, perfect, president, lect, gpt]
-
+bought_champs = []
+total_champion = len(bought_champs)
 
 # Champion initialization
 for champion in champions:
@@ -393,7 +394,7 @@ class Upgrade():
         self.button_tooltip = pygame_gui.elements.UITooltip(html_text="<font face=canva>"
                                                             f"{self.name}\n{self.tooltip}\nPrice: {self.price}"
                                                             "</font>",
-                                                            hover_distance=(-1, -1),
+                                                            hover_distance=(0, 0),
                                                             manager=window)
         return self.button_tooltip
 
@@ -472,11 +473,11 @@ class Upgrade():
 # num_id, requirement, price, name, origin, tooltip, mult, action
 
 # Hero
-up_hero1 = Upgrade(1, 2, 100000, "Hero 1", hero, "This is hero upgrade 1", 2, action=(hero.upgrade1))
-up_hero2 = Upgrade(2, 3, 100000, "Hero 2", hero, "This is hero upgrade 2", 2, action=(hero.upgrade1))
-up_hero3 = Upgrade(3, 4, 100000, "Hero 3", hero, "This is hero upgrade 3", 2, action=(hero.upgrade1))
-up_hero4 = Upgrade(4, 5, 100000, "Hero 4", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
-up_hero5 = Upgrade(5, 6, 100000, "Hero 5", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
+up_hero1 = Upgrade(1, 2, 100000, "Freshman", hero, "This is hero upgrade 1", 2, action=(hero.upgrade1))
+up_hero2 = Upgrade(2, 3, 100000, "Sophomore", hero, "This is hero upgrade 2", 2, action=(hero.upgrade1))
+up_hero3 = Upgrade(3, 4, 100000, "Junior", hero, "This is hero upgrade 3", 2, action=(hero.upgrade1))
+up_hero4 = Upgrade(4, 5, 100000, "Senior", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
+up_hero5 = Upgrade(5, 6, 100000, "Graduate", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
 
 # reliable
 up_reliable1 = Upgrade(6, 2, 100000, "reliable 1", reliable, "This is reliable upgrade 1", 2, action=(reliable.upgrade1))
@@ -637,7 +638,9 @@ info_num_money = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), 
                                              text=f"{money}",
                                              container=container_info_money)
 
-
+button_settings = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((860, 16), (70, 70)),
+                                               text="",
+                                               container=container_info_bars)
 
 # Format
 def format_num(value):
@@ -727,7 +730,10 @@ while running:
                     print("deleted")
 
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
+
+            # The Prestige Button. yes. that one
             if event.ui_element == button_prestige:
+                # Close everything in the main screen
                 tab_openclose()
                 if area_tabs_status == False:
                     button_tab.disable()
@@ -739,17 +745,24 @@ while running:
                     area_prestige.show()
                     area_prestige.enable()
 
-            #    area_tab2.hide()
-             #   area_tab2.disable()
+                # prestige title effect wahoo
                 text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
 
-            #    for champion in champions:
-             #       champion.isUnlocked = False
+                # reset all the things !
+                gold = 0
+                #click_power = 1
+                for champion in champions:
+                    champion.isUnlocked = False
+                    champion.forHire = False
+                    hero.forHire = True
+                    champion.level = 0
+                    champion.idle_power = 0
+                    champion.up_mult = 1
+                    champion.showChamp()
 
-            # debug button lol
-    #        elif event.ui_element == button_test:
-     #           area_tabs.hide()
-      #          area_tabs.show()
+                bought_champs.clear()
+                print(bought_champs)
+
 
             elif event.ui_element == button_prestige_continue:
                 paused = False
@@ -829,7 +842,7 @@ while running:
                 mouse_pos = pygame.mouse.get_pos()
                 
                 if not paused:
-                    if background_area.rect.collidepoint(mouse_pos):
+                    if generatable_area.rect.collidepoint(mouse_pos):
                         money += click_power
 
         window.process_events(event)
@@ -871,9 +884,10 @@ while running:
         # its so botched but at least its technically fixed??
 
 
-    # Champion button gray-out
+    # Champions
     for champion in champions:
-        if champion.shown and money >= champion.price_hire:
+        # Grey out button if unable to afford
+        if champion.forHire and money >= champion.price_hire:
             champion.button_hire.enable()
         else:
             champion.button_hire.disable()
@@ -882,6 +896,29 @@ while running:
             champion.button_level.enable()
         else:
             champion.button_level.disable()
+
+
+
+        if champion.isUnlocked == False and champion.forHire == True:
+            champion.button_hire.show()
+            champion.price_hire_display.show()
+            champion.price_hire_display.enable()
+            champion.button_level.hide()
+            champion.price_level_display.hide()
+            champion.price_level_display.disable()
+        elif champion.isUnlocked == True:
+            champion.button_level.show()
+            champion.price_level_display.show()
+            champion.price_level_display.enable()
+            champion.button_hire.hide()
+            champion.price_hire_display.hide()
+            champion.price_hire_display.disable()
+
+        # Keep stats updated
+        champion.price_level_display.set_text(f"{champion.price_level}")
+        champion.text_level.set_text(f"{champion.level}")
+        champion.text_idle.set_text(f"{champion.idle_power}/s")
+
 
     # Upgrade button gray-out
     for upgrade in list_upgrades:
@@ -902,12 +939,26 @@ while running:
             adjusted_mouse_pos = (mouse_pos[0] - 75, mouse_pos[1] - 108)
             upgrade.button_tooltip.find_valid_position((adjusted_mouse_pos))
 
+
+    # Prestige progress bar
+    progress_prestige.set_current_progress(money)
+    progress_prestige.percent_full = progress_prestige.current_progress/progress_prestige.maximum_progress*100
+
+    if money >= progress_prestige.maximum_progress:
+        button_prestige.enable()
+    else:
+        button_prestige.disable()
+
 #    if main_menu_status == True:
  #       init_main_menu()
 
     info_num_click.set_text(f"{format_num(click_power)}")
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_money.set_text(f"{format_money(money)}")
+
+
+
+
 
     window.update(time_delta)
     window.draw_ui(screen)
