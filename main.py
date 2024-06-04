@@ -55,7 +55,7 @@ window.preload_fonts([{'name': 'canva', 'point-size': 14, 'style': 'regular'}])
 
 # Game Variables
 paused = False
-click_power = 100000
+click_power = 10000
 money = 0
 
 # Info bar container
@@ -285,7 +285,13 @@ class Champion():
         self.isUnlocked = True
         bought_champs.append(self)
         self.idle_power = self.base_idle_power * self.level * self.up_mult
-        self.thread_start()
+        if self.isUnlocked == True:
+            self.button_level.show()
+            self.price_level_display.show()
+            self.price_level_display.enable()
+            self.button_hire.hide()
+            self.price_hire_display.hide()
+            self.price_hire_display.disable()
 
         # Show next champion
         index = champions.index(self)
@@ -293,6 +299,7 @@ class Champion():
             next_champion = champions[index + 1]
             next_champion.forHire = True
             next_champion.showChamp()
+            
 
         return self.idle_power
         
@@ -307,20 +314,6 @@ class Champion():
         self.idle_power = self.base_idle_power * self.level * self.up_mult
         return self.price_level, self.level, self.idle_power
 
-    # Update champ info
-        
-    # Idle generation
-    def thread_start(self):
-        thread = threading.Thread(target=self.increment_money)
-        thread.daemon = True
-        thread.start()
-
-    def increment_money(self):
-        while True:
-            time.sleep(1)
-            global money
-            money += self.idle_power
-
 
     # Enable/Disable champion container
     def showChamp(self):
@@ -329,14 +322,16 @@ class Champion():
             self.container.disable()
             self.button_hire.hide()
             self.button_hire.disable()
-        elif self.forHire == True:
-            self.container.show()
-            self.container.enable()
-            if self.isUnlocked == False:
+
+        if self.isUnlocked == False and self.forHire == True:
+                self.container.show()
+                self.container.enable()
                 self.button_hire.show()
-                self.button_hire.enable()
+                self.price_hire_display.show()
+                self.price_hire_display.enable()
                 self.button_level.hide()
-                self.button_level.disable()
+                self.price_level_display.hide()
+                self.price_level_display.disable()
 
     # Champ upgrades
     def upgrade1(self, mult):
@@ -680,6 +675,21 @@ def format_money(value):
  #   print("worked")
   #  return paused, main_menu_status
 
+    # Idle generation
+status_thread = False
+
+def thread_start():
+    global status_thread
+    thread = threading.Thread(target=increment_money)
+    thread.daemon = True
+    thread.start()
+    status_thread = True
+
+def increment_money():
+    while True:
+        time.sleep(1)
+        global money, total_idle_power
+        money += total_idle_power
 
 # Game loop \o/
 running = True
@@ -897,36 +907,18 @@ while running:
         else:
             champion.button_level.disable()
 
-
-
-        if champion.isUnlocked == False and champion.forHire == True:
-            champion.button_hire.show()
-            champion.price_hire_display.show()
-            champion.price_hire_display.enable()
-            champion.button_level.hide()
-            champion.price_level_display.hide()
-            champion.price_level_display.disable()
-        elif champion.isUnlocked == True:
-            champion.button_level.show()
-            champion.price_level_display.show()
-            champion.price_level_display.enable()
-            champion.button_hire.hide()
-            champion.price_hire_display.hide()
-            champion.price_hire_display.disable()
-
         # Keep stats updated
-        champion.price_level_display.set_text(f"{champion.price_level}")
-        champion.text_level.set_text(f"{champion.level}")
-        champion.text_idle.set_text(f"{champion.idle_power}/s")
+        if champion.isUnlocked:
+            champion.price_level_display.set_text(f"{champion.price_level}")
+            champion.text_level.set_text(f"{champion.level}")
+            champion.text_idle.set_text(f"{champion.idle_power}/s")
 
 
     # Upgrade button gray-out
     for upgrade in list_upgrades:
-        if upgrade not in list_available:
-            if upgrade not in list_bought: # God I feel like a genius figuring this out after 3 #$*&ing days
-                if upgrade.shown:
-                    list_available.append(upgrade)
-                    upgrade.available()
+        if upgrade not in list_available and upgrade not in list_bought and upgrade.shown: # God I feel like a genius figuring this out after 3 #$*&ing days
+            list_available.append(upgrade)
+            upgrade.available()
 
         
         if upgrade.origin.level >= upgrade.requirement:
@@ -956,13 +948,13 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_money.set_text(f"{format_money(money)}")
 
-
-
+    if not status_thread:
+        thread_start()
 
 
     window.update(time_delta)
     window.draw_ui(screen)
-    pygame.display.update
+    pygame.display.update()
     pygame.display.flip()
 
 pygame.quit()
