@@ -5,6 +5,10 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
+from Class import moving_box
+
+
+
 
 pygame.init()
 
@@ -600,6 +604,10 @@ def format_gold(value):
   #  return paused, main_menu_status
 
 
+button = moving_box("assets\Button_sheet.png")
+moving_button = [button.parse_sprite('f_button1.png'),button.parse_sprite('f_button2.png'),button.parse_sprite('f_button3.png'),button.parse_sprite('f_button4.png'),button.parse_sprite('f_button5.png'),button.parse_sprite('f_button6.png')]
+index = 0
+
 # Game loop \o/
 running = True
 while running:
@@ -758,11 +766,12 @@ while running:
     
 #    if main_menu_status == True:
  #       init_main_menu()
-
+    
     info_num_click.set_text(f"{format_num(click_power)}")
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
+    screen.blit(moving_button,(0,screen_height-200))
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update

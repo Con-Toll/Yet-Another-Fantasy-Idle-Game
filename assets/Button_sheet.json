@@ -1,0 +1,53 @@
+{"frames":{
+
+"f_button1.png":
+{
+    "frame":{"x":0,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}
+},
+"f_button2.png":
+{
+    "frame":{"x":200,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}
+},
+"f_button3.png":
+{
+    "frame":{"x":400,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}
+},
+"f_button4.png":{
+    "frame":{"x":600,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}
+},
+"f_button5.png":{
+    "frame":{"x":800,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}
+},
+"f_button6.png":{
+    "frame":{"x":1000,"y":0,"w":200,"h":50},
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize":{"x":0,"y":0,"w":200,"h":50},
+    "sourceSize":{"w":200,"h":50}}
+
+
+
+
+}
+
+}
