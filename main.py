@@ -55,7 +55,7 @@ window.preload_fonts([{'name': 'canva', 'point-size': 14, 'style': 'regular'}])
 
 # Game Variables
 paused = False
-click_power = 10000
+click_power = 100000
 money = 0
 
 # Info bar container
@@ -398,8 +398,12 @@ class Upgrade():
         if self.shown:
             self.button.enable()
             self.button.show()
+        else:
+            self.button.disable()
+            self.button.hide()
 
-        if not self.isUnlocked:
+        if not self.isUnlocked and self.shown:
+            self.button.set_container(container=area_upgrade_available)
             index = list_available.index(self)
             #the container is (422, 315)
             if index >= 64:
@@ -454,9 +458,30 @@ class Upgrade():
         if self.isUnlocked == True:
             index = list_bought.index(self)
             
-            if index >= 8:
+            if index >= 64:
+                self.x = 10 + ((index-64) * 49) + ((index-64) * 2)
+                self.y = 60 + (8 * 51)
+            elif index >= 56:
+                self.x = 10 + ((index-56) * 49) + ((index-56) * 2)
+                self.y = 60 + (7 * 51)
+            elif index >= 48:
+                self.x = 10 + ((index-48) * 49) + ((index-48) * 2)
+                self.y = 60 + (6 * 51)
+            elif index >= 40:
+                self.x = 10 + ((index-40) * 49) + ((index-40) * 2)
+                self.y = 60 + (5 * 51)
+            elif index >= 32:
+                self.x = 10 + ((index-32) * 49) + ((index-32) * 2)
+                self.y = 60 + (4 * 51)
+            elif index >= 24:
+                self.x = 10 + ((index-24) * 49) + ((index-24) * 2)
+                self.y = 60 + (3 * 51)
+            elif index >= 16:
+                self.x = 10 + ((index-16) * 49) + ((index-16) * 2)
+                self.y = 60 + (2 * 51)
+            elif index >= 8:
                 self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
-                self.y = 60 + 51
+                self.y = 60 + (1 * 51)
             elif index >= 0:
                 self.x = 10 + (index * 49) + (index * 2)
                 self.y = 60
@@ -545,43 +570,48 @@ for upgrade in list_upgrades:
 
 
 class Prestige():
-    def __init__(self, x, y, num_id, requirement, price, name, tooltip, mult, action=None):
+    def __init__(self, x, y, price, name, tooltip, mult, action=None):
         self.x = x
         self.y = y
-        self.num_id = num_id
-        self.requirement = requirement
+        self.canBuy = False
         self.price = price
         self.name = name
         self.tooltip = tooltip
         self.mult = mult
         self.isUnlocked = False
+        self.action = action
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (150, 75)),
                                                    text=f"{self.name}",
                                                    anchors={"center": "center"},
                                                    container=area_prestige,
                                                    object_id=ObjectID(class_id="@button_prestige"))
-        
     
 
 
-# x, y, num_id, requirement, price, name, tooltip, mult
+# x, y, price, name, tooltip, mult, action
 # requirement is for prestige branches
-prestige1 = Prestige(-380, -55, 1, 1, 0, "Foundation", "The end of your first year!", 1)
-prestige2a = Prestige(-190, -115, 1, 1, 0, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n(+100% Click Power)", 1)
-prestige2b = Prestige(-190, 5, 1, 1, 0, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 1)
-prestige3 = Prestige(0, -55, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige3a = Prestige(0, -140, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige3b = Prestige(0, 30, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige4a = Prestige(190, -115, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige4b = Prestige(190, 5, 1, 1, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige5 = Prestige(380, -55, 1, 1, 0, "Graduation", "Congratulations, it's finally over! (+The End)", 1)
+prestige1 = Prestige(-380, -55, 0, "Foundation", "The end of your first year!", 1)
+prestige2a = Prestige(-190, -115, 0, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n(+100% Click Power)", 1)
+prestige2b = Prestige(-190, 5, 0, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 1)
+prestige3 = Prestige(0, -55, 0, "Electives", "To hold my places, y'know. (+Takes up space)", 1)
+prestige3a = Prestige(0, -140, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige3b = Prestige(0, 30, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige4a = Prestige(190, -115, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige4b = Prestige(190, 5, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
+prestige5 = Prestige(380, -55, 0, "Graduation", "Congratulations, it's finally over! (+The End)", 1)
 
 list_prestige = [prestige1, prestige2a, prestige2b, prestige3, prestige3a, prestige3b, prestige4a, prestige4b, prestige5]
 
+for upgrade in list_prestige:
+    upgrade.button.disable()
+    
+prestige1.button.enable()
+prestige1.canBuy = True
+
 total_credits = 0
 show_credits = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((480, 350), (480, 60)),
-                                           text=f"College Credits: {total_credits}",
+                                           text=f"Credits: {total_credits}",
                                            container=area_prestige,
                                            object_id=ObjectID(class_id="@prestige_credits"))
 
@@ -724,7 +754,6 @@ while running:
                 if event.ui_element == upgrade.button:
                     prestige_show_price.set_text(f"Cost: {upgrade.price}")
                     prestige_show_tooltip.set_text(f"{upgrade.tooltip}")
-                    print("set")
 
         if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
             for upgrade in list_available:
@@ -737,7 +766,6 @@ while running:
                 if event.ui_element == upgrade.button:
                     prestige_show_price.set_text("")
                     prestige_show_tooltip.set_text("")
-                    print("deleted")
 
         elif event.type == pygame_gui.UI_BUTTON_PRESSED:
 
@@ -753,14 +781,17 @@ while running:
                     container_info_bars.hide()
                     container_info_bars.disable()
                     area_prestige.show()
-                    area_prestige.enable()
+                    button_prestige_respec.enable()
+                    button_prestige_continue.enable()
 
                 # prestige title effect wahoo
                 text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
 
                 # reset all the things !
-                gold = 0
+                money = 0
                 #click_power = 1
+                total_idle_power = sum(champion.idle_power for champion in champions)
+
                 for champion in champions:
                     champion.isUnlocked = False
                     champion.forHire = False
@@ -769,9 +800,19 @@ while running:
                     champion.idle_power = 0
                     champion.up_mult = 1
                     champion.showChamp()
+                    champion.price_hire_display.set_text(f"{champion.price_hire}")
+                    champion.text_level.set_text(f"{champion.level}")
+                    champion.text_idle.set_text(f"{champion.idle_power}/s")
 
                 bought_champs.clear()
                 print(bought_champs)
+
+                for upgrade in list_upgrades:
+                    upgrade.isUnlocked = False
+                    upgrade.shown = False
+                    list_available.clear()
+                    list_bought.clear()
+                    upgrade.available()
 
 
             elif event.ui_element == button_prestige_continue:
@@ -785,11 +826,77 @@ while running:
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
-                    if total_credits >= upgrade.price:
+                    if total_credits >= upgrade.price and upgrade.canBuy:
                         total_credits = total_credits - upgrade.price
                         upgrade.isUnlocked = True
-                        upgrade.button.disable()
-            
+                        print(f"{upgrade.name} bought")
+
+                        if event.ui_element == prestige1.button:
+                            prestige2a.button.enable()
+                            prestige2b.button.enable()
+                            prestige2a.canBuy = True
+                            prestige2b.canBuy = True
+
+                        elif event.ui_element == prestige2a.button:
+                            if prestige2a.canBuy:
+                                # upgrades of the same tier get disabled
+                                prestige2a.canBuy = False
+                                prestige2b.canBuy = False
+                                # enable next tier upgrades
+                                prestige3.button.enable()
+                                prestige3a.button.enable()
+                                # make them purchasable
+                                prestige3.canBuy = True
+                                prestige3a.canBuy = True
+                    
+                        elif event.ui_element == prestige2b.button:
+                            if prestige2b.canBuy:
+                                prestige2a.canBuy = False
+                                prestige2b.canBuy = False
+                                prestige3.button.enable()
+                                prestige3b.button.enable()
+                                prestige3.canBuy = True
+                                prestige3b.canBuy = True
+
+                        elif event.ui_element == prestige3.button:
+                            if prestige3.canBuy:
+                                prestige3.canBuy = False
+
+                        elif event.ui_element == prestige3a.button:
+                            if prestige3a.canBuy:
+                                prestige3a.canBuy = False
+                                prestige3b.canBuy = False
+                                prestige4a.button.enable()
+                                prestige4a.canBuy = True
+
+                        elif event.ui_element == prestige3b.button:
+                            if prestige3b.canBuy:
+                                prestige3a.canBuy = False
+                                prestige3b.canBuy = False
+                                prestige4b.button.enable()
+                                prestige4b.canBuy = True
+
+                        elif event.ui_element == prestige4a.button:
+                            if prestige4a.canBuy:
+                                prestige4a.canBuy = False
+                                prestige4b.canBuy = False
+                                
+                                prestige5.button.enable()
+                                prestige5.canBuy = True
+                    
+                        elif event.ui_element == prestige4b.button:
+                            if prestige4b.canBuy:
+                                prestige4a.canBuy = False
+                                prestige4b.canBuy = False
+
+                                prestige5.button.enable()
+                                prestige5.canBuy = True
+                        
+                        elif event.ui_element == prestige5.button:
+                            if prestige5.canBuy:
+                                prestige5.canBuy = False
+
+
             if not paused:
                 if event.ui_element == button_next_tab:
                     current_tab = 2
@@ -828,7 +935,7 @@ while running:
                         if money >= upgrade.price and not upgrade.isUnlocked and upgrade.shown:
                             # Buy upgrade
                             upgrade.purchase()
-                            # Move bought upgrade from available to bought                        lists make me wanna commit a crime
+                            # Move bought upgrade from available to bought                     lists make me wanna commit a crime
                             list_available.remove(upgrade)
                             print(list_available)
                             list_bought.append(upgrade)
@@ -921,7 +1028,7 @@ while running:
             upgrade.available()
 
         
-        if upgrade.origin.level >= upgrade.requirement:
+        if upgrade.origin.level >= upgrade.requirement and not upgrade.shown:
             upgrade.shown = True
 
 

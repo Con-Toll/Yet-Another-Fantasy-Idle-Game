@@ -160,5 +160,21 @@
             "text_vert_alignment_padding": "-21",
             "text_horiz_alignment_padding": "0"
         }
+    },
+    "@prestige_not_chosen":{
+        "colours":
+        {
+             "normal_border": "Red",
+             "normal_bg": "Orange",
+             "normal_text": "White"
+        }
+    },
+    "@prestige_bought":{
+        "colours":
+        {
+             "normal_border": "Red",
+             "normal_bg": "Orange",
+             "normal_text": "White"
+        }
     }
 }
