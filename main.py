@@ -184,6 +184,12 @@ progress_prestige = MyProgressBar(5, 62, 875, 25, area_tab2)
 
 # Prestige waoooo
 area_prestige = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2, -2), (964, 544)))
+bg_prestige_load = pygame.image.load("assets/prestige_bg.png")
+bg_prestige = pygame_gui.elements.UIImage(relative_rect=((0,0), (screen_width, screen_height)),
+                                          image_surface=bg_prestige_load,
+                                          container=area_prestige,
+                                          starting_height=0
+                                         )
 area_prestige.disable()
 area_prestige.hide()
 text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((220, 0), (screen_width-440, 80)),
@@ -585,7 +591,7 @@ class Prestige():
                                                    text=f"{self.name}",
                                                    anchors={"center": "center"},
                                                    container=area_prestige,
-                                                   object_id=ObjectID(class_id="@button_prestige"))
+                                                   object_id=ObjectID(class_id="@prestige_available"))
     
 
 
@@ -832,10 +838,14 @@ while running:
                         print(f"{upgrade.name} bought")
 
                         if event.ui_element == prestige1.button:
-                            prestige2a.button.enable()
-                            prestige2b.button.enable()
-                            prestige2a.canBuy = True
-                            prestige2b.canBuy = True
+                            if prestige1.canBuy:
+                                prestige1.canBuy = False
+                                prestige2a.button.enable()
+                                prestige2b.button.enable()
+                                prestige2a.canBuy = True
+                                prestige2b.canBuy = True
+
+                                prestige1.button.change_object_id("@prestige_bought")
 
                         elif event.ui_element == prestige2a.button:
                             if prestige2a.canBuy:
@@ -845,36 +855,62 @@ while running:
                                 # enable next tier upgrades
                                 prestige3.button.enable()
                                 prestige3a.button.enable()
+                                prestige3b.button.enable()
                                 # make them purchasable
                                 prestige3.canBuy = True
                                 prestige3a.canBuy = True
+                                
+                                prestige2b.button.change_object_id("@prestige_not_chosen")
+                                prestige3b.button.change_object_id("@prestige_not_chosen")
+
+                                prestige2a.button.change_object_id("@prestige_bought")
                     
                         elif event.ui_element == prestige2b.button:
                             if prestige2b.canBuy:
                                 prestige2a.canBuy = False
                                 prestige2b.canBuy = False
                                 prestige3.button.enable()
+                                prestige3a.button.enable()
                                 prestige3b.button.enable()
                                 prestige3.canBuy = True
                                 prestige3b.canBuy = True
 
+                                prestige2a.button.change_object_id("@prestige_not_chosen")
+                                prestige3a.button.change_object_id("@prestige_not_chosen")
+
+                                prestige2b.button.change_object_id("@prestige_bought")
+
                         elif event.ui_element == prestige3.button:
                             if prestige3.canBuy:
                                 prestige3.canBuy = False
+
+                                prestige3.button.change_object_id("@prestige_bought")
 
                         elif event.ui_element == prestige3a.button:
                             if prestige3a.canBuy:
                                 prestige3a.canBuy = False
                                 prestige3b.canBuy = False
                                 prestige4a.button.enable()
+                                prestige4b.button.enable()
                                 prestige4a.canBuy = True
+
+                                prestige3b.button.change_object_id("@prestige_not_chosen")
+                                prestige4b.button.change_object_id("@prestige_not_chosen")
+
+                                prestige3a.button.change_object_id("@prestige_bought")
 
                         elif event.ui_element == prestige3b.button:
                             if prestige3b.canBuy:
                                 prestige3a.canBuy = False
                                 prestige3b.canBuy = False
+                                prestige4a.button.enable()
                                 prestige4b.button.enable()
                                 prestige4b.canBuy = True
+
+                                prestige3a.button.change_object_id("@prestige_not_chosen")
+                                prestige4a.button.change_object_id("@prestige_not_chosen")
+
+                                prestige3b.button.change_object_id("@prestige_bought")
 
                         elif event.ui_element == prestige4a.button:
                             if prestige4a.canBuy:
@@ -883,6 +919,10 @@ while running:
                                 
                                 prestige5.button.enable()
                                 prestige5.canBuy = True
+
+                                prestige4b.button.change_object_id("@prestige_not_chosen")
+
+                                prestige4a.button.change_object_id("@prestige_bought")
                     
                         elif event.ui_element == prestige4b.button:
                             if prestige4b.canBuy:
@@ -891,10 +931,16 @@ while running:
 
                                 prestige5.button.enable()
                                 prestige5.canBuy = True
+
+                                prestige4a.button.change_object_id("@prestige_not_chosen")
+
+                                prestige4b.button.change_object_id("@prestige_bought")
                         
                         elif event.ui_element == prestige5.button:
                             if prestige5.canBuy:
                                 prestige5.canBuy = False
+
+                                prestige5.button.change_object_id("@prestige_bought")
 
 
             if not paused:
