@@ -5,11 +5,11 @@ import math
 
 
 
-class moving_box(pygame.sprite.Sprite):
-    def __init__(self,filename):
-        super()
-        self.filename = filename
-        self.sprite_sheet = pygame.image.load(filename).convert()
+class button(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__
+        self.filename = "assets\Button_sprite.png"
+        self.sprite_sheet = pygame.image.load(self.filename).convert()
         self.meta_data =self.filename.replace('png','json')
         with open(self.meta_data)as f:
             self.data = json.load(f)
@@ -27,3 +27,17 @@ class moving_box(pygame.sprite.Sprite):
         image = self.get_sprite(x,y,w,h)
         return image 
     
+class moving_button(button):
+    def __init__(self):
+        super().__init__
+        self.button = button()
+        self.sprite = [self.button.parse_sprite('f_button1.png'),self.button.parse_sprite('f_button2.png'),self.button.parse_sprite('f_button3.png'),self.button.parse_sprite('f_button4.png'),self.button.parse_sprite('f_button5.png'),self.button.parse_sprite('f_button6.png')]
+        self.current_sprite = 0
+        self.image = self.sprite
+        self.image = self.sprite[self.current_sprite]
+        self.animate = True
+        self.index = 0
+    
+    
+        
+        
