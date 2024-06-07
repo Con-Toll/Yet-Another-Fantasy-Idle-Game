@@ -5,8 +5,8 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
-from Class import moving_button
-
+import Class_file
+import random
 
 
 
@@ -605,14 +605,18 @@ def format_gold(value):
   #  return paused, main_menu_status
 
 
-buttons = moving_button()        
+QTE_Button = Class_file.moving_button()
+QTE_Button.x = screen_width
+QTE_Button.y =screen_height //2
 
 # Game loop \o/
 running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-
+    randomiser_x = random.randint(8000,20000)
+    randomiser_y = random.randint(80,screen_height-50)
+    
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, backgroundheight))
     
@@ -716,10 +720,14 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
                 mouse_pos = pygame.mouse.get_pos()
+                QTE_Button_Rect = QTE_Button.frames[QTE_Button.index].get_rect(topleft=(QTE_Button.x,QTE_Button.y))
                 
                 if not paused:
                     if background_area.rect.collidepoint(mouse_pos):
                         gold += click_power
+                    
+                    if QTE_Button_Rect.collidepoint(mouse_pos):
+                        QTE_Button.x = randomiser_x
 
         window.process_events(event)
 
@@ -764,14 +772,17 @@ while running:
 
     
 #    if main_menu_status == True:
- #       init_main_menu()
-    buttons.index = (buttons.index + 1) % len(buttons.sprite)
+#       init_main_menu()
+
+    QTE_Button.move(5)
+    QTE_Button.check(randomiser_x,randomiser_y)
+    screen.blit(QTE_Button.frames[QTE_Button.index], (QTE_Button.x, QTE_Button.y))
+    QTE_Button.index = (QTE_Button.index + 1) % len(QTE_Button.frames)
     
     info_num_click.set_text(f"{format_num(click_power)}")
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
-    screen.blit(buttons.sprite[buttons.index],(200,screen_width-200))
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
