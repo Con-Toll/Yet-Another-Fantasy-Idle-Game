@@ -8,7 +8,7 @@ import threading
 import json
 import os
 
-
+pygame.init()
 
 
 # -- VARIABLES --
@@ -294,7 +294,30 @@ class Champion():
                                                               text=f"{self.price_hire}",
                                                               container=self.container)
 
+    def to_dict(self):
+        return {
+            "level": self.level,
+            "idle_power": self.idle_power,
+            "isUnlocked": self.isUnlocked,
+            "forHire": self.forHire,
+            "price_hire": self.price_hire,
+            "price_level": self.price_level,
+            "up_mult": self.up_mult
+        }
 
+    @classmethod
+    def from_dict(cls, data):
+        champ = cls(
+            forHire=data["forHire"],
+            price_hire=data["price_hire"],
+            price_level=data["price_level"]
+        )
+        champ.level = data["level"]
+        champ.idle_power = data["idle_power"]
+        champ.isUnlocked = data["isUnlocked"]
+        champ.up_mult = data["up_mult"]
+        return champ
+    
     # Hire Champion Function
     def hire(self):
         global money
@@ -353,6 +376,17 @@ class Champion():
                 self.button_level.hide()
                 self.price_level_display.hide()
                 self.price_level_display.disable()
+
+    def load_save(self):
+        if self.isUnlocked:
+            self.container.show()
+            self.container.enable()
+            self.button_level.show()
+            self.price_level_display.show()
+            self.price_level_display.enable()
+            self.button_hire.hide()
+            self.price_hire_display.hide()
+            self.price_hire_display.disable()
 
     # Champ upgrades
     def upgrade1(self, mult):
@@ -744,11 +778,11 @@ def increment_money():
         money += total_idle_power
 
 def save_game_state():
-    global gold, total_champion, click_power, auto_click_power
+    global money, click_power, total_idle_power, champions
     game_state = {
         "click_power": click_power,
-        "auto_click_power": auto_click_power,
-        "gold": gold,
+        "money": money,
+        "total_idle_power": total_idle_power,
         "champions": [champion.to_dict() for champion in champions]
     }
     with open('game_state.json', 'w') as file:
@@ -756,40 +790,38 @@ def save_game_state():
     print("Game state saved.")
 
 def load_game_state():
-    global gold, total_champion, click_power, auto_click_power, champions
+    global money, click_power, total_idle_power, champions
     if os.path.exists('game_state.json'):
-        with open('game_state.json', 'r') as file:
-            game_state = json.load(file)
-            gold = game_state.get('gold', 0)
-            total_champion = game_state.get('total_champion', 0)
-            click_power = game_state.get('click_power', 100)
-            auto_click_power = game_state.get('auto_click_power', 0)
-            champions_data = game_state["champions"]
-            # Reinitialize champions based on saved data
-            for i, champ_data in enumerate(champions_data):
-                champions[i].name = champ_data["name"]
-                champions[i].title = champ_data["title"]
-                champions[i].level = champ_data["level"]
-                champions[i].idle_power = champ_data["idle_power"]
-                champions[i].isUnlocked = champ_data["isUnlocked"]
-                champions[i].shown = champ_data["shown"]
-                champions[i].pos = champ_data["position"]
-                champions[i].price_hire = champ_data["price_hire"]
-                champions[i].price_level = champ_data["price_level"]
-                champions[i].image_path = champ_data["image"]
-                champions[i].text_box.set_text(f"<p>Level : {champions[i].level}<p>")
-                champions[i].price_level_display.set_text(f"{champions[i].price_level}")
-                champions[i].price_hire_display.set_text(f"{champions[i].price_hire}")
-                if champions[i].isUnlocked:
-                    champions[i].hire()
-                if champions[i].shown:
-                    champions[i].showChamp()
-        print("Game state loaded.")
-    else:
-        print("No save file found. Starting with default values.")
+        try:
+            with open('game_state.json', 'r') as file:
+                game_state = json.load(file)
+                money = game_state.get('money', 0)
+                click_power = game_state.get('click_power', 100)
+                champions_data = game_state["champions"]
+                # Reinitialize champions based on saved data
+                for i, champ_data in enumerate(champions_data):
+                    champions[i].level = champ_data["level"]
+                    champions[i].idle_power = champ_data["idle_power"]
+                    champions[i].isUnlocked = champ_data["isUnlocked"]
+                    champions[i].forHire = champ_data["forHire"]
+                    champions[i].price_hire = champ_data["price_hire"]
+                    champions[i].price_level = champ_data["price_level"]
+                    champions[i].up_mult = champ_data["up_mult"]
+                    champions[i].price_level_display.set_text(f"{champions[i].price_level}")
+                    champions[i].price_hire_display.set_text(f"{champions[i].price_hire}")
+                    if champions[i].isUnlocked:
+                        champions[i].load_save()
+                    if champions[i].forHire:
+                        champions[i].showChamp()
+                total_idle_power = sum(champion.idle_power for champion in champions)
+        except json.JSONDecodeError:
+            print("Error: The game state file contains invalid JSON. Initializing default game state.")
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
 
 # Load game state on startup
 load_game_state()
+thread_start()
 
 # Game loop \o/
 running = True
@@ -1167,8 +1199,6 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_money.set_text(f"{format_money(money)}")
 
-    if not status_thread:
-        thread_start()
 
     
     window.update(time_delta)
