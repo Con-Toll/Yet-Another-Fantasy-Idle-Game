@@ -793,10 +793,7 @@ while running:
                 # prestige title effect wahoo
                 text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
 
-                # reset all the things !
-                money = 0
-                #click_power = 1
-                total_idle_power = sum(champion.idle_power for champion in champions)
+                
 
                 for champion in champions:
                     champion.isUnlocked = False
@@ -819,7 +816,11 @@ while running:
                     list_available.clear()
                     list_bought.clear()
                     upgrade.available()
-
+                    
+                # reset all the things !
+                money = 0
+                #click_power = 1
+                total_idle_power = sum(champion.idle_power for champion in champions)
 
             elif event.ui_element == button_prestige_continue:
                 paused = False
