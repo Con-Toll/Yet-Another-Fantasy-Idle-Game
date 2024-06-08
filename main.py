@@ -608,6 +608,7 @@ def format_gold(value):
 QTE_Button = Class_file.moving_button()
 QTE_Button.x = screen_width
 QTE_Button.y =screen_height //2
+QTE_game_1 = Class_file.QTE()
 
 # Game loop \o/
 running = True
@@ -630,6 +631,7 @@ while running:
 
     # Event handling
     for event in pygame.event.get():
+        QTE_game_1.key()
         if event.type == pygame.QUIT:
             running = False
 
@@ -728,6 +730,7 @@ while running:
                     
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
+                        QTE_game_1.exe =True
 
         window.process_events(event)
 
@@ -783,10 +786,19 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
+    QTE_game_1.update(screen)
+    QTE_game_1.fadeout()
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
     pygame.display.flip()
 
+print(time_delta)
+print(clock)
 pygame.quit()
 sys.exit()
+
+
+
+
+
