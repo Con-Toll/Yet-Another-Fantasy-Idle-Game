@@ -461,7 +461,7 @@ K_r = pygame.K_RIGHT
 
 
 class QTE(pygame.sprite.Sprite):
-    def __init__(self, start, end):
+    def __init__(self):
         super().__init__()
         self.position = {
             1: (350, 3),
@@ -469,14 +469,15 @@ class QTE(pygame.sprite.Sprite):
             3: (550, 3),
             4: (650, 3)
         }
-        self.different = ["UP", "DOWN", "LEFT", "RIGHT"]
+        self.different = ["UP","DOWN","LEFT","RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
         self.Down = Event_gui(self.position[2], random.choice(self.different))#2
         self.Left = Event_gui(self.position[3], random.choice(self.different))#3
-        self.Right = Event_gui(self.position[4], random.choice(self.different))
+        self.Right = Event_gui(self.position[4],random.choice(self.different))
         self.current_key = 0
         self.prev_key = None
         self.exe =True
+        self.randomise = False
         
         
     def key(self):
@@ -496,20 +497,29 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             gold+=10000
                             self.exe = False
+                            self.randomise =True
+                            self.reset()
                             
                             
-    
-        
-   
+    def reset(self):
+        if self.randomise ==  True:
+            if self.Right.alpha <= 0:
+                self.Up = Event_gui(self.position[1], random.choice(self.different))#1
+                self.Down = Event_gui(self.position[2], random.choice(self.different))#2
+                self.Left = Event_gui(self.position[3], random.choice(self.different))#3
+                self.Right = Event_gui(self.position[4], random.choice(self.different))
+                self.key()
+                self.update()
 
         
     def update(self):
-    
+
         if self.exe == True:
             moving_image.add(self.Up)
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
+            
         
         
     def fadeout(self):
@@ -517,13 +527,13 @@ class QTE(pygame.sprite.Sprite):
         self.Down.fadeout()
         self.Left.fadeout()
         self.Right.fadeout()
-
+        
     
     
     
     
     
-Test = QTE(13,14)
+Test = QTE()
 
     
 
@@ -586,6 +596,7 @@ while running:
 
                 # Tab buttons
                 if champ_button.rect.collidepoint(mouse_pos):
+                    Test.exe = True
                     if champion_y == 490:
                         champion_y = 0
                         upgrade_y = 490
@@ -694,6 +705,7 @@ while running:
                 
                 else:
                     gold += click_power
+                    
                     
                     
         Test.key()
