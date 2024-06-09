@@ -631,7 +631,7 @@ while running:
 
     # Event handling
     for event in pygame.event.get():
-        QTE_game_1.key(gold)
+        QTE_game_1.key()
         if event.type == pygame.QUIT:
             running = False
 
