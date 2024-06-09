@@ -684,14 +684,13 @@ while running:
                 # Champion buttons
                 for champion in champions:
                     # Level up button
-                    if event.ui_element == champion.button_level:
+                    if champion.button_level.rect.collidepoint(mouse_pos):
                         if gold >= champion.price_level and champion.isUnlocked:
                             champion.level_up()
-                            total_idle_power = sum(champion.idle_power for champion in champions)
 
                     # Hire button
                     if champion.button_hire.is_enabled:
-                        if event.ui_element == champion.button_hire:
+                        if champion.button_hire.rect.collidepoint(mouse_pos):
                             if gold >= champion.price_hire and not champion.isUnlocked:
                                 champion.hire()
                                 total_idle_power = sum(champion.idle_power for champion in champions)
