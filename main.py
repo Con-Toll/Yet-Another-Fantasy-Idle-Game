@@ -415,8 +415,8 @@ class Event_gui(pygame.sprite.Sprite):
     
         
         
-    
-        
+    def randomiser(self,random):
+        self.direc = random
     
     def key(self):
         if self.access == True:
@@ -438,13 +438,12 @@ class Event_gui(pygame.sprite.Sprite):
             
     
     def fadeout(self):
-            global point
             if self.fade == True:
                 self.alpha=max(0,self.alpha-5)
                 self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
                 if self.alpha <= 0:
                     self.kill()
-                    self.is_animating = False
+                    
                 
              
            
@@ -497,23 +496,21 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             gold+=10000
                             self.exe = False
-                            self.reset()
                             
-    def reset(self):
-        self.Down.direc = random.choice(self.different)
-        self.Up.direc = random.choice(self.different)
-        self.Left.direc = random.choice(self.different)
-        self.Right.direc = random.choice(self.different)
+                            
+    
         
-                    
+   
+
         
     def update(self):
+    
         if self.exe == True:
             moving_image.add(self.Up)
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
-            
+        
         
     def fadeout(self):
         self.Up.fadeout()
@@ -697,6 +694,7 @@ while running:
                 
                 else:
                     gold += click_power
+                    
                     
         Test.key()
         
