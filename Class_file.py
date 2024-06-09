@@ -27,7 +27,10 @@ class moving_button():
             self.y = random_y
             
             
-    
+
+
+
+###################################################################################################################################
 class Event_gui(pygame.sprite.Sprite):
     def __init__(self,pos,direc) -> None:
         super().__init__()
@@ -45,6 +48,10 @@ class Event_gui(pygame.sprite.Sprite):
         self.direc = direc
         self.access = False
         self.nice = False
+    
+        
+        
+ 
     
     def key(self):
         if self.access == True:
@@ -64,15 +71,15 @@ class Event_gui(pygame.sprite.Sprite):
                 
             self.image = self.sprite[int(self.current_sprite)]
             
-        
+            
+    
     def fadeout(self):
-            global point
             if self.fade == True:
                 self.alpha=max(0,self.alpha-5)
                 self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
                 if self.alpha <= 0:
                     self.kill()
-                    self.is_animating = False
+                    
                 
              
            
@@ -85,21 +92,23 @@ class QTE(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.position = {
-            1: (350, 200),
-            2: (450, 200),
-            3: (550, 200),
-            4: (650, 200)
+            1: (350, 3),
+            2: (450, 3),
+            3: (550, 3),
+            4: (650, 3)
         }
-        self.different = ["UP", "DOWN", "LEFT", "RIGHT"]
+        self.different = ["UP","DOWN","LEFT","RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
         self.Down = Event_gui(self.position[2], random.choice(self.different))#2
         self.Left = Event_gui(self.position[3], random.choice(self.different))#3
-        self.Right = Event_gui(self.position[4], random.choice(self.different))
-        self.exe = False
+        self.Right = Event_gui(self.position[4],random.choice(self.different))
+        self.current_key = 0
+        self.prev_key = None
+        self.exe =True
+        self.randomise = False
         
         
-    def key(self):
-        global gold
+    def key(self,gold):
         if self.exe == True:
             self.Up.access = True
             self.Up.key()
@@ -115,15 +124,20 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             gold+=10000
                             self.exe = False
+                            self.randomise =True
                             self.reset()
                             
+                            
     def reset(self):
-        self.Down.direc = random.choice(self.different)
-        self.Up.direc = random.choice(self.different)
-        self.Left.direc = random.choice(self.different)
-        self.Right.direc = random.choice(self.different)
-        self.key()
-                    
+        if self.randomise ==  True:
+            if self.Right.alpha <= 0:
+                self.Up = Event_gui(self.position[1], random.choice(self.different))#1
+                self.Down = Event_gui(self.position[2], random.choice(self.different))#2
+                self.Left = Event_gui(self.position[3], random.choice(self.different))#3
+                self.Right = Event_gui(self.position[4], random.choice(self.different))
+                self.key()
+                self.update()
+
         
     def update(self,screen):
         moving_image.update()
@@ -133,15 +147,13 @@ class QTE(pygame.sprite.Sprite):
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
-            self.Down.alpha = 255
-            self.Up.alpha = 255
-            self.Left.alpha = 255
-            self.Right.alpha = 255
-        self.fadeout()
             
+        
         
     def fadeout(self):
         self.Up.fadeout()
         self.Down.fadeout()
         self.Left.fadeout()
         self.Right.fadeout()
+
+
