@@ -596,7 +596,7 @@ while running:
 
                 # Tab buttons
                 if champ_button.rect.collidepoint(mouse_pos):
-                    Test.exe = True
+                    
                     if champion_y == 490:
                         champion_y = 0
                         upgrade_y = 490
@@ -705,7 +705,7 @@ while running:
                 
                 else:
                     gold += click_power
-                    
+                    Test.exe = True
                     
                     
         Test.key()
