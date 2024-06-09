@@ -608,6 +608,7 @@ def format_gold(value):
 QTE_Button = Class_file.moving_button()
 QTE_Button.x = screen_width
 QTE_Button.y =screen_height //2
+
 class Event_gui(pygame.sprite.Sprite):
     def __init__(self,pos,direc,name="none") -> None:
         super().__init__()
@@ -628,10 +629,6 @@ class Event_gui(pygame.sprite.Sprite):
         self.access = False
         self.nice = False
     
-        
-        
-    def randomiser(self,random):
-        self.direc = random
     
     def key(self):
         if self.access == True:
@@ -660,10 +657,6 @@ class Event_gui(pygame.sprite.Sprite):
                     self.kill()
                     
                 
-             
-           
-    
-        
 moving_image = pygame.sprite.Group()
 
 class QTE(pygame.sprite.Sprite):
@@ -791,6 +784,7 @@ while running:
                     area_tab_upgrade.hide()
                     container_champ.hide()
                     container_upgrade.hide()
+                    Test.exe = True
 
                 elif event.ui_element == button_prev_tab:
                     current_tab = 1
@@ -857,13 +851,18 @@ while running:
                 if not paused:
                     if background_area.rect.collidepoint(mouse_pos):
                         gold += click_power
+                        
                     
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
-                        Test.exe =True
+                        
+        Test.key()               
 
         window.process_events(event)
-
+    Test.update()
+    Test.fadeout()
+    moving_image.draw(screen)
+    moving_image.update()
 
 
 
@@ -902,10 +901,11 @@ while running:
         
         if upgrade.origin.level >= upgrade.requirement:
             upgrade.shown = True
-    Test.key()
+    
     
 #    if main_menu_status == True:
 #       init_main_menu()
+   
 
     QTE_Button.move(5)
     QTE_Button.check(randomiser_x,randomiser_y)
@@ -916,10 +916,8 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
-    Test.update()
-    Test.fadeout()
-    moving_image.draw(screen)
-    moving_image.update()
+    
+    
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update

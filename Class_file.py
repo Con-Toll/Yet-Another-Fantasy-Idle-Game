@@ -168,8 +168,6 @@ class Event_gui(pygame.sprite.Sprite):
     
         
         
-    def randomiser(self,random):
-        self.direc = random
     
     def key(self):
         if self.access == True:
@@ -278,4 +276,3 @@ class QTE(pygame.sprite.Sprite):
     
     
     
-Test = QTE()
