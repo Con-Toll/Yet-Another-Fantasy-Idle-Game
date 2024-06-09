@@ -606,7 +606,7 @@ def format_gold(value):
 
 
 QTE_Button = Class_file.moving_button()
-QTE_Button.x = screen_width
+QTE_Button.x = random.randint(5000,20000)
 QTE_Button.y =screen_height //2
 
 class Event_gui(pygame.sprite.Sprite):
@@ -663,10 +663,10 @@ class QTE(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.position = {
-            1: (350, 3),
-            2: (450, 3),
-            3: (550, 3),
-            4: (650, 3)
+            1: (350, 200),
+            2: (450, 200),
+            3: (550, 200),
+            4: (650, 200)
         }
         self.different = ["UP","DOWN","LEFT","RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
@@ -675,7 +675,7 @@ class QTE(pygame.sprite.Sprite):
         self.Right = Event_gui(self.position[4],random.choice(self.different))
         self.current_key = 0
         self.prev_key = None
-        self.exe =True
+        self.exe =False
         self.randomise = False
         
         
@@ -694,15 +694,14 @@ class QTE(pygame.sprite.Sprite):
                         self.Right.key()
                         self.Right.access = True
                         if self.Right.nice == True:
-                            gold+=10000
                             self.exe = False
-                            self.randomise =True
+                            gold+=10000
                             self.reset()
                             
                             
     def reset(self):
-        if self.randomise ==  True:
-            if self.Right.alpha <= 0:
+            if self.Right.alpha == 0:
+               
                 self.Up = Event_gui(self.position[1], random.choice(self.different))#1
                 self.Down = Event_gui(self.position[2], random.choice(self.different))#2
                 self.Left = Event_gui(self.position[3], random.choice(self.different))#3
@@ -712,7 +711,6 @@ class QTE(pygame.sprite.Sprite):
 
         
     def update(self):
-
         if self.exe == True:
             moving_image.add(self.Up)
             moving_image.add(self.Down)
@@ -784,7 +782,7 @@ while running:
                     area_tab_upgrade.hide()
                     container_champ.hide()
                     container_upgrade.hide()
-                    Test.exe = True
+                    
 
                 elif event.ui_element == button_prev_tab:
                     current_tab = 1
@@ -855,10 +853,13 @@ while running:
                     
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
+                        Test.exe = True 
                         
+        
         Test.key()               
 
         window.process_events(event)
+
     Test.update()
     Test.fadeout()
     moving_image.draw(screen)
