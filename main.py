@@ -608,7 +608,138 @@ def format_gold(value):
 QTE_Button = Class_file.moving_button()
 QTE_Button.x = screen_width
 QTE_Button.y =screen_height //2
-QTE_game_1 = Class_file.QTE()
+class Event_gui(pygame.sprite.Sprite):
+    def __init__(self,pos,direc,name="none") -> None:
+        super().__init__()
+        self.name = name
+        self.perk = gold
+        self.sprite = []
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-0.png"))
+        self.sprite.append(pygame.image.load(f"assets\{direc}\pixil-frame-1.png"))
+        self.is_animating = True
+        self.current_sprite = 0
+        self.image = self.sprite
+        self.image = self.sprite[self.current_sprite]
+        self.fade = False
+        self.rect = self.image.get_rect()
+        self.rect= [pos,pos]
+        self.alpha = 255
+        self.direc = direc
+        self.access = False
+        self.nice = False
+    
+        
+        
+    def randomiser(self,random):
+        self.direc = random
+    
+    def key(self):
+        if self.access == True:
+            if event.type == pygame.KEYUP:
+                if event.key == getattr(pygame,f"K_{self.direc}"):
+                    self.fade=True
+                    self.access = False
+                    self.nice = True
+                    
+                            
+    def update(self):
+        if self.is_animating==True:
+            self.current_sprite += 0.1
+            if self.current_sprite >= len(self.sprite):
+                self.current_sprite = 0
+                
+            self.image = self.sprite[int(self.current_sprite)]
+            
+            
+    
+    def fadeout(self):
+            if self.fade == True:
+                self.alpha=max(0,self.alpha-5)
+                self.image.fill((255,255,255,self.alpha),special_flags=pygame.BLEND_RGBA_MULT)
+                if self.alpha <= 0:
+                    self.kill()
+                    
+                
+             
+           
+    
+        
+moving_image = pygame.sprite.Group()
+
+class QTE(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.position = {
+            1: (350, 3),
+            2: (450, 3),
+            3: (550, 3),
+            4: (650, 3)
+        }
+        self.different = ["UP","DOWN","LEFT","RIGHT"]
+        self.Up = Event_gui(self.position[1], random.choice(self.different))#1
+        self.Down = Event_gui(self.position[2], random.choice(self.different))#2
+        self.Left = Event_gui(self.position[3], random.choice(self.different))#3
+        self.Right = Event_gui(self.position[4],random.choice(self.different))
+        self.current_key = 0
+        self.prev_key = None
+        self.exe =True
+        self.randomise = False
+        
+        
+    def key(self):
+        global gold
+        if self.exe == True:
+            self.Up.access = True
+            self.Up.key()
+            if self.Up.nice == True:
+                self.Down.key()
+                self.Down.access = True
+                if self.Down.nice == True:
+                    self.Left.key() == True
+                    self.Left.access = True
+                    if self.Left.nice == True:
+                        self.Right.key()
+                        self.Right.access = True
+                        if self.Right.nice == True:
+                            gold+=10000
+                            self.exe = False
+                            self.randomise =True
+                            self.reset()
+                            
+                            
+    def reset(self):
+        if self.randomise ==  True:
+            if self.Right.alpha <= 0:
+                self.Up = Event_gui(self.position[1], random.choice(self.different))#1
+                self.Down = Event_gui(self.position[2], random.choice(self.different))#2
+                self.Left = Event_gui(self.position[3], random.choice(self.different))#3
+                self.Right = Event_gui(self.position[4], random.choice(self.different))
+                self.key()
+                self.update()
+
+        
+    def update(self):
+
+        if self.exe == True:
+            moving_image.add(self.Up)
+            moving_image.add(self.Down)
+            moving_image.add(self.Left)
+            moving_image.add(self.Right)
+            
+        
+        
+    def fadeout(self):
+        self.Up.fadeout()
+        self.Down.fadeout()
+        self.Left.fadeout()
+        self.Right.fadeout()
+        
+    
+    
+    
+    
+    
+Test = QTE()
 
 # Game loop \o/
 running = True
@@ -631,7 +762,7 @@ while running:
 
     # Event handling
     for event in pygame.event.get():
-        QTE_game_1.key()
+        
         if event.type == pygame.QUIT:
             running = False
 
@@ -729,7 +860,7 @@ while running:
                     
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
-                        QTE_game_1.exe =True
+                        Test.exe =True
 
         window.process_events(event)
 
@@ -771,7 +902,7 @@ while running:
         
         if upgrade.origin.level >= upgrade.requirement:
             upgrade.shown = True
-
+    Test.key()
     
 #    if main_menu_status == True:
 #       init_main_menu()
@@ -785,8 +916,10 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_gold.set_text(f"{format_gold(gold)}")
 
-    QTE_game_1.update(screen)
-    QTE_game_1.fadeout()
+    Test.update()
+    Test.fadeout()
+    moving_image.draw(screen)
+    moving_image.update()
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
