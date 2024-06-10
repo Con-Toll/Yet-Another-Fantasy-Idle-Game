@@ -106,5 +106,99 @@
             "hovered_text": "#00000000",
             "disabled_text": "#00000000"
         }
-    }   
+    },
+    "@prestige_price":{
+        "font":{
+            "name": "chava",
+            "size": "32"
+        },
+        "misc":{
+            "text_horiz_alignment": "left",
+            "text_horiz_alignment_padding": "15"
+        }
+    },
+    "@prestige_credits":{
+        "font":{
+            "name": "chava",
+            "size": "32"
+        },
+        "misc":{
+            "text_horiz_alignment": "right",
+            "text_horiz_alignment_padding": "15"
+        }
+    },
+    "@prestige_tooltip":{
+        "font":{
+            "name": "chava",
+            "size": "22"
+        },
+        "misc":{
+            "text_horiz_alignment": "left",
+            "text_vert_alignment": "top",
+            "text_horiz_alignment_padding": "5"
+        }
+    },
+    "@prestige_continue":{
+        "font":{
+            "name":"chava",
+            "size":"20"
+        },
+        "misc":{
+            "text_horiz_alignment": "right",
+            "text_vert_alignment": "top",
+            "text_vert_alignment_padding": "-21",
+            "text_horiz_alignment_padding": "0"
+        }
+    },
+    "@prestige_bought":{
+        "font":{
+            "name":"chava",
+            "size":"20"
+        },
+        "misc":{
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "top",
+            "text_vert_alignment_padding": "0"
+        },
+        "colours":
+        {
+             "normal_border": "Red",
+             "normal_bg": "Orange",
+             "normal_text": "White"
+        }
+    },
+    "@prestige_not_chosen":{
+        "font":{
+            "name":"chava",
+            "size":"20"
+        },
+        "misc":{
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "top",
+            "text_vert_alignment_padding": "0"
+        },
+        "colours":
+        {
+             "normal_border": "#91271d",
+             "normal_bg": "#946322",
+             "normal_text": "White"
+        }
+    },
+    "@prestige_available":{
+        "font":{
+            "name":"chava",
+            "size":"20"
+        },
+        "misc":{
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "top",
+            "text_vert_alignment_padding": "0"
+        },
+        "colours":
+        {
+             "normal_border": "Orange",
+             "normal_bg": "#1c1000",
+             "normal_text": "White"
+        }
+    }
 }
