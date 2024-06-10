@@ -847,7 +847,7 @@ load_game_state()
 thread_start()
 
 QTE_Button = Class_file.moving_button()
-QTE_Button.x = random.randint(5000,20000)
+QTE_Button.x = random.randint(1000,5000)
 QTE_Button.y =screen_height //2
 
 class Event_gui(pygame.sprite.Sprite):
@@ -977,7 +977,7 @@ running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-    randomiser_x = random.randint(8000,20000)
+    randomiser_x = random.randint(1000,5000)
     randomiser_y = random.randint(80,screen_height-50)
     
     for i in range(0, sections + 1):  
