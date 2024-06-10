@@ -462,33 +462,8 @@ class Upgrade():
             self.button.set_container(container=area_upgrade_available)
             index = list_available.index(self)
             #the container is (422, 315)
-            if index >= 64:
-                self.x = 10 + ((index-64) * 49) + ((index-64) * 2)
-                self.y = 60 + (8 * 51)
-            elif index >= 56:
-                self.x = 10 + ((index-56) * 49) + ((index-56) * 2)
-                self.y = 60 + (7 * 51)
-            elif index >= 48:
-                self.x = 10 + ((index-48) * 49) + ((index-48) * 2)
-                self.y = 60 + (6 * 51)
-            elif index >= 40:
-                self.x = 10 + ((index-40) * 49) + ((index-40) * 2)
-                self.y = 60 + (5 * 51)
-            elif index >= 32:
-                self.x = 10 + ((index-32) * 49) + ((index-32) * 2)
-                self.y = 60 + (4 * 51)
-            elif index >= 24:
-                self.x = 10 + ((index-24) * 49) + ((index-24) * 2)
-                self.y = 60 + (3 * 51)
-            elif index >= 16:
-                self.x = 10 + ((index-16) * 49) + ((index-16) * 2)
-                self.y = 60 + (2 * 51)
-            elif index >= 8:
-                self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
-                self.y = 60 + (1 * 51)
-            elif index >= 0:
-                self.x = 10 + (index * 49) + (index * 2)
-                self.y = 60
+            self.x = 10 + ((index % 8) * 49) + ((index % 8) * 2)
+            self.y = 60 + ((index // 8) * 51)
             print(index, self.x, self.y)
 
             # note for future improvement:
@@ -511,38 +486,33 @@ class Upgrade():
 
 
     def sort(self):
-        if self.isUnlocked == True:
-            index = list_bought.index(self)
-            
-            if index >= 64:
-                self.x = 10 + ((index-64) * 49) + ((index-64) * 2)
-                self.y = 60 + (8 * 51)
-            elif index >= 56:
-                self.x = 10 + ((index-56) * 49) + ((index-56) * 2)
-                self.y = 60 + (7 * 51)
-            elif index >= 48:
-                self.x = 10 + ((index-48) * 49) + ((index-48) * 2)
-                self.y = 60 + (6 * 51)
-            elif index >= 40:
-                self.x = 10 + ((index-40) * 49) + ((index-40) * 2)
-                self.y = 60 + (5 * 51)
-            elif index >= 32:
-                self.x = 10 + ((index-32) * 49) + ((index-32) * 2)
-                self.y = 60 + (4 * 51)
-            elif index >= 24:
-                self.x = 10 + ((index-24) * 49) + ((index-24) * 2)
-                self.y = 60 + (3 * 51)
-            elif index >= 16:
-                self.x = 10 + ((index-16) * 49) + ((index-16) * 2)
-                self.y = 60 + (2 * 51)
-            elif index >= 8:
-                self.x = 10 + ((index-8) * 49) + ((index-8) * 2)
-                self.y = 60 + (1 * 51)
-            elif index >= 0:
-                self.x = 10 + (index * 49) + (index * 2)
-                self.y = 60
+        if self.shown:
+            self.button.enable()
+            self.button.show()
+        else:
+            self.button.disable()
+            self.button.hide()
 
+        if self.isUnlocked == True:
+            self.button.set_container(container=area_upgrade_bought)
+            index = list_bought.index(self)
+            self.x = 10 + ((index % 8) * 49) + ((index % 8) * 2)
+            self.y = 60 + ((index // 8) * 51)
             self.button.set_relative_position((self.x, self.y))
+
+    def to_dict(self):
+            return {
+                "shown": self.shown,
+                "isUnlocked": self.isUnlocked
+            }
+
+    @classmethod
+    def from_dict(cls, data):
+        upgrade = cls(
+        )
+        upgrade.shown = data["shown"]
+        upgrade.isUnlocked = data["isUnlocked"]
+        return upgrade
 
 
 # Upgrades
@@ -636,12 +606,43 @@ class Prestige():
         self.mult = mult
         self.isUnlocked = False
         self.action = action
+        self.not_chosen = False
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (150, 75)),
                                                    text=f"{self.name}",
                                                    anchors={"center": "center"},
                                                    container=area_prestige,
                                                    object_id=ObjectID(class_id="@prestige_available"))
+        
+    def to_dict(self):
+        return {
+            "canBuy": self.canBuy,
+            "isUnlocked": self.isUnlocked,
+            "not_chosen": self.not_chosen
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        prestige = cls(
+        )
+        prestige.canBuy = data["canBuy"]
+        prestige.isUnlocked = data["isUnlocked"]
+        prestige.not_chosen = data["not_chosen"]
+        return prestige
+    
+    def load_save(self):
+        if self.isUnlocked:
+            self.canBuy = False
+            self.button.enable()
+            self.button.change_object_id("@prestige_bought")
+
+        if self.not_chosen:
+            self.button.enable()
+            self.button.change_object_id("@prestige_not_chosen")
+
+        if self.canBuy:
+            self.button.enable()
+            self.button.change_object_id("@prestige_available")
     
 
 
@@ -778,25 +779,28 @@ def increment_money():
         money += total_idle_power
 
 def save_game_state():
-    global money, click_power, total_idle_power, champions
+    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige
     game_state = {
         "click_power": click_power,
         "money": money,
         "total_idle_power": total_idle_power,
-        "champions": [champion.to_dict() for champion in champions]
+        "champions": [champion.to_dict() for champion in champions],
+        "list_upgrades": [upgrade.to_dict() for upgrade in list_upgrades],
+        "list_prestige": [prestige.to_dict() for prestige in list_prestige]
     }
     with open('game_state.json', 'w') as file:
         json.dump(game_state, file)
     print("Game state saved.")
 
 def load_game_state():
-    global money, click_power, total_idle_power, champions
+    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige
     if os.path.exists('game_state.json'):
         try:
             with open('game_state.json', 'r') as file:
                 game_state = json.load(file)
                 money = game_state.get('money', 0)
-                click_power = game_state.get('click_power', 100)
+                click_power = game_state.get('click_power', 1)
+
                 champions_data = game_state["champions"]
                 # Reinitialize champions based on saved data
                 for i, champ_data in enumerate(champions_data):
@@ -813,6 +817,20 @@ def load_game_state():
                         champions[i].load_save()
                     if champions[i].forHire:
                         champions[i].showChamp()
+
+                upgrade_data = game_state["list_upgrades"]
+                for i, up_data in enumerate(upgrade_data):
+                    list_upgrades[i].shown = up_data["shown"]
+                    list_upgrades[i].isUnlocked = up_data["isUnlocked"]
+
+                prestige_data = game_state["list_prestige"]
+                for i, pres_data in enumerate(prestige_data):
+                    list_prestige[i].canBuy = pres_data["canBuy"]
+                    list_prestige[i].isUnlocked = pres_data["isUnlocked"]
+                    list_prestige[i].not_chosen = pres_data["not_chosen"]
+                    list_prestige[i].load_save()
+                
+
                 total_idle_power = sum(champion.idle_power for champion in champions)
         except json.JSONDecodeError:
             print("Error: The game state file contains invalid JSON. Initializing default game state.")
@@ -950,6 +968,7 @@ while running:
                                 # upgrades of the same tier get disabled
                                 prestige2a.canBuy = False
                                 prestige2b.canBuy = False
+                                prestige2b.not_chosen = True
                                 # enable next tier upgrades
                                 prestige3.button.enable()
                                 prestige3a.button.enable()
@@ -957,6 +976,7 @@ while running:
                                 # make them purchasable
                                 prestige3.canBuy = True
                                 prestige3a.canBuy = True
+                                prestige3b.not_chosen = True
                                 
                                 prestige2b.button.change_object_id("@prestige_not_chosen")
                                 prestige3b.button.change_object_id("@prestige_not_chosen")
@@ -966,12 +986,14 @@ while running:
                         elif event.ui_element == prestige2b.button:
                             if prestige2b.canBuy:
                                 prestige2a.canBuy = False
+                                prestige2a.not_chosen = True
                                 prestige2b.canBuy = False
                                 prestige3.button.enable()
                                 prestige3a.button.enable()
                                 prestige3b.button.enable()
                                 prestige3.canBuy = True
                                 prestige3b.canBuy = True
+                                prestige3a.not_chosen = True
 
                                 prestige2a.button.change_object_id("@prestige_not_chosen")
                                 prestige3a.button.change_object_id("@prestige_not_chosen")
@@ -988,6 +1010,7 @@ while running:
                             if prestige3a.canBuy:
                                 prestige3a.canBuy = False
                                 prestige3b.canBuy = False
+                                prestige3b.not_chosen = True
                                 prestige4a.button.enable()
                                 prestige4b.button.enable()
                                 prestige4a.canBuy = True
@@ -1000,6 +1023,7 @@ while running:
                         elif event.ui_element == prestige3b.button:
                             if prestige3b.canBuy:
                                 prestige3a.canBuy = False
+                                prestige3a.not_chosen = True
                                 prestige3b.canBuy = False
                                 prestige4a.button.enable()
                                 prestige4b.button.enable()
@@ -1014,6 +1038,7 @@ while running:
                             if prestige4a.canBuy:
                                 prestige4a.canBuy = False
                                 prestige4b.canBuy = False
+                                prestige4b.not_chosen = True
                                 
                                 prestige5.button.enable()
                                 prestige5.canBuy = True
@@ -1025,6 +1050,7 @@ while running:
                         elif event.ui_element == prestige4b.button:
                             if prestige4b.canBuy:
                                 prestige4a.canBuy = False
+                                prestige4a.not_chosen = True
                                 prestige4b.canBuy = False
 
                                 prestige5.button.enable()
@@ -1167,10 +1193,15 @@ while running:
 
     # Upgrade button gray-out
     for upgrade in list_upgrades:
-        if upgrade not in list_available and upgrade not in list_bought and upgrade.shown: # God I feel like a genius figuring this out after 3 #$*&ing days
+        if upgrade not in list_available and upgrade not in list_bought and upgrade.shown and upgrade.isUnlocked: # God I feel like a genius figuring this out after 3 #$*&ing days
+            list_bought.append(upgrade)
+            upgrade.sort()
+
+        if upgrade not in list_available and upgrade not in list_bought and upgrade.shown and not upgrade.isUnlocked: # God I feel like a genius figuring this out after 3 #$*&ing days
             list_available.append(upgrade)
             upgrade.available()
 
+        
         
         if upgrade.origin.level >= upgrade.requirement and not upgrade.shown:
             upgrade.shown = True
