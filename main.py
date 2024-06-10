@@ -696,12 +696,11 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             self.exe = False
                             gold+=10000
-                            self.reset()
+                            
                             
                             
     def reset(self):
             if self.Right.alpha == 0:
-               
                 self.Up = Event_gui(self.position[1], random.choice(self.different))#1
                 self.Down = Event_gui(self.position[2], random.choice(self.different))#2
                 self.Left = Event_gui(self.position[3], random.choice(self.different))#3
@@ -854,16 +853,14 @@ while running:
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
                         Test.exe = True 
+                        Test.reset()
                         
         
         Test.key()               
 
         window.process_events(event)
 
-    Test.update()
-    Test.fadeout()
-    moving_image.draw(screen)
-    moving_image.update()
+   
 
 
 
@@ -908,7 +905,7 @@ while running:
 #       init_main_menu()
    
 
-    QTE_Button.move(5)
+    QTE_Button.move(random.randint(5,10))
     QTE_Button.check(randomiser_x,randomiser_y)
     screen.blit(QTE_Button.frames[QTE_Button.index], (QTE_Button.x, QTE_Button.y))
     QTE_Button.index = (QTE_Button.index + 1) % len(QTE_Button.frames)
@@ -918,7 +915,10 @@ while running:
     info_num_gold.set_text(f"{format_gold(gold)}")
 
     
-    
+    Test.update()
+    Test.fadeout()
+    moving_image.draw(screen)
+    moving_image.update()
     window.update(time_delta)
     window.draw_ui(screen)
     pygame.display.update
