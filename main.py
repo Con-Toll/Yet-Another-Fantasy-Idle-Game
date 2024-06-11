@@ -5,8 +5,9 @@ from pygame_gui.core import ObjectID
 import math
 import time
 import threading
-import Class_file
+import Class_file as CF
 import random
+
 
 
 
@@ -605,8 +606,8 @@ def format_gold(value):
   #  return paused, main_menu_status
 
 
-QTE_Button = Class_file.moving_button()
-QTE_Button.x = random.randint(5000,20000)
+QTE_Button = CF.moving_button()
+QTE_Button.x = random.randint(2000,2000)
 QTE_Button.y =screen_height //2
 
 class Event_gui(pygame.sprite.Sprite):
@@ -727,9 +728,10 @@ class QTE(pygame.sprite.Sprite):
     
     
     
-    
-    
+
+
 Test = QTE()
+LW_Button = CF.LW_button("Spin",(0,0),(100,50))
 
 # Game loop \o/
 running = True
@@ -738,7 +740,7 @@ while running:
     time_delta = clock.tick(60)/1000.0
     randomiser_x = random.randint(8000,20000)
     randomiser_y = random.randint(80,screen_height-50)
-    
+        
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, backgroundheight))
     
@@ -852,8 +854,20 @@ while running:
                     
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
-                        Test.exe = True 
-                        Test.reset()
+                        k = random.randint(1,2)
+                        if k == 1:
+                            Test.exe = True 
+                        else:
+                            LW_Button.rect.center = (200,200)
+                            
+                    LW_Button.is_clicked(mouse_pos)  
+                    
+                        
+                        
+                         
+                        
+                        
+                        
                         
         
         Test.key()               
@@ -904,7 +918,7 @@ while running:
 #    if main_menu_status == True:
 #       init_main_menu()
    
-
+    
     QTE_Button.move(random.randint(5,10))
     QTE_Button.check(randomiser_x,randomiser_y)
     screen.blit(QTE_Button.frames[QTE_Button.index], (QTE_Button.x, QTE_Button.y))
@@ -915,6 +929,8 @@ while running:
     info_num_gold.set_text(f"{format_gold(gold)}")
 
     
+    
+    LW_Button.draw(screen,font)
     Test.update()
     Test.fadeout()
     moving_image.draw(screen)
