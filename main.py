@@ -736,13 +736,13 @@ triangles = []
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
 center_x = screen_width  //2
 center_y = screen_height // 2
-radius = 100
+radius = 200
 jumlah = 10
 
 for i in range(10):
     angle = pygame.time.get_ticks() / 10 + (360 / jumlah * i)
     color = random.choice(colors)
-    triangle = CF.Triangle(center_x, center_y, radius, angle, 0, 250, color)
+    triangle = CF.Triangle(center_x, center_y, radius, angle, 0, 400, color)
     triangle.angular_velocity = 0  
     triangles.append(triangle)
 

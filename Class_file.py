@@ -66,7 +66,7 @@ class Triangle():
         angle_center = math.atan2(self.center_y - y,self.center_x - x)
         angle_center = math.degrees(angle_center)
         
-        triangle_width = 2* self.radius * math.sin(math.radians(360 / 10 ))
+        triangle_width = 2* self.radius * math.sin(math.radians(360 / 10 // 2 ))
         
         self.rotated_points = [
             (
@@ -80,7 +80,7 @@ class Triangle():
             ]
         ]
 
-        # Draw the triangle with the bottom corner always pointing towards the center
+        
         pygame.draw.polygon(screen, self.color, self.rotated_points)
 
     def collidepoint(self, point):
