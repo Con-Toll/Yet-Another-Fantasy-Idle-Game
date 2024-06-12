@@ -32,6 +32,7 @@ class LW_button:
         self.rect = pygame.Rect(position, size)
         self.color = color
         self.destination = (0, 0) 
+        self.clicked = False
 
     def draw(self, surface,font):
         pygame.draw.rect(surface, self.color, self.rect)
@@ -39,12 +40,7 @@ class LW_button:
         text_rect = text_surface.get_rect(center=self.rect.center)
         surface.blit(text_surface, text_rect)
 
-    def is_clicked(self, mouse_pos):
-        if self.rect.collidepoint(mouse_pos):
-            self.clicked = True
-            self.rect.center = self.destination
-            return True
-        return False
+    
             
     
     
@@ -66,11 +62,11 @@ class Triangle():
         
     def draw(self,screen):
         x = self.center_x + self.radius * math.cos(math.radians(self.angle))
-        y   = self.center_x + self.radius * math.sin(math.radians(self.angle))
+        y   = self.center_y + self.radius * math.sin(math.radians(self.angle))
         angle_center = math.atan2(self.center_y - y,self.center_x - x)
         angle_center = math.degrees(angle_center)
         
-        triangle_width = 2* self.radius * math.sin(math.radians(360 / num_triangles ))
+        triangle_width = 2* self.radius * math.sin(math.radians(360 / 10 ))
         
         self.rotated_points = [
             (
