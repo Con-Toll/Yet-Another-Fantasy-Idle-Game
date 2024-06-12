@@ -4,9 +4,11 @@ import sys
 from pygame_gui.core import ObjectID
 import math
 import time
-import threading
+import threading 
 import Class_file as CF
 import random
+import Spinning_Wheel
+
 
 
 
@@ -732,25 +734,7 @@ class QTE(pygame.sprite.Sprite):
         self.Left.fadeout()
         self.Right.fadeout()
         
-triangles = []
-colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
-center_x = screen_width  //2
-center_y = screen_height // 2
-radius = 200
-jumlah = 10
 
-for i in range(10):
-    angle = pygame.time.get_ticks() / 10 + (360 / jumlah * i)
-    color = random.choice(colors)
-    triangle = CF.Triangle(center_x, center_y, radius, angle, 0, 400, color)
-    triangle.angular_velocity = 0  
-    triangles.append(triangle)
-
-
-spinning = False
-spin_start_time = 0
-spin_duration = 3000
-spin_force = random.uniform(5, 20)
 
 
 
@@ -758,7 +742,7 @@ spin_force = random.uniform(5, 20)
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
 
 Test = QTE()
-LW_Button = CF.LW_button("Spin",(0,0),(100,50))
+
 
 # Game loop \o/
 running = True
@@ -882,43 +866,22 @@ while running:
                     if QTE_Button_Rect.collidepoint(mouse_pos):
                         QTE_Button.x = randomiser_x
                         k = random.randint(1,200)
+                        
                         if k == 1:
                             Test.exe = True 
                         else:
-                            LW_Button.rect.center = (200,200)
+                            Spinning_Wheel.run()
+                            
                             
                      
                     
-                    if LW_Button.rect.collidepoint(mouse_pos):
-                        LW_Button.clicked = True
-                        LW_Button.rect.center = LW_Button.destination
-                        button_clicked = True
-                        spinning = True
-                        spin_start_time = pygame.time.get_ticks()  
-                        spin_force = random.uniform(5, 20)  
-                        for triangle in triangles:
-                            triangle.angular_velocity = spin_force  
-                            fallen_triangle = None  
+                 
         
         Test.key()               
 
         window.process_events(event)
 
-    pygame.draw.circle(screen, (255, 0, 0), (center_x, center_y), radius, 2)
-    for triangle in triangles:
-        triangle.draw(screen)
-
-    
-    if LW_Button.clicked and spinning:
-        current_time = pygame.time.get_ticks()
-        elapsed_time = current_time - spin_start_time
-        if elapsed_time < spin_duration:
-            for triangle in triangles:
-                triangle.angular_velocity -= spin_force / spin_duration  
-                triangle.update()  
-                
-        else:
-            spinning = False
+   
             
     
 
@@ -977,7 +940,7 @@ while running:
 
     
     
-    LW_Button.draw(screen,font)
+    
     Test.update()
     Test.fadeout()
     moving_image.draw(screen)
@@ -991,6 +954,8 @@ print(time_delta)
 print(clock)
 pygame.quit()
 sys.exit()
+
+
 
 
 

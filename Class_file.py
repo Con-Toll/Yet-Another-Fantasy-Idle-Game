@@ -57,6 +57,7 @@ class Triangle():
         self.rotated_points = []
         self.fallen_word = ["ADD 100000","ADD CHAMPION","ADD BOY","ADD 5223","ADD 566O2","ADD 23211","ADD 2321","ADD 23133","NONE","NONE"] #Add the bonus thing that you want
         
+        
     def update(self):
         self.angle +=self.angular_velocity
         
