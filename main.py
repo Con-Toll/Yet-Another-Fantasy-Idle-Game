@@ -663,11 +663,12 @@ moving_image = pygame.sprite.Group()
 class QTE(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.reset = (0,0)
         self.position = {
-            1: (350, 200),
-            2: (450, 200),
+            1: (150, 200),
+            2: (350, 200),
             3: (550, 200),
-            4: (650, 200)
+            4: (750, 200)
         }
         self.different = ["UP","DOWN","LEFT","RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
@@ -678,6 +679,8 @@ class QTE(pygame.sprite.Sprite):
         self.prev_key = None
         self.exe =False
         self.randomise = False
+        self.rect = pygame.Rect(150,150,700,200)
+        self.after = (0,0)
         
         
     def key(self):
@@ -697,6 +700,8 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             self.exe = False
                             gold+=10000
+                            if self.Right.alpha <= 0:
+                                self.background.x = 0
                             
                             
                             
@@ -716,6 +721,8 @@ class QTE(pygame.sprite.Sprite):
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
+            self.background = pygame.draw.rect(screen,(255, 165, 0),self.rect)
+            
             
         
         
