@@ -746,7 +746,7 @@ def collect_bonus():
             time = int(bonus[i])
             idl = bonus[i+1]
             if idl == "IDLE":
-                gold += total_idle_power * time
+                gold = gold+(total_idle_power * time)
             else:
                 click_power = click_power + time
                     
@@ -888,24 +888,12 @@ while running:
                         else:
                             if Spinning_Wheel.run()== False:
                                 collect_bonus()
-                                
-                            
-                            
-                     
-                    
-                 
         
         Test.key()               
-
         window.process_events(event)
 
    
             
-    
-
-
-
-
     # Tab
     if current_tab == 1 and not paused:
         button_next_tab.show()

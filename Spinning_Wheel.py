@@ -11,14 +11,19 @@ def save(pls):
             
 
 def run():
+    pygame.mixer.pre_init(44100, 16, 2, 4096)
     pygame.init()
+    pygame.font.init()
+    pygame.mixer.init()
+    
 
     WIDTH = 960
     HEIGHT =  540
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
     pygame.display.set_caption("Lucky Wheel")
 
-  
+    sound_1 = pygame.mixer.music.load("assets\Bell.mp3")
+    #sound_2 = pygame.mixer.Channel.get_sound(sound_1)
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
 
@@ -125,17 +130,10 @@ def run():
     button_text = "Spin"
 
     button_clicked = False
-
-    
     spinning = False
-
-    
     spin_start_time = 0
-
-    
     spin_duration = 3000
 
-    
     spin_force = random.uniform(5, 20)
 
     
@@ -182,27 +180,29 @@ def run():
                 for triangle in triangles:
                     triangle.angular_velocity -= spin_force / spin_duration  
                     triangle.update()  
-                 
+                    if triangle.collidepoint(inverted_vertices[0]) :
+                        fallen_triangle = triangle  
+                        print("Triangle {} has fallen on the inverted triangle area attribute ='{}'".format(
+                            triangles.index(triangle) + 1, triangle.bonus[triangles.index(triangle)]))
+
+                        bonus = triangle.bonus[triangles.index(triangle)]
+                        result = font.render("YOU GET {}".format(bonus),True,colors[triangles.index(triangle)])
+                        screen.blit(result,(center_x-150,center_y+200))
+                        save(bonus)
+                        checker = pygame.draw.polygon(screen, BLACK, inverted_vertices)
+                        pygame.mixer.music.play()
+                        pygame.display.update()
+                        
             else:
                 spinning = False
-                for triangle in triangles:
-                    triangle.update()
-                    if triangle.collidepoint(inverted_vertices[0]) and not fallen_triangle:
-                        fallen_triangle = triangle  
-                        print("Triangle {} has fallen on the inverted triangle area attribute = '{}'".format(
-                            triangles.index(triangle) + 1, triangle.bonus[triangles.index(triangle)]))
-                        
-                        bonus = triangle.bonus[triangles.index(triangle)]
-                        save(bonus)
-               
-                 
+                
                 button_clicked = False
-                time.sleep(3)
                 runnings = False
+                time.sleep(3)
                 return False
                 
-                
-        
+        result = font.render("YOU GET {}".format(bonus),True,BLACK)
+        screen.blit(result,(center_x-150,center_y+200))
         checker = pygame.draw.polygon(screen, BLACK, inverted_vertices)
         
            
