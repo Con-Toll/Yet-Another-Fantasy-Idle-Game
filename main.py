@@ -63,8 +63,9 @@ window.preload_fonts([{'name': 'canva', 'point-size': 14, 'style': 'regular'}])
 
 # Game Variables
 paused = False
-click_power = 100000
+base_click_power = 100000 # Change this number for testing :3
 money = 0
+prestige_2a_status = 1
 
 # Info bar container
 container_info_bars = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((-2,-2), (screen_width+4, 102)))
@@ -113,7 +114,7 @@ text_tab_champ = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2), (
                                                container=area_tab_champ)
 
 # Upgrade Area
-container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 230)),
+container_upgrade = pygame_gui.elements.UIScrollingContainer(relative_rect=pygame.Rect((450, 90), (440, 130)),
                                                                   container=area_tabs,
                                                                   allow_scroll_x=False)
 # Header that says "UPGRADES"
@@ -124,11 +125,6 @@ text_tab_upgrade = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 2),
                                                object_id=ObjectID(class_id="@text_tabs"),
                                                container=area_tab_upgrade)
 
-# Upgrade "Buy All" button
-button_up_buyall = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((290, 6), (144, 44)),
-                                             text="Buy All",
-                                             container=area_tab_upgrade,
-                                             )
 
 
 # Containers for available and bought upgrades
@@ -140,16 +136,21 @@ area_upgrade_bought = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0,5
 
 
 # "Available" and "Bought" text
-text_available = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+text_available = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,30)),
                                              text="Available:",
                                              container=area_upgrade_available,
                                             )
 
-text_bought = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,50)),
+text_bought = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5,5),(422,30)),
                                           text="Bought:",
                                           container=area_upgrade_bought,
                                          )
 
+# Upgrade tooltip
+tooltip_upgrade = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect((448, 218), (444, 100)),
+                                                html_text="",
+                                                container=area_tabs,
+                                                object_id=ObjectID(class_id="@upgrade_tooltip"))
 
 # Tab switch buttons
 current_tab = 1
@@ -171,23 +172,6 @@ text_tab2 = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((5, 5), (880, 
                                                object_id=ObjectID(class_id="@text_tabs"),
                                                container=area_tab2)
 
-# the thing that makes prestige prestige-able
-total_prestige_points = 0
-
-class MyProgressBar(pygame_gui.elements.UIProgressBar):
-    def __init__(self, x, y, w, h, ui_container):
-        super().__init__(relative_rect=pygame.Rect((x, y), (w, h)), container=ui_container)
-        global money, total_prestige_points
-        self.current_progress = money
-        self.maximum_progress = 1000000
-
-    def status_text(self):
-        return f"{self.current_progress:,}/{self.maximum_progress:,}"
-    
-    def set_current_progress(self, progress: float):
-        return super().set_current_progress(progress)
-    
-progress_prestige = MyProgressBar(5, 62, 875, 25, area_tab2)
 
 
 # Prestige waoooo
@@ -204,9 +188,9 @@ text_prestige = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((220, 0), 
                                             text="Sembreak Start !!",
                                             container=area_prestige,
                                             object_id=ObjectID(class_id="@text_prestige"))
-button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 11), (200, 60)),
-                                                      text="RESPEC",
-                                                      container=area_prestige)
+#button_prestige_respec = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((10, 11), (200, 60)),
+ #                                                     text="RESPEC",
+  #                                                    container=area_prestige)
 button_prestige_continue = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((750, 11), (200, 60)),
                                                         text="Back to\n campus\n ",
                                                         container=area_prestige,
@@ -227,7 +211,7 @@ class UILabel:
 
 # Champions
 class Champion():
-    def __init__(self, index, name, title, base_idle_power, forHire, price_hire, price_level, image="assets/images.png"):
+    def __init__(self, index, name, title, base_idle_power, forHire, price_hire, base_price_level, image="assets/images.png"):
         self.name = name
         self.title = title
         self.level = 0
@@ -238,8 +222,10 @@ class Champion():
         self.index = index
         self.image = image
         self.price_hire = price_hire
-        self.price_level = price_level
-        self.up_mult = 1
+        self.base_price_level = base_price_level
+        self.price_level = self.base_price_level
+        self.up_mult = 0
+        self.pres_mult = 0
 
         # Champion container
         self.container = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((2, (self.index * 100)), (416, 100)),
@@ -258,7 +244,7 @@ class Champion():
                                                                      object_id=ObjectID(class_id="@champ_info"))
 
         # Idle power icon + number
-        self.image_idle_load = pygame.image.load("assets/images.png")
+        self.image_idle_load = pygame.image.load("assets/champ_idle.png")
         self.image_idle = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((100, 64), (35, 35)),
                                                        image_surface=self.image_idle_load,
                                                        container=self.container)
@@ -307,7 +293,8 @@ class Champion():
             "forHire": self.forHire,
             "price_hire": self.price_hire,
             "price_level": self.price_level,
-            "up_mult": self.up_mult
+            "up_mult": self.up_mult,
+            "pres_mult": self.pres_mult
         }
 
     @classmethod
@@ -321,6 +308,7 @@ class Champion():
         champ.idle_power = data["idle_power"]
         champ.isUnlocked = data["isUnlocked"]
         champ.up_mult = data["up_mult"]
+        champ.pres_mult = data["pres_mult"]
         return champ
     
     # Hire Champion Function
@@ -333,7 +321,13 @@ class Champion():
         self.level = 1
         self.isUnlocked = True
         bought_champs.append(self)
-        self.idle_power = self.base_idle_power * self.level * self.up_mult
+
+        self.idle_power = self.base_idle_power * self.level
+        if self.up_mult != 0:
+            self.idle_power *= self.up_mult
+        if self.pres_mult != 0:
+            self.idle_power *= self.pres_mult
+                
         if self.isUnlocked == True:
             self.button_level.show()
             self.price_level_display.show()
@@ -349,18 +343,23 @@ class Champion():
             next_champion.forHire = True
             next_champion.showChamp()
             
-
-        return self.idle_power
+        return self.level, self.idle_power
         
 
     # Level Up Function
     def level_up(self):
-        global money
+        global money, click_power
         money = money - self.price_level
         self.level += 1
-        self.price_level *= 2
-        
-        self.idle_power = self.base_idle_power * self.level * self.up_mult
+        self.price_level = math.floor((5 + self.base_price_level) * (1.07 ** (self.level-1)))
+        click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
+
+        self.idle_power = self.base_idle_power * self.level
+        if self.up_mult != 0:
+            self.idle_power *= self.up_mult
+        if self.pres_mult != 0:
+            self.idle_power *= self.pres_mult
+
         return self.price_level, self.level, self.idle_power
 
 
@@ -394,28 +393,44 @@ class Champion():
             self.price_hire_display.disable()
 
     # Champ upgrades
-    def upgrade1(self, mult):
-        self.up_mult = self.up_mult * mult
-        self.idle_power = self.base_idle_power * self.level * self.up_mult
+    def upgrade1(self):
+        self.up_mult += 2
+
+        self.idle_power = self.base_idle_power * self.level
+        if self.up_mult != 0:
+            self.idle_power *= self.up_mult
+        if self.pres_mult != 0:
+            self.idle_power *= self.pres_mult
         return self.idle_power
+    
+    def upgrade2(self):
+        self.pres_mult = 2
+
+        self.idle_power = self.base_idle_power * self.level
+        if self.up_mult != 0:
+            self.idle_power *= self.up_mult
+        if self.pres_mult != 0:
+            self.idle_power *= self.pres_mult
+        return self.idle_power, self.pres_mult
 
 
 
 # Champions List 
 # (index, name, title, base_idle_power, forHire, price_hire, price_level, image)
-hero = Champion(0, "hero", "The Protagonist", 1, True, 15, 20, "assets/images.png")
-reliable = Champion(1, "reliable", "The Reliable", 10, False, 1000, 1200, "assets/images.png")
-incon = Champion(2, "incon", "The Inconsistent", 100, False, 2500, 3000, "assets/images.png")
-leader = Champion(3, "leader", "The Group Leader", 1000, False, 5000, 6000, "assets/images.png")
-perfect = Champion(4, "perfect", "The Perfectionist", 10000, False, 10000, 10000, "assets/images.png")
-president = Champion(5, "president", "The Club President", 10000, False, 10000, 10000, "assets/images.png")
-lect = Champion(6, "lect", "The Lecturer", 10000, False, 10000, 10000, "assets/images.png")
-gpt = Champion(7, "gpt", "ChatGGEZ", 10000, False, 10000, 10000, "assets/images.png")
+hero = Champion(0, "hero", "The Protagonist", 1, True, 15, 20, "assets/champs/hero.PNG")
+reliable = Champion(1, "reliable", "The Reliable", 10, False, 200, 220, "assets/champs/reli.PNG")
+incon = Champion(2, "incon", "The Inconsistent", 200, False, 2500, 2750, "assets/champs/incon.PNG")
+leader = Champion(3, "leader", "The Group Leader", 500, False, 7500, 8000, "assets/champs/lead.PNG")
+perfect = Champion(4, "perfect", "The Perfectionist", 1000, False, 30000, 32000, "assets/champs/perf.PNG")
+president = Champion(5, "president", "The Club President", 1625, False, 80000, 84000, "assets/champs/pres.PNG")
+lect = Champion(6, "lect", "The Lecturer", 3325, False, 140000, 150000, "assets/champs/lect.PNG")
+gpt = Champion(7, "gpt", "ChatGGEZ", 10000, False, 500000, 550000, "assets/champs/gpt.PNG")
 
 champions = [hero, reliable, incon, leader, perfect, president, lect, gpt]
 bought_champs = []
 total_champion = len(bought_champs)
-
+hero_up_status = 0
+click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
 # Champion initialization
 for champion in champions:
     champion.showChamp()
@@ -424,9 +439,9 @@ for champion in champions:
 
 # Upgrades
 class Upgrade():
-    def __init__(self,  num_id, requirement, price, name, origin, tooltip, mult, action=None):
+    def __init__(self, num_id, requirement, price, name, origin, tooltip, mult, action=None):
         self.x = 10
-        self.y = 60
+        self.y = 40
         self.num_id = num_id
         self.requirement = requirement
         self.name = name
@@ -437,21 +452,15 @@ class Upgrade():
         self.isUnlocked = False
         self.action = action
         self.mult = mult
+        self.object_id = f"@upgrade_{self.num_id}"
 
         self.button = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((self.x, self.y), (45, 45)),
                                                    text="",
                                                    container=area_upgrade_available,
-                                                   manager=window)
+                                                   manager=window,
+                                                   object_id=ObjectID(class_id=self.object_id))
     
-        self.button_tooltip = None
-
-    def create_tooltip(self):
-        self.button_tooltip = pygame_gui.elements.UITooltip(html_text="<font face=canva>"
-                                                            f"{self.name}\n{self.tooltip}\nPrice: {self.price}"
-                                                            "</font>",
-                                                            hover_distance=(0, 0),
-                                                            manager=window)
-        return self.button_tooltip
+        
 
 
     def available(self):
@@ -468,7 +477,7 @@ class Upgrade():
             index = list_available.index(self)
             #the container is (422, 315)
             self.x = 10 + ((index % 8) * 49) + ((index % 8) * 2)
-            self.y = 60 + ((index // 8) * 51)
+            self.y = 40 + ((index // 8) * 51)
             print(index, self.x, self.y)
 
             # note for future improvement:
@@ -485,7 +494,7 @@ class Upgrade():
         self.isUnlocked = True
         
         self.button.set_container(container=area_upgrade_bought)
-        self.action(self.mult)
+        self.action()
 
         print("bought")
 
@@ -502,7 +511,7 @@ class Upgrade():
             self.button.set_container(container=area_upgrade_bought)
             index = list_bought.index(self)
             self.x = 10 + ((index % 8) * 49) + ((index % 8) * 2)
-            self.y = 60 + ((index // 8) * 51)
+            self.y = 40 + ((index // 8) * 51)
             self.button.set_relative_position((self.x, self.y))
 
     def to_dict(self):
@@ -522,62 +531,67 @@ class Upgrade():
 
 # Upgrades
 # num_id, requirement, price, name, origin, tooltip, mult, action
+def set_clickpower_status():
+    global hero_up_status, click_power
+    hero_up_status = 1
+    click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
+    hero.upgrade1()
 
 # Hero
-up_hero1 = Upgrade(1, 2, 100000, "Freshman", hero, "This is hero upgrade 1", 2, action=(hero.upgrade1))
-up_hero2 = Upgrade(2, 3, 100000, "Sophomore", hero, "This is hero upgrade 2", 2, action=(hero.upgrade1))
-up_hero3 = Upgrade(3, 4, 100000, "Junior", hero, "This is hero upgrade 3", 2, action=(hero.upgrade1))
-up_hero4 = Upgrade(4, 5, 100000, "Senior", hero, "This is hero upgrade 4", 2, action=(hero.upgrade1))
-up_hero5 = Upgrade(5, 6, 100000, "Graduate", hero, "This is hero upgrade 5", 2, action=(hero.upgrade1))
+up_hero1 = Upgrade(1, 5, 100, "Freshman", hero, "Protagonist's Idle Power is added to Click Power. (Also 2x Protag's Idle Power)", 2, action=(set_clickpower_status))
+up_hero2 = Upgrade(2, 25, 1000, "Sophomore", hero, "Doubles the Idle Power of the Protagonist", 2, action=(hero.upgrade1))
+up_hero3 = Upgrade(3, 50, 5000, "Junior", hero, "Doubles the Idle Power of the Protagonist", 2, action=(hero.upgrade1))
+up_hero4 = Upgrade(4, 75, 7500, "Senior", hero, "Doubles the Idle Power of the Protagonist", 2, action=(hero.upgrade1))
+up_hero5 = Upgrade(5, 100, 10000, "Graduate", hero, "Doubles the Idle Power of the Protagonist", 2, action=(hero.upgrade1))
 
 # reliable
-up_reliable1 = Upgrade(6, 2, 100000, "reliable 1", reliable, "This is reliable upgrade 1", 2, action=(reliable.upgrade1))
-up_reliable2 = Upgrade(7, 3, 100000, "reliable 2", reliable, "This is reliable upgrade 2", 2, action=(reliable.upgrade1))
-up_reliable3 = Upgrade(8, 4, 100000, "reliable 3", reliable, "This is reliable upgrade 3", 2, action=(reliable.upgrade1))
-up_reliable4 = Upgrade(9, 5, 100000, "reliable 4", reliable, "This is reliable upgrade 4", 2, action=(reliable.upgrade1))
-up_reliable5 = Upgrade(10, 6, 100000, "reliable 5", reliable, "This is reliable upgrade 5", 2, action=(reliable.upgrade1))
+up_reliable1 = Upgrade(6, 10, 2000, "reliable 1", reliable, "Doubles the Idle Power of the Reliable", 2, action=(reliable.upgrade1))
+up_reliable2 = Upgrade(7, 25, 5500, "reliable 2", reliable, "Doubles the Idle Power of the Reliable", 2, action=(reliable.upgrade1))
+up_reliable3 = Upgrade(8, 50, 42500, "reliable 3", reliable, "Doubles the Idle Power of the Reliable", 2, action=(reliable.upgrade1))
+up_reliable4 = Upgrade(9, 75, 124320, "reliable 4", reliable, "Doubles the Idle Power of the Reliable", 2, action=(reliable.upgrade1))
+up_reliable5 = Upgrade(10, 100, 342700, "reliable 5", reliable, "Doubles the Idle Power of the Reliable", 2, action=(reliable.upgrade1))
 
 # incon
-up_incon1 = Upgrade(11, 2, 100000, "incon 1", incon, "This is incon upgrade 1", 2, action=(incon.upgrade1))
-up_incon2 = Upgrade(12, 3, 100000, "incon 2", incon, "This is incon upgrade 2", 2, action=(incon.upgrade1))
-up_incon3 = Upgrade(13, 4, 100000, "incon 3", incon, "This is incon upgrade 3", 2, action=(incon.upgrade1))
-up_incon4 = Upgrade(14, 5, 100000, "incon 4", incon, "This is incon upgrade 4", 2, action=(incon.upgrade1))
-up_incon5 = Upgrade(15, 6, 100000, "incon 5", incon, "This is incon upgrade 5", 2, action=(incon.upgrade1))
+up_incon1 = Upgrade(11, 10, 30000, "incon 1", incon, "Doubles the Idle Power of the Inconsistent", 2, action=(incon.upgrade1))
+up_incon2 = Upgrade(12, 25, 70000, "incon 2", incon, "Doubles the Idle Power of the Inconsistent", 2, action=(incon.upgrade1))
+up_incon3 = Upgrade(13, 50, 200000, "incon 3", incon, "Doubles the Idle Power of the Inconsistent", 2, action=(incon.upgrade1))
+up_incon4 = Upgrade(14, 75, 500000, "incon 4", incon, "Doubles the Idle Power of the Inconsistent", 2, action=(incon.upgrade1))
+up_incon5 = Upgrade(15, 100, 1000000, "incon 5", incon, "Doubles the Idle Power of the Inconsistent", 2, action=(incon.upgrade1))
 
 # leader
-up_leader1 = Upgrade(16, 2, 100000, "leader 1", leader, "This is leader upgrade 1", 2, action=(leader.upgrade1))
-up_leader2 = Upgrade(17, 3, 100000, "leader 2", leader, "This is leader upgrade 2", 2, action=(leader.upgrade1))
-up_leader3 = Upgrade(18, 4, 100000, "leader 3", leader, "This is leader upgrade 3", 2, action=(leader.upgrade1))
-up_leader4 = Upgrade(19, 5, 100000, "leader 4", leader, "This is leader upgrade 4", 2, action=(leader.upgrade1))
-up_leader5 = Upgrade(20, 6, 100000, "leader 5", leader, "This is leader upgrade 5", 2, action=(leader.upgrade1))
+up_leader1 = Upgrade(16, 10, 100000, "leader 1", leader, "Doubles the Idle Power of the Group Leader", 2, action=(leader.upgrade1))
+up_leader2 = Upgrade(17, 25, 155620, "leader 2", leader, "Doubles the Idle Power of the Group Leader", 2, action=(leader.upgrade1))
+up_leader3 = Upgrade(18, 50, 432000, "leader 3", leader, "Doubles the Idle Power of the Group Leader", 2, action=(leader.upgrade1))
+up_leader4 = Upgrade(19, 75, 1234560, "leader 4", leader, "Doubles the Idle Power of the Group Leader", 2, action=(leader.upgrade1))
+up_leader5 = Upgrade(20, 100, 3451930, "leader 5", leader, "Doubles the Idle Power of the Group Leader", 2, action=(leader.upgrade1))
 
 # perfect
-up_perfect1 = Upgrade(26, 2, 100000, "perfect 1", perfect, "This is perfect upgrade 1", 2, action=(perfect.upgrade1))
-up_perfect2 = Upgrade(27, 3, 100000, "perfect 2", perfect, "This is perfect upgrade 2", 2, action=(perfect.upgrade1))
-up_perfect3 = Upgrade(28, 4, 100000, "perfect 3", perfect, "This is perfect upgrade 3", 2, action=(perfect.upgrade1))
-up_perfect4 = Upgrade(29, 5, 100000, "perfect 4", perfect, "This is perfect upgrade 4", 2, action=(perfect.upgrade1))
-up_perfect5 = Upgrade(30, 6, 100000, "perfect 5", perfect, "This is perfect upgrade 5", 2, action=(perfect.upgrade1))
+up_perfect1 = Upgrade(21, 10, 333333, "perfect 1", perfect, "Doubles the Idle Power of the Perfectionist", 2, action=(perfect.upgrade1))
+up_perfect2 = Upgrade(22, 25, 888888, "perfect 2", perfect, "Doubles the Idle Power of the Perfectionist", 2, action=(perfect.upgrade1))
+up_perfect3 = Upgrade(23, 50, 12341234, "perfect 3", perfect, "Doubles the Idle Power of the Perfectionist", 2, action=(perfect.upgrade1))
+up_perfect4 = Upgrade(24, 75, 53355335, "perfect 4", perfect, "Doubles the Idle Power of the Perfectionist", 2, action=(perfect.upgrade1))
+up_perfect5 = Upgrade(25, 100, 99999999, "perfect 5", perfect, "Doubles the Idle Power of the Perfectionist", 2, action=(perfect.upgrade1))
 
 # Champ 6
-up_president_1 = Upgrade(6, 2, 100000, "president 1", president, "This is president upgrade 1", 2, action=(president.upgrade1))
-up_president_2 = Upgrade(7, 3, 100000, "president 2", president, "This is president upgrade 2", 2, action=(president.upgrade1))
-up_president_3 = Upgrade(8, 4, 100000, "president 3", president, "This is president upgrade 3", 2, action=(president.upgrade1))
-up_president_4 = Upgrade(9, 5, 100000, "president 4", president, "This is president upgrade 4", 2, action=(president.upgrade1))
-up_president_5 = Upgrade(10, 6, 100000, "president 5", president, "This is president upgrade 5", 2, action=(president.upgrade1))
+up_president_1 = Upgrade(26, 10, 1333337, "president 1", president, "Doubles the Idle Power of the Club President", 2, action=(president.upgrade1))
+up_president_2 = Upgrade(27, 25, 8008135, "president 2", president, "Doubles the Idle Power of the Club President", 2, action=(president.upgrade1))
+up_president_3 = Upgrade(28, 50, 42069420, "president 3", president, "Doubles the Idle Power of the Club President", 2, action=(president.upgrade1))
+up_president_4 = Upgrade(29, 75, 91234801, "president 4", president, "Doubles the Idle Power of the Club President", 2, action=(president.upgrade1))
+up_president_5 = Upgrade(30, 100, 112344313, "president 5", president, "Doubles the Idle Power of the Club President", 2, action=(president.upgrade1))
 
 # Champ 7
-up_lect_1 = Upgrade(6, 2, 100000, "lect 1", lect, "This is lect upgrade 1", 2, action=(lect.upgrade1))
-up_lect_2 = Upgrade(7, 3, 100000, "lect 2", lect, "This is lect upgrade 2", 2, action=(lect.upgrade1))
-up_lect_3 = Upgrade(8, 4, 100000, "lect 3", lect, "This is lect upgrade 3", 2, action=(lect.upgrade1))
-up_lect_4 = Upgrade(9, 5, 100000, "lect 4", lect, "This is lect upgrade 4", 2, action=(lect.upgrade1))
-up_lect_5 = Upgrade(10, 6, 100000, "lect 5", lect, "This is lect upgrade 5", 2, action=(lect.upgrade1))
+up_lect_1 = Upgrade(31, 10, 5000000, "lect 1", lect, "Doubles the Idle Power of the Lecturer", 2, action=(lect.upgrade1))
+up_lect_2 = Upgrade(32, 25, 10000000, "lect 2", lect, "Doubles the Idle Power of the Lecturer", 2, action=(lect.upgrade1))
+up_lect_3 = Upgrade(33, 50, 50000000, "lect 3", lect, "Doubles the Idle Power of the Lecturer", 2, action=(lect.upgrade1))
+up_lect_4 = Upgrade(34, 75, 100000000, "lect 4", lect, "Doubles the Idle Power of the Lecturer", 2, action=(lect.upgrade1))
+up_lect_5 = Upgrade(35, 100, 500000000, "lect 5", lect, "Doubles the Idle Power of the Lecturer", 2, action=(lect.upgrade1))
 
 # Champ 8
-up_gpt_1 = Upgrade(6, 2, 100000, "Legally Distinct AI Model", gpt, "Increases ChatGGEZ's idle power by 100%.", 2, action=(gpt.upgrade1))
-up_gpt_2 = Upgrade(7, 3, 100000, "As an AI language model", gpt, "This is gpt upgrade 2", 2, action=(gpt.upgrade1))
-up_gpt_3 = Upgrade(8, 4, 100000, "gpt 3", gpt, "This is gpt upgrade 3", 2, action=(gpt.upgrade1))
-up_gpt_4 = Upgrade(9, 5, 100000, "gpt 4", gpt, "This is gpt upgrade 4", 2, action=(gpt.upgrade1))
-up_gpt_5 = Upgrade(10, 6, 100000, "gpt 5", gpt, "This is gpt upgrade 5", 2, action=(gpt.upgrade1))
+up_gpt_1 = Upgrade(36, 10, 25000000, "Legally Distinct AI Model", gpt, "Doubles the Idle Power of ChatGGEZ", 2, action=(gpt.upgrade1))
+up_gpt_2 = Upgrade(37, 25, 100000000, "As an AI language model,", gpt, "Doubles the Idle Power of ChatGGEZ", 2, action=(gpt.upgrade1))
+up_gpt_3 = Upgrade(38, 50, 500000000, "Introducing GGEZ-4", gpt, "Doubles the Idle Power of ChatGGEZ", 2, action=(gpt.upgrade1))
+up_gpt_4 = Upgrade(39, 75, 1000000000, "gpt 4", gpt, "Doubles the Idle Power of ChatGGEZ", 2, action=(gpt.upgrade1))
+up_gpt_5 = Upgrade(40, 100, 10000000000, "gpt 5", gpt, "Doubles the Idle Power of ChatGGEZ", 2, action=(gpt.upgrade1))
 
 
 
@@ -650,18 +664,29 @@ class Prestige():
             self.button.change_object_id("@prestige_available")
     
 
+def set_clickpower_status_but_prestige():
+    global prestige_2a_status, click_power
+    prestige_2a_status = 10
+    click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
+    hero.upgrade1()
+    print("worked")
+
+def set_prestige2b():
+    for champion in champions:
+        champion.upgrade2()
+    print("worked")
 
 # x, y, price, name, tooltip, mult, action
 # requirement is for prestige branches
-prestige1 = Prestige(-380, -55, 0, "Foundation", "The end of your first year!", 1)
-prestige2a = Prestige(-190, -115, 0, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n(+100% Click Power)", 1)
-prestige2b = Prestige(-190, 5, 0, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 1)
-prestige3 = Prestige(0, -55, 0, "Electives", "To hold my places, y'know. (+Takes up space)", 1)
-prestige3a = Prestige(0, -140, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige3b = Prestige(0, 30, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige4a = Prestige(190, -115, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige4b = Prestige(190, 5, 0, "Placeholder", "To hold my places, y'know. (+Takes up space)", 1)
-prestige5 = Prestige(380, -55, 0, "Graduation", "Congratulations, it's finally over! (+The End)", 1)
+prestige1 = Prestige(-380, -55, 0, "Foundation", "The start of your first year!", 0)
+prestige2a = Prestige(-190, -115, 1, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n( Click Power * 10)", 0, action=(set_clickpower_status_but_prestige))
+prestige2b = Prestige(-190, 5, 1, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 0, action=(set_prestige2b))
+prestige3 = Prestige(0, -55, 1, "Electives", "I wish electives weren't mandatory :(", 1)
+prestige3a = Prestige(0, -140, 1, "Art Spec.", "Time for a specialization!", 1)
+prestige3b = Prestige(0, 30, 1, "CS Spec.", "Time for a specialization!", 1)
+prestige4a = Prestige(190, -115, 1, "Art Degree", "Take an Art Degree!", 1)
+prestige4b = Prestige(190, 5, 1, "CS Degree", "Take a Comp. Science Degree!", 1)
+prestige5 = Prestige(380, -55, 1, "Graduation", "Congratulations, it's finally over! (+The End)", 1)
 
 list_prestige = [prestige1, prestige2a, prestige2b, prestige3, prestige3a, prestige3b, prestige4a, prestige4b, prestige5]
 
@@ -671,13 +696,32 @@ for upgrade in list_prestige:
 prestige1.button.enable()
 prestige1.canBuy = True
 
-total_credits = 0
+credits_total = 0
+credits_onhand = 0
 show_credits = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((480, 350), (480, 60)),
-                                           text=f"Credits: {total_credits}",
+                                           text=f"Credits: {credits_onhand}/{credits_total}",
                                            container=area_prestige,
                                            object_id=ObjectID(class_id="@prestige_credits"))
 
 clock = pygame.time.Clock()
+
+
+# Prestige progress bar
+class MyProgressBar(pygame_gui.elements.UIProgressBar):
+    def __init__(self, x, y, w, h, ui_container):
+        super().__init__(relative_rect=pygame.Rect((x, y), (w, h)), container=ui_container)
+        global money, credits_total
+        self.current_progress = money
+        self.maximum_progress = 1000000 + (1000000 * credits_total)
+
+    def status_text(self):
+        return f"{self.current_progress:,}/{self.maximum_progress:,}"
+    
+    def set_current_progress(self, progress: float):
+        return super().set_current_progress(progress)
+    
+progress_prestige = MyProgressBar(5, 62, 875, 25, area_tab2)
+
 
 
 total_idle_power = sum(champion.idle_power for champion in champions)
@@ -696,8 +740,8 @@ prestige_show_tooltip = pygame_gui.elements.UITextBox(relative_rect=pygame.Rect(
 # Info bars
 container_info_click = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 4), (210, 49)),
                                                   container=container_info_bars)
-icon_click_power_load = pygame.image.load("assets/images.png")
-icon_click_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (47, 47)),
+icon_click_power_load = pygame.image.load("assets/click.png")
+icon_click_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (46, 46)),
                                               image_surface=icon_click_power_load,
                                               container=container_info_click)
 info_num_click = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), (163, 47)),
@@ -707,8 +751,8 @@ info_num_click = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), 
 
 container_info_idle = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((211, 51), (210, 49)),
                                                   container=container_info_bars)
-icon_idle_power_load = pygame.image.load("assets/images.png")
-icon_idle_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (47, 47)),
+icon_idle_power_load = pygame.image.load("assets/idle.png")
+icon_idle_power = pygame_gui.elements.UIImage(relative_rect=pygame.Rect((1, 1), (46, 46)),
                                               image_surface=icon_idle_power_load,
                                               container=container_info_idle)
 info_num_idle = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((49, 1), (163, 47)),
@@ -727,7 +771,8 @@ info_num_money = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((2, 47), 
 
 button_settings = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((860, 16), (70, 70)),
                                                text="",
-                                               container=container_info_bars)
+                                               container=container_info_bars,
+                                               object_id=ObjectID(class_id="@button_settings"))
 
 # Format
 def format_num(value):
@@ -768,6 +813,8 @@ def format_money(value):
   #  return paused, main_menu_status
 
     # Idle generation
+
+# Money generation
 status_thread = False
 
 def thread_start():
@@ -783,28 +830,37 @@ def increment_money():
         global money, total_idle_power
         money += total_idle_power
 
+# GAME SAVES WAAAAAAAAA
 def save_game_state():
-    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige
+    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige, credits_total, credits_onhand, hero_up_status, prestige_2a_status
     game_state = {
         "click_power": click_power,
         "money": money,
         "total_idle_power": total_idle_power,
         "champions": [champion.to_dict() for champion in champions],
         "list_upgrades": [upgrade.to_dict() for upgrade in list_upgrades],
-        "list_prestige": [prestige.to_dict() for prestige in list_prestige]
+        "list_prestige": [prestige.to_dict() for prestige in list_prestige],
+        "credits_total": credits_total,
+        "credits_onhand": credits_onhand,
+        "hero_up_status": hero_up_status,
+        "prestige_2a_status": prestige_2a_status
     }
     with open('game_state.json', 'w') as file:
         json.dump(game_state, file)
     print("Game state saved.")
 
 def load_game_state():
-    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige
+    global money, click_power, total_idle_power, champions, list_upgrades, list_prestige, credits_total, credits_onhand, hero_up_status, prestige_2a_status
     if os.path.exists('game_state.json'):
         try:
             with open('game_state.json', 'r') as file:
                 game_state = json.load(file)
                 money = game_state.get('money', 0)
                 click_power = game_state.get('click_power', 1)
+                credits_total = game_state.get("credits_total", 0)
+                credits_onhand = game_state.get("credits_onhand", 0)
+                hero_up_status = game_state.get("hero_up_status", 0)
+                prestige_2a_status = game_state.get("prestige_2a_status", 1)
 
                 champions_data = game_state["champions"]
                 # Reinitialize champions based on saved data
@@ -842,13 +898,23 @@ def load_game_state():
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
 
+def reset_game_state():
+    save_file_path = 'game_state.json'
+    if os.path.exists(save_file_path):
+        save_game_state()
+        with open(save_file_path, 'w') as file:
+            pass
+        print("Game state file cleared.")
+    else:
+        print("No save file found to clear.")
+
 # Load game state on startup
 load_game_state()
 thread_start()
 
 QTE_Button = Class_file.moving_button()
 QTE_Button.x = random.randint(1000,5000)
-QTE_Button.y =screen_height //2
+QTE_Button.y =screen_height//2
 
 class Event_gui(pygame.sprite.Sprite):
     def __init__(self,pos,direc,name="none") -> None:
@@ -964,20 +1030,49 @@ class QTE(pygame.sprite.Sprite):
         self.Down.fadeout()
         self.Left.fadeout()
         self.Right.fadeout()
-        
-    
-    
-    
-    
     
 Test = QTE()
+
+
+
+menu_settings = pygame_gui.elements.UIPanel(relative_rect=pygame.Rect((0, 0), (500, 200)), 
+                                            anchors={'center': 'center'},
+                                            starting_height=10)
+
+text_settings = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 0), (420, 80)),
+                                            container=menu_settings,
+                                            text="SETTINGS",
+                                            object_id=ObjectID(class_id="@text_settings"))
+
+text_saved = pygame_gui.elements.UILabel(relative_rect=pygame.Rect((0, 80), (500, 50)),
+                                            container=menu_settings,
+                                            text="",
+                                            object_id=ObjectID(class_id="@text_saved"))
+
+button_settings_close = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((425, 15), (50, 50)),
+                                                     container=menu_settings,
+                                                     text="x")
+
+button_save = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((25, 135), (200, 50)),
+                                           container=menu_settings,
+                                           text="Save Game")
+
+button_reset = pygame_gui.elements.UIButton(relative_rect=pygame.Rect((275, 135), (200, 50)),
+                                           container=menu_settings,
+                                           text="Reset Save",
+                                           object_id=ObjectID(class_id="@button_reset"))
+
+menu_settings.hide()
+menu_settings.disable()
+
+
 
 # Game loop \o/
 running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-    randomiser_x = random.randint(1000,5000)
+    randomiser_x = random.randint(10000000,50000000)
     randomiser_y = random.randint(80,screen_height-50)
     
     for i in range(0, sections + 1):  
@@ -1000,10 +1095,9 @@ while running:
 
         # AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA I FINALLY FIXED THE TOOLTIP
         if event.type == pygame_gui.UI_BUTTON_ON_HOVERED:
-            for upgrade in list_available:
+            for upgrade in list_upgrades:
                 if event.ui_element == upgrade.button:
-                    if upgrade.button_tooltip is None:
-                        upgrade.button_tooltip = upgrade.create_tooltip()
+                    tooltip_upgrade.set_text(f"{upgrade.name} - Price: {upgrade.price}\n{upgrade.tooltip}")
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
@@ -1011,11 +1105,9 @@ while running:
                     prestige_show_tooltip.set_text(f"{upgrade.tooltip}")
 
         if event.type == pygame_gui.UI_BUTTON_ON_UNHOVERED:
-            for upgrade in list_available:
+            for upgrade in list_upgrades:
                 if event.ui_element == upgrade.button:
-                    if upgrade.button_tooltip is not None:
-                        upgrade.button_tooltip.kill()
-                        upgrade.button_tooltip = None
+                    tooltip_upgrade.set_text("")
 
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
@@ -1026,6 +1118,10 @@ while running:
 
             # The Prestige Button. yes. that one
             if event.ui_element == button_prestige:
+                credits_total += 1
+                credits_onhand += 1
+                show_credits.set_text(f"Credits: {credits_onhand}/{credits_total}")
+                progress_prestige.maximum_progress = 1000000 + (1000000 * credits_total)
                 # Close everything in the main screen
                 tab_openclose()
                 if area_tabs_status == False:
@@ -1036,13 +1132,11 @@ while running:
                     container_info_bars.hide()
                     container_info_bars.disable()
                     area_prestige.show()
-                    button_prestige_respec.enable()
+                    #button_prestige_respec.enable()
                     button_prestige_continue.enable()
 
                 # prestige title effect wahoo
                 text_prestige.set_active_effect(pygame_gui.TEXT_EFFECT_TYPING_APPEAR)
-
-                
 
                 for champion in champions:
                     champion.isUnlocked = False
@@ -1068,8 +1162,10 @@ while running:
                     
                 # reset all the things !
                 money = 0
-                #click_power = 1
+                hero_up_status = 0
+                click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
                 total_idle_power = sum(champion.idle_power for champion in champions)
+                
 
             elif event.ui_element == button_prestige_continue:
                 paused = False
@@ -1080,12 +1176,33 @@ while running:
                 area_prestige.hide()
                 area_prestige.disable()
 
+            elif event.ui_element == button_settings:
+                paused = True
+                menu_settings.show()
+                menu_settings.enable()
+
+            elif event.ui_element == button_settings_close:
+                paused = False
+                menu_settings.hide()
+                menu_settings.disable()
+                
+                text_saved.set_text("")
+
+            elif event.ui_element == button_save:
+                save_game_state()
+                text_saved.set_text("Game saved!")
+
+            elif event.ui_element == button_reset:
+                reset_game_state()
+                running = False
+
             for upgrade in list_prestige:
                 if event.ui_element == upgrade.button:
-                    if total_credits >= upgrade.price and upgrade.canBuy:
-                        total_credits = total_credits - upgrade.price
+                    if credits_onhand >= upgrade.price and upgrade.canBuy:
+                        credits_onhand = credits_onhand - upgrade.price
                         upgrade.isUnlocked = True
                         print(f"{upgrade.name} bought")
+                        show_credits.set_text(f"Credits: {credits_onhand}/{credits_total}")
 
                         if event.ui_element == prestige1.button:
                             if prestige1.canBuy:
@@ -1099,6 +1216,7 @@ while running:
 
                         elif event.ui_element == prestige2a.button:
                             if prestige2a.canBuy:
+                                prestige2a.action()
                                 # upgrades of the same tier get disabled
                                 prestige2a.canBuy = False
                                 prestige2b.canBuy = False
@@ -1119,6 +1237,8 @@ while running:
                     
                         elif event.ui_element == prestige2b.button:
                             if prestige2b.canBuy:
+                                prestige2b.action()
+
                                 prestige2a.canBuy = False
                                 prestige2a.not_chosen = True
                                 prestige2b.canBuy = False
@@ -1200,6 +1320,8 @@ while running:
 
                                 prestige5.button.change_object_id("@prestige_bought")
 
+                        
+
 
             if not paused:
                 if event.ui_element == button_next_tab:
@@ -1217,12 +1339,16 @@ while running:
                     elif not area_tabs_status:
                         tab_openclose()
 
+                
+
                 # Champion buttons
                 for champion in champions:
                     # Level up button
                     if event.ui_element == champion.button_level:
                         if money >= champion.price_level and champion.isUnlocked:
                             champion.level_up()
+                            total_idle_power = sum(champion.idle_power for champion in champions)
+
 
                     # Hire button
                     if champion.button_hire.is_enabled:
@@ -1231,6 +1357,7 @@ while running:
                                 champion.hire()
                                 total_idle_power = sum(champion.idle_power for champion in champions)
 
+                
 
                 # Upgrade buttons
                 for upgrade in list_available:
@@ -1251,25 +1378,24 @@ while running:
                                 upgrade.sort()
                             total_idle_power = sum(champion.idle_power for champion in champions)
 
+        if not paused:
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.button == 1:
+                            mouse_pos = pygame.mouse.get_pos()
+                            QTE_Button_Rect = QTE_Button.frames[QTE_Button.index].get_rect(topleft=(QTE_Button.x,QTE_Button.y))
 
-
+                            if generatable_area.rect.collidepoint(mouse_pos):
+                                money += click_power
+                                        
+                            if QTE_Button_Rect.collidepoint(mouse_pos):
+                                QTE_Button.x = randomiser_x
+                                Test.exe = True 
+                                Test.reset()
 
         #    if event.ui_element == button_game_start:
          #       game_start()
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                mouse_pos = pygame.mouse.get_pos()
-                QTE_Button_Rect = QTE_Button.frames[QTE_Button.index].get_rect(topleft=(QTE_Button.x,QTE_Button.y))
-                
-                if not paused:
-                    if generatable_area.rect.collidepoint(mouse_pos):
-                        money += click_power
-                        
-                    if QTE_Button_Rect.collidepoint(mouse_pos):
-                        QTE_Button.x = randomiser_x
-                        Test.exe = True 
-                        Test.reset()
+        
                         
         
         Test.key()               
@@ -1350,16 +1476,9 @@ while running:
             upgrade.shown = True
 
 
-    for upgrade in list_available:
-        if upgrade.button_tooltip is not None:
-            mouse_pos = pygame.mouse.get_pos()
-            adjusted_mouse_pos = (mouse_pos[0] - 75, mouse_pos[1] - 108)
-            upgrade.button_tooltip.find_valid_position((adjusted_mouse_pos))
-
-
     # Prestige progress bar
     progress_prestige.set_current_progress(money)
-    progress_prestige.percent_full = progress_prestige.current_progress/progress_prestige.maximum_progress*100
+    progress_prestige.percent_full = min(progress_prestige.current_progress/progress_prestige.maximum_progress, 1.0)
 
     if money >= progress_prestige.maximum_progress:
         button_prestige.enable()
