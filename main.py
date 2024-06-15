@@ -9,6 +9,9 @@ import json
 import os
 import Class_file
 import random
+import Spinning_Wheel
+
+
 
 
 
@@ -985,11 +988,12 @@ moving_image = pygame.sprite.Group()
 class QTE(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
+        self.reset = (0,0)
         self.position = {
-            1: (350, 200),
-            2: (450, 200),
+            1: (150, 200),
+            2: (350, 200),
             3: (550, 200),
-            4: (650, 200)
+            4: (750, 200)
         }
         self.different = ["UP","DOWN","LEFT","RIGHT"]
         self.Up = Event_gui(self.position[1], random.choice(self.different))#1
@@ -1000,6 +1004,8 @@ class QTE(pygame.sprite.Sprite):
         self.prev_key = None
         self.exe =False
         self.randomise = False
+      
+        self.after = (0,0)
         
         
     def key(self):
@@ -1038,6 +1044,8 @@ class QTE(pygame.sprite.Sprite):
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
+          
+            
             
         
         
@@ -1046,7 +1054,29 @@ class QTE(pygame.sprite.Sprite):
         self.Down.fadeout()
         self.Left.fadeout()
         self.Right.fadeout()
+        
+
+def collect_bonus():
+    global total_idle_power
+    global click_power
+    global gold
+    with open("Bonus.txt","r") as f:
+        spl = f.read()
+        m = spl.replace('S','')
+        bonus = m.split(" ")
+        for i in range(0,len(bonus),2):
+            time = int(bonus[i])
+            idl = bonus[i+1]
+            if idl == "IDLE":
+                gold = gold+(total_idle_power * time)
+            else:
+                click_power = click_power + time
+                    
+    print(gold)    
+    return gold
     
+
+
 Test = QTE()
 
 
@@ -1090,7 +1120,7 @@ while running:
     time_delta = clock.tick(60)/1000.0
     randomiser_x = random.randint(10000000,50000000)
     randomiser_y = random.randint(80,screen_height-50)
-    
+        
     for i in range(0, sections + 1):  
      screen.blit(background, (i * backgroundwidth + scroll, backgroundheight))
     
@@ -1405,23 +1435,19 @@ while running:
                                         
                             if QTE_Button_Rect.collidepoint(mouse_pos):
                                 QTE_Button.x = randomiser_x
-                                Test.exe = True 
-                                Test.reset()
-
-        #    if event.ui_element == button_game_start:
-         #       game_start()
-
-        
-                        
+                                k = random.randint(1,2)
+                
+                                
+                                if k == 1:
+                                    Test.exe = True 
+                                else:
+                                    if Spinning_Wheel.run()== False:
+                                        collect_bonus()
         
         Test.key()               
-
         window.process_events(event)
 
-   
-
-
-
+            
     # Tab
     if current_tab == 1 and not paused:
         # enable tab 1 stuff
@@ -1504,7 +1530,7 @@ while running:
 #    if main_menu_status == True:
 #       init_main_menu()
    
-
+    
     QTE_Button.move(random.randint(5,10))
     QTE_Button.check(randomiser_x,randomiser_y)
     screen.blit(QTE_Button.frames[QTE_Button.index], (QTE_Button.x, QTE_Button.y))
@@ -1514,6 +1540,8 @@ while running:
     info_num_idle.set_text(f"{format_num(total_idle_power)}")
     info_num_money.set_text(f"{format_money(money)}")
 
+    
+    
     
     Test.update()
     Test.fadeout()
