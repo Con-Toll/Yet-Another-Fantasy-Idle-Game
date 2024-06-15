@@ -698,7 +698,7 @@ def set_prestige2b():
 # x, y, price, name, tooltip, mult, action
 # requirement is for prestige branches
 prestige1 = Prestige(-380, -55, 0, "Foundation", "The start of your first year!", 0)
-prestige2a = Prestige(-190, -115, 1, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n( Click Power * 10)", 0, action=(set_clickpower_status_but_prestige))
+prestige2a = Prestige(-190, -115, 1, "Become FCM", "Live a life of never-ending deadlines. (This is the \"Active\" path, for art students can never catch a break.) \n(DOESN'T WORK YET)", 0, action=(set_clickpower_status_but_prestige))
 prestige2b = Prestige(-190, 5, 1, "Turn to FCI", "Learn to make computers do your work for you! (This is the \"Passive\" path, 'cause screw manual labour!) \n(+100% Idle Power)", 0, action=(set_prestige2b))
 prestige3 = Prestige(0, -55, 1, "Electives", "I wish electives weren't mandatory :(", 1)
 prestige3a = Prestige(0, -140, 1, "Art Spec.", "Time for a specialization!", 1)
@@ -1059,7 +1059,7 @@ class QTE(pygame.sprite.Sprite):
 def collect_bonus():
     global total_idle_power
     global click_power
-    global gold
+    global money
     with open("Bonus.txt","r") as f:
         spl = f.read()
         m = spl.replace('S','')
@@ -1068,12 +1068,12 @@ def collect_bonus():
             time = int(bonus[i])
             idl = bonus[i+1]
             if idl == "IDLE":
-                gold = gold+(total_idle_power * time)
+                money = money+(total_idle_power * time)
             else:
                 click_power = click_power + time
                     
-    print(gold)    
-    return gold
+    print(money)    
+    return money
     
 
 
