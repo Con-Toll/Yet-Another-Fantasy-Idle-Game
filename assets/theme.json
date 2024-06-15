@@ -38,6 +38,29 @@
          "misc":{
          }
     },
+    "@text_settings": 
+    {
+        "font":{
+            "name": "chava",
+            "size": "32"
+            }
+    },
+    "@text_saved": 
+    {
+        "font":{
+            "name": "chava",
+            "size": "28"
+            },
+        "colours":{
+            "normal_text": "#32a852"
+        }
+    },
+    "@button_reset": 
+    {
+        "colours":{
+            "normal_text": "#ff2929"
+        }
+    },
     "@text_tabs":
     {
         "font":{
@@ -199,6 +222,299 @@
              "normal_border": "Orange",
              "normal_bg": "#1c1000",
              "normal_text": "White"
+        }
+    },
+    "@upgrade_1":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/hero1.PNG"
+            }
+        }
+    },
+    "@upgrade_2":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/hero2.PNG"
+            }
+        }
+    },
+    "@upgrade_3":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/hero3.PNG"
+            }
+        }
+    },
+    "@upgrade_4":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/hero4.PNG"
+            }
+        }
+    },
+    "@upgrade_5":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/hero5.PNG"
+            }
+        }
+    },
+    "@upgrade_6":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/reli1.PNG"
+            }
+        }
+    },
+    "@upgrade_7":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/reli2.PNG"
+            }
+        }
+    },
+    "@upgrade_8":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/reli3.PNG"
+            }
+        }
+    },
+    "@upgrade_9":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/reli4.PNG"
+            }
+        }
+    },
+    "@upgrade_10":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/reli5.PNG"
+            }
+        }
+    },
+    "@upgrade_11":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/incon1.PNG"
+            }
+        }
+    },
+    "@upgrade_12":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/incon2.PNG"
+            }
+        }
+    },
+    "@upgrade_13":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/incon3.PNG"
+            }
+        }
+    },
+    "@upgrade_14":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/incon4.PNG"
+            }
+        }
+    },
+    "@upgrade_15":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/incon5.PNG"
+            }
+        }
+    },
+    "@upgrade_16":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lead1.PNG"
+            }
+        }
+    },
+    "@upgrade_17":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lead2.PNG"
+            }
+        }
+    },
+    "@upgrade_18":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lead3.PNG"
+            }
+        }
+    },
+    "@upgrade_19":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lead4.PNG"
+            }
+        }
+    },
+    "@upgrade_20":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lead5.PNG"
+            }
+        }
+    },
+    "@upgrade_21":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/perf1.PNG"
+            }
+        }
+    },
+    "@upgrade_22":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/perf2.PNG"
+            }
+        }
+    },
+    "@upgrade_23":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/perf3.PNG"
+            }
+        }
+    },
+    "@upgrade_24":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/perf4.PNG"
+            }
+        }
+    },
+    "@upgrade_25":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/perf5.PNG"
+            }
+        }
+    },
+    "@upgrade_26":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/pres1.PNG"
+            }
+        }
+    },
+    "@upgrade_27":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/pres2.PNG"
+            }
+        }
+    },
+    "@upgrade_28":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/pres3.PNG"
+            }
+        }
+    },
+    "@upgrade_29":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/pres4.PNG"
+            }
+        }
+    },
+    "@upgrade_30":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/pres5.PNG"
+            }
+        }
+    },
+    "@upgrade_31":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lect1.PNG"
+            }
+        }
+    },
+    "@upgrade_32":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lect2.PNG"
+            }
+        }
+    },
+    "@upgrade_33":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lect3.PNG"
+            }
+        }
+    },
+    "@upgrade_34":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lect4.PNG"
+            }
+        }
+    },
+    "@upgrade_35":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/lect5.PNG"
+            }
+        }
+    },
+    "@upgrade_36":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/gpt1.PNG"
+            }
+        }
+    },
+    "@upgrade_37":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/gpt2.PNG"
+            }
+        }
+    },
+    "@upgrade_38":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/gpt3.PNG"
+            }
+        }
+    },
+    "@upgrade_39":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/gpt4.PNG"
+            }
+        }
+    },
+    "@upgrade_40":{
+        "images":{
+            "normal_image":{
+                "path": "assets/upgrades/gpt5.PNG"
+            }
+        }
+    },
+    "@upgrade_tooltip":{
+        "font":{
+            "name": "chava",
+            "size": "16"
+        }
+    },
+    "@button_settings":{
+        "images":{
+            "normal_image":{
+                "path": "assets/settings.PNG"
+            }
         }
     }
 }
