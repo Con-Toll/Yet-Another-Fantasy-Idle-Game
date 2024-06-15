@@ -322,11 +322,16 @@ class Champion():
         self.isUnlocked = True
         bought_champs.append(self)
 
-        self.idle_power = self.base_idle_power * self.level
-        if self.up_mult != 0:
-            self.idle_power *= self.up_mult
         if self.pres_mult != 0:
-            self.idle_power *= self.pres_mult
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult * self.pres_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level * self.pres_mult
+        else:
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level
                 
         if self.isUnlocked == True:
             self.button_level.show()
@@ -354,11 +359,17 @@ class Champion():
         self.price_level = math.floor((5 + self.base_price_level) * (1.07 ** (self.level-1)))
         click_power = base_click_power + (math.floor(hero.idle_power * hero_up_status)) * prestige_2a_status
 
-        self.idle_power = self.base_idle_power * self.level
-        if self.up_mult != 0:
-            self.idle_power *= self.up_mult
         if self.pres_mult != 0:
-            self.idle_power *= self.pres_mult
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult * self.pres_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level * self.pres_mult
+        else:
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level
+        return self.idle_power
 
         return self.price_level, self.level, self.idle_power
 
@@ -396,11 +407,16 @@ class Champion():
     def upgrade1(self):
         self.up_mult += 2
 
-        self.idle_power = self.base_idle_power * self.level
-        if self.up_mult != 0:
-            self.idle_power *= self.up_mult
         if self.pres_mult != 0:
-            self.idle_power *= self.pres_mult
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult * self.pres_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level * self.pres_mult
+        else:
+            if self.up_mult != 0:
+                self.idle_power = self.base_idle_power * self.level * self.up_mult
+            else:
+                self.idle_power = self.base_idle_power * self.level
         return self.idle_power
     
     def upgrade2(self):
