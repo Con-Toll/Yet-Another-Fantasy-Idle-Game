@@ -63,7 +63,7 @@ font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
 paused = False
 
 # Clicking
-click_power = 100000
+click_power = 1
 
 # Currency
 gold = 0
@@ -736,17 +736,27 @@ class QTE(pygame.sprite.Sprite):
         
 
 def collect_bonus():
+    global total_idle_power
+    global click_power
     global gold
-    f = open("Bonus.txt","r+")
-    bonus = int(f.read())
-    gold += bonus
-    f.seek(0)
-    f.write("0")
+    with open("Bonus.txt","r") as f:
+        spl = f.read()
+        m = spl.replace('S','')
+        bonus = m.split(" ")
+        for i in range(0,len(bonus),2):
+            time = int(bonus[i])
+            idl = bonus[i+1]
+            if idl == "IDLE":
+                gold += total_idle_power * time
+            else:
+                click_power = click_power * time
+                    
+    print(gold)    
+    return gold
+    
 
 
 
-
-colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
 
 Test = QTE()
 
@@ -879,6 +889,7 @@ while running:
                         else:
                             if Spinning_Wheel.run()== False:
                                 collect_bonus()
+                                
                             
                             
                      

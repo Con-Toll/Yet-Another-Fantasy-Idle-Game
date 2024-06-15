@@ -51,7 +51,8 @@ def run():
             self.height = height
             self.color = color
             self.rotated_points = []  
-            self.bonus = ["100000","0","100","5223","566O2","23211","1","133","0","0"]  
+            self.bonus = ["10S IDLE", "20S IDLE", "10S IDLE", "30S IDLE", "60S IDLE", "30S CLICK", "10S CLICK", "20S CLICK", "10S CLICK", "60S CLICK"]
+            
 
         def update(self):
             self.angle += self.angular_velocity
@@ -107,13 +108,11 @@ def run():
     clock = pygame.time.Clock()
 
     triangles = []
-    colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255), (0, 255, 255), (128, 0, 0), (0, 128, 0), (0, 0, 128), (128, 128, 0)]
-
+    colors =  [(255,204,0), (51,204,51), (255,204,0), (255,153,51), (255, 0, 0), (204,51,153), (116,121,213), (218,39,104), (116,121,213), (34,167,223)]
     
     for i in range(num_triangles):
         angle = pygame.time.get_ticks() / 10 + (360 / num_triangles * i)
-        color = random.choice(colors)
-        triangle = Triangle(center_x, center_y, radius, angle, 0, 400, color)
+        triangle = Triangle(center_x, center_y, radius, angle, 0, 400, colors[i])
         triangle.angular_velocity = 0  
         triangles.append(triangle)
 
@@ -193,14 +192,14 @@ def run():
                         print("Triangle {} has fallen on the inverted triangle area and says '{}'".format(
                             triangles.index(triangle) + 1, triangle.bonus[triangles.index(triangle)]))
                         
-                        
+                        bonus = triangle.bonus[triangles.index(triangle)]
                         save(bonus)
-                bonus = triangle.bonus[triangles.index(triangle)]
+               
                  
                 button_clicked = False
                 time.sleep(3)
                 runnings = False
-                
+                return False
                 
                 
         
