@@ -1,8 +1,14 @@
 import pygame
 import math
 import random
+import time
 
 
+def save(pls):
+    with open("Bonus.txt","w") as f:
+        f.write(str(pls))
+        
+            
 
 def run():
     pygame.init()
@@ -45,7 +51,7 @@ def run():
             self.height = height
             self.color = color
             self.rotated_points = []  
-            self.fallen_word = ["ADD 100000","ADD CHAMPION","ADD BOY","ADD 5223","ADD 566O2","ADD 23211","ADD 2321","ADD 23133","NONE","NONE"]  
+            self.bonus = ["100000","0","100","5223","566O2","23211","1","133","0","0"]  
 
         def update(self):
             self.angle += self.angular_velocity
@@ -78,9 +84,9 @@ def run():
             pygame.draw.polygon(screen, self.color, self.rotated_points)
 
         def collidepoint(self, point):
-            """
-            Check if the given point is inside the bounding rectangle of the triangle.
-            """
+        
+            #Check if the given point is inside the bounding rectangle of the triangle.
+            
             x, y = point
             x_min = min(p[0] for p in self.rotated_points)
             x_max = max(p[0] for p in self.rotated_points)
@@ -138,6 +144,7 @@ def run():
 
     runnings = True
 
+    bonus = ""
     while runnings:
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -157,7 +164,7 @@ def run():
 
         
         pygame.draw.rect(screen, button_color, (button_x, button_y, button_width, button_height))
-        font = pygame.font.Font(None, 32)
+        font = pygame.font.Font("assets/Chava-Regular.ttf", 26)
         text = font.render(button_text, True, WHITE)
         text_rect = text.get_rect(center=(button_x + button_width // 2, button_y + button_height // 2))
         screen.blit(text, text_rect)
@@ -183,16 +190,29 @@ def run():
                     triangle.update()
                     if triangle.collidepoint(inverted_vertices[0]) and not fallen_triangle:
                         fallen_triangle = triangle  
-                        print("Pussei {} has fallen on the inverted triangle area and says '{}'".format(
-                            triangles.index(triangle) + 1, triangle.fallen_word[triangles.index(triangle)]))
-                button_clicked = False  
+                        print("Triangle {} has fallen on the inverted triangle area and says '{}'".format(
+                            triangles.index(triangle) + 1, triangle.bonus[triangles.index(triangle)]))
+                        
+                        
+                        save(bonus)
+                bonus = triangle.bonus[triangles.index(triangle)]
+                 
+                button_clicked = False
+                time.sleep(3)
                 runnings = False
+                
+                
+                
         
         checker = pygame.draw.polygon(screen, BLACK, inverted_vertices)
-       
+        
+           
+
         pygame.display.flip()
 
         
         clock.tick(60)
+        
+       
 
     

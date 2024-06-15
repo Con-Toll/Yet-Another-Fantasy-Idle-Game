@@ -735,6 +735,13 @@ class QTE(pygame.sprite.Sprite):
         self.Right.fadeout()
         
 
+def collect_bonus():
+    global gold
+    f = open("Bonus.txt","r+")
+    bonus = int(f.read())
+    gold += bonus
+    f.seek(0)
+    f.write("0")
 
 
 
@@ -749,7 +756,7 @@ running = True
 while running:
     screen.fill(white)
     time_delta = clock.tick(60)/1000.0
-    randomiser_x = random.randint(8000,20000)
+    randomiser_x = random.randint(2000,2000)
     randomiser_y = random.randint(80,screen_height-50)
         
     for i in range(0, sections + 1):  
@@ -870,7 +877,8 @@ while running:
                         if k == 1:
                             Test.exe = True 
                         else:
-                            Spinning_Wheel.run()
+                            if Spinning_Wheel.run()== False:
+                                collect_bonus()
                             
                             
                      
