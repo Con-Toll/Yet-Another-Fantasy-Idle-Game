@@ -189,7 +189,7 @@ def run():
                     triangle.update()
                     if triangle.collidepoint(inverted_vertices[0]) and not fallen_triangle:
                         fallen_triangle = triangle  
-                        print("Triangle {} has fallen on the inverted triangle area and says '{}'".format(
+                        print("Triangle {} has fallen on the inverted triangle area attribute = '{}'".format(
                             triangles.index(triangle) + 1, triangle.bonus[triangles.index(triangle)]))
                         
                         bonus = triangle.bonus[triangles.index(triangle)]

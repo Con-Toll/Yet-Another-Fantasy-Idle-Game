@@ -681,7 +681,7 @@ class QTE(pygame.sprite.Sprite):
         self.prev_key = None
         self.exe =False
         self.randomise = False
-        self.rect = pygame.Rect(150,150,700,200)
+      
         self.after = (0,0)
         
         
@@ -702,8 +702,7 @@ class QTE(pygame.sprite.Sprite):
                         if self.Right.nice == True:
                             self.exe = False
                             gold+=10000
-                            if self.Right.alpha <= 0:
-                                self.background.x = 0
+                          
                             
                             
                             
@@ -723,7 +722,7 @@ class QTE(pygame.sprite.Sprite):
             moving_image.add(self.Down)
             moving_image.add(self.Left)
             moving_image.add(self.Right)
-            self.background = pygame.draw.rect(screen,(255, 165, 0),self.rect)
+          
             
             
         
@@ -749,7 +748,7 @@ def collect_bonus():
             if idl == "IDLE":
                 gold += total_idle_power * time
             else:
-                click_power = click_power * time
+                click_power = click_power + time
                     
     print(gold)    
     return gold
