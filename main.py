@@ -1435,36 +1435,18 @@ while running:
                                         
                             if QTE_Button_Rect.collidepoint(mouse_pos):
                                 QTE_Button.x = randomiser_x
-                                Test.exe = True 
-                                Test.reset()
-
-        #    if event.ui_element == button_game_start:
-         #       game_start()
-
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                mouse_pos = pygame.mouse.get_pos()
-                QTE_Button_Rect = QTE_Button.frames[QTE_Button.index].get_rect(topleft=(QTE_Button.x,QTE_Button.y))
+                                k = random.randint(1,2)
                 
-                if not paused:
-                    if generatable_area.rect.collidepoint(mouse_pos):
-                        gold += click_power
-                        
-                    if QTE_Button_Rect.collidepoint(mouse_pos):
-                        QTE_Button.x = randomiser_x
-                        k = random.randint(1,2)
-        
-                        
-                        if k == 1:
-                            Test.exe = True 
-                        else:
-                            if Spinning_Wheel.run()== False:
-                                collect_bonus()
+                                
+                                if k == 1:
+                                    Test.exe = True 
+                                else:
+                                    if Spinning_Wheel.run()== False:
+                                        collect_bonus()
         
         Test.key()               
         window.process_events(event)
 
-   
             
     # Tab
     if current_tab == 1 and not paused:
